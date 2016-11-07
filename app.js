@@ -28,7 +28,7 @@ client.on('connected', function (channel) {
 client.on('message', function (channel, user, message, self) {
     if (message.startsWith("!test")) {
     	console.log("[DEBUG] Test command is working")
-		client.say("This is a command xD")
+		client.say(channel, "This is a command xD")
 	}
 	else if (message.startsWith("!twitter")) {
 		client.say(channel, "Merijn his Twitter is https://www.twitter.com/Mstiekema_")
