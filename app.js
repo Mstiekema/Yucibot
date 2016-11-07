@@ -29,6 +29,7 @@ client.on('message', function (channel, user, message, self) {
     if (message.startsWith("!test")) {
     	console.log("[DEBUG] Test command is working")
 		client.say(channel, "This is a command xD")
+		console.log(user)
 	}
 	else if (message.startsWith("!twitter")) {
 		client.say(channel, "Merijn his Twitter is https://www.twitter.com/Mstiekema_")
@@ -37,8 +38,12 @@ client.on('message', function (channel, user, message, self) {
 		client.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")
 	}
 	else if (message.startsWith("!quit")) {
-		client.say(channel, "Shutting down Yucibot MrDestructoid")
-		client.disconnect()
+		if (user.mod === true) {
+			client.say(channel, "Shutting down Yucibot MrDestructoid")
+			client.disconnect()}
+		else {
+			client.say(channel, "You are not allowed to turn off the bot OMGScoots")
+		};
 	};
 });
 
