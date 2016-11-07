@@ -26,10 +26,15 @@ client.on('connected', function (channel) {
 });
 
 client.on('message', function (channel, user, message, self) {
-    if (message === "!test") {
-    	console.log("[DEBUG] Test command werkt")
-		client.say("mstiekema", "This is a command xD")};
-//	else if (message ==="!twitter") {
-//		client.say("Mstiekema", "Merijn his Twitter is https://www.twitter.com/Mstiekema_")};
+    if (message.startsWith("!test")) {
+    	console.log("[DEBUG] Test command is working")
+		client.say("This is a command xD")
+	}
+	else if (message.startsWith("!twitter")) {
+		client.say(channel, "Merijn his Twitter is https://www.twitter.com/Mstiekema_")
+	}
+	else if (message.startsWith("!slap")) {
+		client.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")
+	};
 });
 
