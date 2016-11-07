@@ -35,6 +35,10 @@ client.on('message', function (channel, user, message, self) {
 	}
 	else if (message.startsWith("!slap")) {
 		client.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")
+	}
+	else if (message.startsWith("!quit")) {
+		client.say(channel, "Shutting down Yucibot MrDestructoid")
+		client.disconnect()
 	};
 });
 
