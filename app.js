@@ -1,21 +1,5 @@
 var tmi = require('tmi.js');
-var auth_token = require('./auth_token.js')
-
-var options = {
-	options: {
-		debug: true
-	},
-	connection: {
-		cluster: "aws",
-		reconnect: true
-	},
-	identity: {
-		username: "Yucibot",
-		password: auth_token
-	},
-	channels: ["mstiekema"]
-};
-
+var options = require('./config.js')
 
 var client = new tmi.client(options);
 client.connect();
