@@ -12,4 +12,4 @@ module.exports = {
 		username: "Yucibot", 
 		password: auth_token 
 	}, 
-	channels: ["mstiekema"] }
+	channels: ["#mstiekema"] }
