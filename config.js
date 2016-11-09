@@ -1,7 +1,6 @@
 var auth_token = require('./auth_token.js')
 
 module.exports = {
-
 	options: {
 		debug: true
 	}, 
