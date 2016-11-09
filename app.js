@@ -32,6 +32,9 @@ bot.on('message', function (channel, user, message, self) {
 		else {
 			bot.say(channel, "You are not allowed to turn off the bot OMGScoots")
 		};
+	}
+	else if (message.includes("Alliance") || message.includes("alliance")) {
+		bot.say(channel, "LOK'TAR OGAR, FOR THE HORDE SMOrc")
 	};
 });
 
