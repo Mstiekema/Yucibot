@@ -3,7 +3,6 @@ var options = require('./config.js')
 var bot = new tmi.client(options);
 var fs = require('fs');
 
-
 bot.connect();
 
 bot.on('connected', function (channel) {
@@ -41,6 +40,7 @@ bot.on('message', function (channel, user, message, self) {
 
 // Chat logger
 bot.on('message', function (channel, user, message, self) {
+	// Logging messages	
 	var time = new Date();
 	var day = time.getDate();
 	var month = time.getMonth();
@@ -48,12 +48,18 @@ bot.on('message', function (channel, user, message, self) {
 	var hours = time.getHours();
 	var minutes = time.getMinutes();
 	var seconds = time.getSeconds();
-	var logTime = [day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds + ' | ']
+	var logDate = [day + '-' + month + '-' + year]
+	var logTime = [hours + ':' + minutes + ':' + seconds]
 	var file = './logs/_' + user.username + '.json'
-	var log = [ logTime + user.username + ': ' + message  + '\n' ]
+	
+	// The part that goes into the .json file
+	var log = [ 
+		'{' + 
+		'"date": ' + '"' + logDate + '", ' +
+		'"time": ' + '"' + logTime + '", ' +
+		'"chatter": ' + '"' + user.username + '", ' +
+		'"message": ' + '"' + message + '"'
+		+ '} \n'
+	]
 
-	fs.appendFile(file, log, function(err) {
-	   if(err) {
-	    return console.log(err);
-	    }
-})}); 
+
