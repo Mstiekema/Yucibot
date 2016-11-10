@@ -2,6 +2,7 @@ var tmi = require('tmi.js');
 var options = require('./config.js')
 var bot = new tmi.client(options);
 var fs = require('fs');
+var request = require("request");
 
 bot.connect();
 
@@ -36,6 +37,18 @@ bot.on('message', function (channel, user, message, self) {
 		bot.say(channel, "LOK'TAR OGAR, FOR THE HORDE SMOrc")
 	};
 });
+
+// Overwatch commands
+bot.on('message', function(channel, user, message, self) {
+	if(message.startsWith("!owrank")) {
+		request('https://api.lootbox.eu/pc/eu/' + owUser + '/profile', function (error, response, body) {
+		var rank = JSON.parse(body);
+		bot.say(channel, channel.substring(1) + " is op het moment rank " + rank.data.competitive.rank + " in Overwatch! PogChamp")
+		});
+	};
+
+
+})
 
 
 // Chat logger
