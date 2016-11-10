@@ -1,3 +1,4 @@
 node_modules
-config.js
 package.json
+_*.json
+config.js

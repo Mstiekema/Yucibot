@@ -49,6 +49,9 @@ bot.on('message', function(channel, user, message, self) {
 
 
 })
+process.on('uncaughtException', function(err) {
+    console.log(err)
+});
 
 
 // Chat logger
