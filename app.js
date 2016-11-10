@@ -74,15 +74,52 @@ bot.on('message', function (channel, user, message, self) {
 	var logDate = [day + '-' + month + '-' + year]
 	var logTime = [hours + ':' + minutes + ':' + seconds]
 	var file = './logs/_' + user.username + '.json'
-	
-	// The part that goes into the .json file
+		// The part that goes into the .json file
 	var log = [ 
 		'{' + 
 		'"date": ' + '"' + logDate + '", ' +
 		'"time": ' + '"' + logTime + '", ' +
 		'"chatter": ' + '"' + user.username + '", ' +
 		'"message": ' + '"' + message + '"'
-		+ '} \n'
+		+ '} ]}'
+	]
+	var logNew = [
+	'{"messages": [ \n'
+	+ log
 	]
 
+
+if (fs.existsSync(file)) { 
+	// Replace end of log-file 
+	function removeFromLog() {
+		fs.readFile(file, 'utf8', function(err, data) {
+    		if (err) {
+    		  return console.log(err);
+    		}
+     
+    		var result = data.replace("]}",", \n");
+    		fs.writeFile(file, result, 'utf8', function(err) {
+    		    if (err) {
+    		       return console.log(err);
+    		    }
+    		})
+	});}
+
+	// Write to log file
+	function writeToLog() {
+		fs.appendFile(file, log, function(err){
+			if(err) {		
+				return console.log(err);
+	}});}
+
+	// Call both functions
+	removeFromLog();
+	setTimeout(writeToLog, 10);
+}
+else {
+	fs.appendFile(file, logNew, function(err){
+			if(err) {		
+				return console.log(err);
+	}});
+}
 
