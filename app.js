@@ -123,3 +123,12 @@ else {
 	}});
 }
 
+
+
+	if (message.startsWith("!rq")) {
+		var obj = JSON.parse(fs.readFileSync('./logs/_' + user.username + '.json', 'utf8'));
+		var count = Object.keys(obj.messages).length;
+		var i = Math.floor(Math.random() * count);
+		bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
+	};
+}); 
