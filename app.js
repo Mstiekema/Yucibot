@@ -1,8 +1,11 @@
 var tmi = require('tmi.js');
 var options = require('./config.js')
-var bot = new tmi.client(options);
 var fs = require('fs');
 var request = require("request");
+var Test = require("./commands/test.js")
+var bot = new tmi.client(options);
+var Bottleneck = require("bottleneck");
+var limiter = new Bottleneck(0, 5000, 0);
 
 bot.connect();
 
@@ -115,20 +118,28 @@ if (fs.existsSync(file)) {
 	// Call both functions
 	removeFromLog();
 	setTimeout(writeToLog, 10);
-}
-else {
-	fs.appendFile(file, logNew, function(err){
+	}
+	else {
+		fs.appendFile(file, logNew, function(err){
 			if(err) {		
 				return console.log(err);
-	}});
-}
-
-
+		}});
+	}
 
 	if (message.startsWith("!rq")) {
-		var obj = JSON.parse(fs.readFileSync('./logs/_' + user.username + '.json', 'utf8'));
-		var count = Object.keys(obj.messages).length;
-		var i = Math.floor(Math.random() * count);
-		bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
+
+		function parseJSON() {
+			var obj = JSON.parse(fs.readFileSync('./logs/_' + user.username + '.json', 'utf8'));
+			var count = Object.keys(obj.messages).length;
+			var i = Math.floor(Math.random() * count);
+			bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)	
+		}
+		
+		function giveRQ() {
+			setTimeout(parseJSON, 200)
+		}
+
+
+		limiter.submit(giveRQ);
 	};
 }); 

@@ -1,5 +1,4 @@
 node_modules
-package.json
 _*.json
 config.js
 test.js
