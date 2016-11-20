@@ -10,9 +10,9 @@ var CronJob = require('cron').CronJob;
 
 bot.connect();
 
-bot.on('connected', function (channel) {
-	console.log("Bot connected to channel")
-	bot.action(channel, "Yucibot connected MrDestructoid")
+bot.on('connected', function (channel, user, message, self) {
+	console.log("[DEBUG] Bot connected to channel")
+	bot.action(JSON.stringify(options.channels).slice(2, -2), "Yucibot connected MrDestructoid")
 });
 
 //Basic commands
