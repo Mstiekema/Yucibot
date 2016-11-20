@@ -7,6 +7,7 @@ var Bottleneck = require("bottleneck");
 var limiter = new Bottleneck(0, 5000, 0);
 var CronJob = require('cron').CronJob;
 var channel = JSON.stringify(options.channels).slice(2, -2);
+var mkdirp = require('mkdirp');
 
 bot.connect();
 
@@ -74,7 +75,7 @@ bot.on('message', function (channel, user, message, self) {
 	var seconds = time.getSeconds();
 	var logDate = [day + '-' + month + '-' + year]
 	var logTime = [hours + ':' + minutes + ':' + seconds]
-	var file = './logs/_' + user.username + '.json'
+	var file = './user/_' + user.username + '/logs.json'
 	// The part that goes into the .json file
 	var log = [
 		'{' +
@@ -120,6 +121,8 @@ if (fs.existsSync(file)) {
 	setTimeout(writeToLog, 10);
 	}
 	else {
+		console.log("Test")
+		mkdirp('./user/_' + user.username, function(err) {}); 
 		fs.appendFile(file, logNew, function(err){
 			if(err) {
 				return console.log(err);
@@ -128,7 +131,7 @@ if (fs.existsSync(file)) {
 
 	if (message.startsWith("!rq")) {
 		function parseJSON() {
-			var obj = JSON.parse(fs.readFileSync('./logs/_' + user.username + '.json', 'utf8'));
+			var obj = JSON.parse(fs.readFileSync('./user/_' + user.username + '/logs.json', 'utf8'));
 			var count = Object.keys(obj.messages).length;
 			var i = Math.floor(Math.random() * count);
 			bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
@@ -156,7 +159,7 @@ var job = new CronJob('00 20 16 * * *', function() {
 
 // Point commands
 bot.on('message', function (channel, user, message, self) {
-	var pointStoreFile = './user/_' + user.username + '.json';
+	var pointStoreFile = './user/_' + user.username + '/profile.json';
 	if (message.startsWith("!addpoints")) {
 		if (fs.existsSync(pointStoreFile) && (user.mod === true || user.username == channel.substring(1))) {
 			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
@@ -183,7 +186,7 @@ var updatePoints = new CronJob('*/1 * * * *', function() {
 		var moderators = chatters.chatters.moderators
 		var viewers = normViewers.concat(moderators);
 		for (var i = 0; i < viewers.length; i++) {
-			var profFile = './user/_' + viewers[i] + '.json';
+			var profFile = './user/_' + viewers[i] + '/profile.json';
 			if (fs.existsSync(profFile)) {
 				var file = require(profFile);
 				pointsGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
@@ -198,6 +201,7 @@ var updatePoints = new CronJob('*/1 * * * *', function() {
     					'"lines": 0\n' +
   					'}\n' +
 				"}"
+				mkdirp('./user/_' + viewers[i], function(err) {}); 
 				fs.appendFile(profFile, profNew, function(err){
 					if(err) {
 						return;
