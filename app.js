@@ -2,7 +2,7 @@ var tmi = require('tmi.js');
 var options = require('./config.js')
 var fs = require('fs');
 var request = require("request");
-//var Test = require("./commands/test.js")
+var channel = JSON.stringify(options.channels).slice(2, -2);
 var bot = new tmi.client(options);
 var Bottleneck = require("bottleneck");
 var limiter = new Bottleneck(0, 5000, 0);
@@ -25,9 +25,9 @@ bot.on('message', function (channel, user, message, self) {
 	else if (message.startsWith("!twitter")) {
 		bot.say(channel, "Merijn his Twitter is https://www.twitter.com/Mstiekema_")
 	}
-	// else if (message.startsWith("!slap")) {
-	// 	bot.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")
-	// }
+	else if (message.startsWith("!slap")) {
+		bot.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")
+	}
 	else if (message.startsWith("1quit")) {
 		if (user.mod === true || user.username == channel.substring(1)) {
 			bot.say(channel, "Shutting down Yucibot MrDestructoid")
@@ -57,7 +57,7 @@ bot.on('message', function(channel, user, message, self) {
 				
 		}
 	};
-}	)
+});
 
 process.on('uncaughtException', function(err) {
     console.log(err)
@@ -77,7 +77,7 @@ bot.on('message', function (channel, user, message, self) {
 	var logDate = [day + '-' + month + '-' + year]
 	var logTime = [hours + ':' + minutes + ':' + seconds]
 	var file = './logs/_' + user.username + '.json'
-		// The part that goes into the .json file
+	// The part that goes into the .json file
 	var log = [ 
 		'{' + 
 		'"date": ' + '"' + logDate + '", ' +
@@ -145,10 +145,8 @@ if (fs.existsSync(file)) {
 }); 
 
 // 420 timer 
-var job = new CronJob('00 16 20 * * *', function() {
+var job = new CronJob('00 20 16 * * *', function() {
 	console.log("[DEBUG] 4:20 Timer initiated"),
-	channel = JSON.stringify(options.channels).slice(2, -2);
-	console.log(channel)
 	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
 	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
 	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
@@ -156,6 +154,71 @@ var job = new CronJob('00 16 20 * * *', function() {
 	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip")
 	}, function () {
     console.log("[DEBUG] 4:20 Timer is over")
+  },
+  true
+);
+
+// Point commands
+bot.on('message', function (channel, user, message, self) {
+	var pointStoreFile = './user/_' + user.username + '.json';
+	if (message.startsWith("!addpoints")) {
+		if (fs.existsSync(pointStoreFile) && (user.mod === true || user.username == channel.substring(1))) {
+			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
+			pointsGet.profile.points = pointsGet.profile.points + 1000
+			fs.writeFile(pointStoreFile, JSON.stringify(pointsGet, null, 2))
+			console.log(pointsGet) 
+			bot.say(channel, "Added 1000 points", message.substring(message.indexOf(" ")))
+		}
+	}
+
+	if (message.startsWith("1points")) {
+		if (fs.existsSync(pointStoreFile)) {
+			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
+			bot.say(channel, "You have " + pointsGet.profile.points + " points!")
+		}
+	}
+
+});
+
+// Update points
+var updatePoints = new CronJob('*/1 * * * *', function() {
+	var chatURL = "https://tmi.twitch.tv/group/user/midnan/chatters";
+	
+	request(chatURL, function (error, response, body, channel) {
+		var chatters = JSON.parse(body)
+		var normViewers = chatters.chatters.viewers
+		var moderators = chatters.chatters.moderators
+		var viewers = normViewers.concat(moderators);
+		for (var i = 0; i < viewers.length; i++) {
+			var profFile = './user/_' + viewers[i] + '.json';
+			if (fs.existsSync(profFile)) {
+				var file = require(profFile);
+				pointsGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
+				pointsGet.profile.points = pointsGet.profile.points + 5
+				fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
+			}
+			else {
+				var profNew = 
+				"{\n" + 
+  					'"profile": {\n' + 
+    					'"points": 0,\n' + 
+    					'"lines": 0\n' + 
+  					'}\n' + 
+				"}"
+
+				fs.appendFile(profFile, profNew, function(err){
+					if(err) {		
+						return;
+					}
+				});
+			}
+		}
+	});
+
+	bot.say(channel, "Succesfully added 5 points")
+	console.log("Succesfully added 5 points")
+
+	}, function () {
   },
   true
 );
