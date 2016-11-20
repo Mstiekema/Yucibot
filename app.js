@@ -2,11 +2,11 @@ var tmi = require('tmi.js');
 var options = require('./config.js')
 var fs = require('fs');
 var request = require("request");
-var channel = JSON.stringify(options.channels).slice(2, -2);
 var bot = new tmi.client(options);
 var Bottleneck = require("bottleneck");
 var limiter = new Bottleneck(0, 5000, 0);
 var CronJob = require('cron').CronJob;
+var channel = JSON.stringify(options.channels).slice(2, -2);
 
 bot.connect();
 
@@ -54,7 +54,6 @@ bot.on('message', function(channel, user, message, self) {
 			request('https://api.lootbox.eu/pc/eu/' + userOW[1] + '/profile', function (error, response, body) {
 				var rank = JSON.parse(body);
 				bot.say(channel, userOW[1] + " is op het moment rank " + rank.data.competitive.rank + " in Overwatch! PogChamp")});
-				
 		}
 	};
 });
@@ -63,10 +62,9 @@ process.on('uncaughtException', function(err) {
     console.log(err)
 });
 
-
 // Chat logger
 bot.on('message', function (channel, user, message, self) {
-	// Logging messages	
+	// Logging messages
 	var time = new Date();
 	var day = time.getDate();
 	var month = time.getMonth();
@@ -78,8 +76,8 @@ bot.on('message', function (channel, user, message, self) {
 	var logTime = [hours + ':' + minutes + ':' + seconds]
 	var file = './logs/_' + user.username + '.json'
 	// The part that goes into the .json file
-	var log = [ 
-		'{' + 
+	var log = [
+		'{' +
 		'"date": ' + '"' + logDate + '", ' +
 		'"time": ' + '"' + logTime + '", ' +
 		'"chatter": ' + '"' + user.username + '", ' +
@@ -91,29 +89,31 @@ bot.on('message', function (channel, user, message, self) {
 	+ log
 	]
 
-
-if (fs.existsSync(file)) { 
-	// Replace end of log-file 
+if (fs.existsSync(file)) {
+	// Replace end of log-file
 	function removeFromLog() {
 		fs.readFile(file, 'utf8', function(err, data) {
     		if (err) {
     		  return console.log(err);
     		}
-     
-    		var result = data.replace("]}",", \n");
+
+    		var result = data.replace("]}", ", \n");
     		fs.writeFile(file, result, 'utf8', function(err) {
     		    if (err) {
     		       return console.log(err);
     		    }
     		})
-	});}
+		});
+	}
 
 	// Write to log file
 	function writeToLog() {
 		fs.appendFile(file, log, function(err){
-			if(err) {		
+			if(err) {
 				return console.log(err);
-	}});}
+			}
+		})
+	};
 
 	// Call both functions
 	removeFromLog();
@@ -121,30 +121,26 @@ if (fs.existsSync(file)) {
 	}
 	else {
 		fs.appendFile(file, logNew, function(err){
-			if(err) {		
+			if(err) {
 				return console.log(err);
 		}});
 	}
 
 	if (message.startsWith("!rq")) {
-
 		function parseJSON() {
 			var obj = JSON.parse(fs.readFileSync('./logs/_' + user.username + '.json', 'utf8'));
 			var count = Object.keys(obj.messages).length;
 			var i = Math.floor(Math.random() * count);
-			bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)	
+			bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
 		}
-		
 		function giveRQ() {
 			setTimeout(parseJSON, 200)
 		}
-
-
 		limiter.submit(giveRQ);
 	};
-}); 
+});
 
-// 420 timer 
+// 420 timer
 var job = new CronJob('00 20 16 * * *', function() {
 	console.log("[DEBUG] 4:20 Timer initiated"),
 	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
@@ -166,24 +162,21 @@ bot.on('message', function (channel, user, message, self) {
 			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
 			pointsGet.profile.points = pointsGet.profile.points + 1000
 			fs.writeFile(pointStoreFile, JSON.stringify(pointsGet, null, 2))
-			console.log(pointsGet) 
+			console.log(pointsGet)
 			bot.say(channel, "Added 1000 points", message.substring(message.indexOf(" ")))
 		}
 	}
-
 	if (message.startsWith("1points")) {
 		if (fs.existsSync(pointStoreFile)) {
 			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
 			bot.say(channel, "You have " + pointsGet.profile.points + " points!")
 		}
 	}
-
 });
 
 // Update points
 var updatePoints = new CronJob('*/1 * * * *', function() {
 	var chatURL = "https://tmi.twitch.tv/group/user/midnan/chatters";
-	
 	request(chatURL, function (error, response, body, channel) {
 		var chatters = JSON.parse(body)
 		var normViewers = chatters.chatters.viewers
@@ -198,26 +191,23 @@ var updatePoints = new CronJob('*/1 * * * *', function() {
 				fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
 			}
 			else {
-				var profNew = 
-				"{\n" + 
-  					'"profile": {\n' + 
-    					'"points": 0,\n' + 
-    					'"lines": 0\n' + 
-  					'}\n' + 
+				var profNew =
+				"{\n" +
+  					'"profile": {\n' +
+    					'"points": 0,\n' +
+    					'"lines": 0\n' +
+  					'}\n' +
 				"}"
-
 				fs.appendFile(profFile, profNew, function(err){
-					if(err) {		
+					if(err) {
 						return;
 					}
 				});
 			}
 		}
 	});
-
 	bot.say(channel, "Succesfully added 5 points")
 	console.log("Succesfully added 5 points")
-
 	}, function () {
   },
   true
