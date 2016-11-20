@@ -6,6 +6,7 @@ var request = require("request");
 var bot = new tmi.client(options);
 var Bottleneck = require("bottleneck");
 var limiter = new Bottleneck(0, 5000, 0);
+var CronJob = require('cron').CronJob;
 
 bot.connect();
 
@@ -13,7 +14,6 @@ bot.on('connected', function (channel) {
 	console.log("Bot connected to channel")
 	bot.action(channel, "Yucibot connected MrDestructoid")
 });
-
 
 //Basic commands
 //I have to move this to a /commands map and import them from there
@@ -143,3 +143,19 @@ if (fs.existsSync(file)) {
 		limiter.submit(giveRQ);
 	};
 }); 
+
+// 420 timer 
+var job = new CronJob('00 16 20 * * *', function() {
+	console.log("[DEBUG] 4:20 Timer initiated"),
+	channel = JSON.stringify(options.channels).slice(2, -2);
+	console.log(channel)
+	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
+	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
+	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
+	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
+	bot.say(channel, "CiGrip 420 BLAZE IT CiGrip")
+	}, function () {
+    console.log("[DEBUG] 4:20 Timer is over")
+  },
+  true
+);
