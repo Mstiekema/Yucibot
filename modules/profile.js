@@ -125,7 +125,7 @@ bot.on('message', function (channel, user, message, self) {
 	};
 
 	var pointStoreFile = './user/_' + user.username + '/profile.json';
-	if (message.startsWith("1lines")) {
+	if (message.startsWith("!lines")) {
 		if (fs.existsSync(pointStoreFile)) {
 			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
 			bot.say(channel, "You have written " + pointsGet.profile.lines + " lines in this chat!")
@@ -140,7 +140,7 @@ bot.on('message', function (channel, user, message, self) {
 			bot.say(channel, "Added 1000 points", message.substring(message.indexOf(" ")))
 		}
 	}
-	if (message.startsWith("1points")) {
+	if (message.startsWith("!points")) {
 		if (fs.existsSync(pointStoreFile)) {
 			var pointStoreFile = './user/_' + user.username + '/profile.json';
 			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
