@@ -4,8 +4,6 @@ var request = require("request");
 var bot = new tmi.client(options);
 module.exports.bot = bot;
 var commands = require('./modules/commands.js')
-var timers = require('./modules/timers.js')
-var profile = require('./modules/profile.js')
 
 var CronJob = require('cron').CronJob;
 var mkdirp = require('mkdirp');
@@ -22,11 +20,6 @@ process.on('uncaughtException', function(err) {
 });
 
 commands.commands();
-timers.fourtwenty();
-timers.test();
-//timers.points();
-profile.updateProfile();
-profile.fetchProfile();
 
 var channel = JSON.stringify(options.channels).slice(2, -2);
 var updatePoints = new CronJob('*/1 * * * *', function() {
