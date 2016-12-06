@@ -13,6 +13,9 @@
   "author": "Mstiekema",
   "license": "ISC",
   "dependencies": {
+    "bottleneck": "^1.15.0",
+    "cron": "^1.1.1",
+    "mkdirp": "^0.5.1",
     "tmi.js": "^1.1.2"
   },
   "devDependencies": {
