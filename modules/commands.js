@@ -12,7 +12,7 @@ exp.commands = function() {
 	overwatch.owCommands();
 	points.updatePoints();
 	timers.fourtwenty();
-	timers.test();
+	timers.twitter();
 	profile.updateProfile();
 	profile.fetchProfile();
 };

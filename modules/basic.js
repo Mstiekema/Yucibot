@@ -16,7 +16,7 @@ module.exports = {
 			   	console.log('Did the thing')
 			}
 			else if (message.startsWith("!twitter")) {
-				bot.say(channel, "Merijn his Twitter is https://www.twitter.com/Mstiekema_")
+				bot.say(channel, channel.substring(1) + "'s Twitter is https://www.twitter.com/" + options.identity.twitter)
 			}
 			else if (message.startsWith("!slap")) {
 				bot.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")

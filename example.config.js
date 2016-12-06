@@ -12,6 +12,7 @@ module.exports = {
 		// You can get your oauth key from https://twitchapps.com/tmi/
 		owUser: 'Battletag-1234',
 		// Use a - instead of a # in your battle tag
+		twitter: 'username',
 		ytApiKey: 'apikey',
 		// Fill in your API key, get it with this tutorial: bit.ly/getYTapikey
 		clientId: 'id',
