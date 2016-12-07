@@ -45,6 +45,8 @@ bot.on('message', function (channel, user, message, self) {
 	   		    }
 	   		})
 		});
+		var message = message.replace(/\\\\/, "");
+		var message = message.replace(/\\/, "");
 		fs.appendFileSync(file, '{"date": "' + logDate + '", "time": "' + logTime + '", "chatter": "' + user.username + '", "message": "' + message  +'"}]}');
 	}
 	else {
