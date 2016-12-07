@@ -112,14 +112,11 @@ bot.on('message', function (channel, user, message, self) {
 
 	// Get randomline
 	if (message.startsWith("!rq")) {
-		function parseJSON() {
+		function giveRQ() {
 			var obj = JSON.parse(fs.readFileSync('./user/_' + user.username + '/logs.json', 'utf8'));
 			var count = Object.keys(obj.messages).length;
 			var i = Math.floor(Math.random() * count);
 			bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
-		}
-		function giveRQ() {
-			setTimeout(parseJSON, 200)
 		}
 		limiter.submit(giveRQ);
 	};
