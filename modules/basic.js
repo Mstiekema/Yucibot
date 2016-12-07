@@ -18,6 +18,9 @@ module.exports = {
 			else if (message.startsWith("!twitter")) {
 				bot.say(channel, channel.substring(1) + "'s Twitter is https://www.twitter.com/" + options.identity.twitter)
 			}
+			else if (message.startsWith("!repo") || message.startsWith("!github")) {
+				bot.say(channel,"You can find the GitHub repo for the bot over at https://github.com/Mstiekema/Yucibot")
+			}
 			else if (message.startsWith("!slap")) {
 				bot.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")
 			}
