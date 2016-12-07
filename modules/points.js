@@ -69,65 +69,105 @@ module.exports = {
 	pointCommands: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!roulette")) {
-				function roulette() {
-					var profFile = './user/_' + user.username + '/profile.json';
-					var y = message.split(' ');
-					var bet = y[1]
+				var profFile = './user/_' + user.username + '/profile.json';
+				var y = message.split(' ');
+				var bet = y[1]
 
 					if(fs.existsSync(profFile)) {
-						var pointsGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
-						var oldPoints = pointsGet.profile.points
-						if(!isNaN(bet)) {
-							if(oldPoints >= bet) {
-								var x = Math.random() * 100
-								if (x > 50) {									
-									var q = parseInt(oldPoints)
-									var r = parseInt(bet)
-									var newPoints = q + r
-									pointsGet.profile.points = newPoints
-									fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
-									bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points! You now have " + newPoints + " points")
-								}
-								else {
-									var q = parseInt(oldPoints)
-									var r = parseInt(bet)
-									var newPoints = q - r
-									pointsGet.profile.points = newPoints
-									fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
-									bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points! You now have " + newPoints + " points")
-								}								
-							}
-							else {
-								bot.say(channel, user.username + ", You can't do roulette's with more points than you have")
-							}
-						}
-						else if(bet === "all" || bet === "allin") {
+					var pointsGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
+					var oldPoints = pointsGet.profile.points
+					if(!isNaN(bet)) {
+						if(oldPoints >= bet) {
 							var x = Math.random() * 100
 							if (x > 50) {									
 								var q = parseInt(oldPoints)
-								var newPoints = q + q
+								var r = parseInt(bet)
+								var newPoints = q + r
 								pointsGet.profile.points = newPoints
 								fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
 								bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points! You now have " + newPoints + " points")
 							}
 							else {
 								var q = parseInt(oldPoints)
-								var newPoints = q - q
+								var r = parseInt(bet)
+								var newPoints = q - r
 								pointsGet.profile.points = newPoints
 								fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
-								bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points! You now have 0 points")
-							}	
+								bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points! You now have " + newPoints + " points")
+							}								
 						}
 						else {
-							bot.say(channel, "I'm sorry, but that's not a valid roulette command " + user.username)
+							bot.say(channel, user.username + ", You can't do roulette's with more points than you have")
 						}
 					}
+					else if(bet === "all" || bet === "allin") {
+						var x = Math.random() * 100
+						if (x > 50) {									
+							var q = parseInt(oldPoints)
+							var newPoints = q + q
+							pointsGet.profile.points = newPoints
+							fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
+							bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points! You now have " + newPoints + " points")
+						}
+						else {
+							var q = parseInt(oldPoints)
+							var newPoints = q - q
+							pointsGet.profile.points = newPoints
+							fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
+							bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points! You now have 0 points")
+						}	
+					}
 					else {
-						console.log("[ERROR] User not found for roulette")
-					}				
+						bot.say(channel, "I'm sorry, but that's not a valid roulette command " + user.username)
+					}
 				}
+				else {
+					console.log("[ERROR] User not found for roulette")
+				}				
 			}	
 
+			if (message.startsWith("!slot")) {
+				var profFile = './user/_' + user.username + '/profile.json';
+				var emoteFile = JSON.parse(fs.readFileSync('./static/json/emotes.json', 'utf8'));
+				var emoteCount = 4
+				var setCount = 3
+				var x = (parseInt([Math.floor(Math.random() * setCount)]) + 1).toString();
+				var emotes = emoteFile.sets[x]
+				var a = emotes[Math.floor(Math.random() * emoteCount)]
+				var b = emotes[Math.floor(Math.random() * emoteCount)]
+				var c = emotes[Math.floor(Math.random() * emoteCount)]
+
+				if (fs.existsSync(profFile)) {
+					var pointsGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
+					var oldPoints = pointsGet.profile.points
+
+					if (a == b && b == c) {
+						var q = parseInt(oldPoints)
+						var newPoints = q + 1000
+						pointsGet.profile.points = newPoints
+						fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
+						bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! They are the same, you win 1000 points! PogChamp")
+					}
+					else if (a == b || b == c){
+						var q = parseInt(oldPoints)
+						var newPoints = q + 100
+						pointsGet.profile.points = newPoints
+						fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))					
+						bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! So close, but yet so far FeelsBadMan You get 100 points")
+					}
+					else if (a == c) {
+						var q = parseInt(oldPoints)
+						var newPoints = q + 10
+						pointsGet.profile.points = newPoints
+						fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))					
+						bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! It's something SeemsGood You get 10 points")
+					}
+					else {
+						bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! Not Even close DansGame")
+					}
+				}
+				else {}
+			}			
 		})
 	}
 }
