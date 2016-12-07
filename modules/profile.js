@@ -4,7 +4,6 @@ var connect = require('../app.js')
 var bot = connect.bot
 var fs = require('fs');
 var Bottleneck = require("bottleneck");
-var limiter = new Bottleneck(0, 5000, 0);
 var CronJob = require('cron').CronJob;
 var request = require("request");
 var mkdirp = require('mkdirp');
@@ -60,6 +59,10 @@ bot.on('message', function (channel, user, message, self) {
 
 fetchProfile: function() {
 
+var rqCd = new Bottleneck(0, 5000, 0);
+var lineCd = new Bottleneck(0, 5000, 0);
+var pointCd = new Bottleneck(0, 5000, 0);
+
 bot.on('message', function (channel, user, message, self) {
 	if (message.startsWith("!rq")) {
 		function giveRQ() {
@@ -68,16 +71,19 @@ bot.on('message', function (channel, user, message, self) {
 			var i = Math.floor(Math.random() * count);
 			bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
 		}
-		function doComm() {limiter.submit(giveRQ)}
+		function doComm() {rqCd.submit(giveRQ)}
 		setTimeout(doComm, 100)
 	};
 
 	var pointStoreFile = './user/_' + user.username + '/profile.json';
 	if (message.startsWith("!lines")) {
-		if (fs.existsSync(pointStoreFile)) {
-			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
-			bot.say(channel, "You have written " + pointsGet.profile.lines + " lines in this chat!")
+		function giveLines() {
+			if (fs.existsSync(pointStoreFile)) {
+				pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
+				bot.whisper(user.username, "You have written " + pointsGet.profile.lines + " lines in this chat!")
+			}
 		}
+		lineCd.submit(giveLines)
 	}
 	if (message.startsWith("!addpoints")) {
 		if (fs.existsSync(pointStoreFile) && (user.mod === true || user.username == channel.substring(1))) {
@@ -85,14 +91,14 @@ bot.on('message', function (channel, user, message, self) {
 			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
 			pointsGet.profile.points = pointsGet.profile.points + 1000
 			fs.writeFile(pointStoreFile, JSON.stringify(pointsGet, null, 2))
-			bot.say(channel, "Added 1000 points", message.substring(message.indexOf(" ")))
+			bot.whisper(user.username, "Added 1000 points", message.substring(message.indexOf(" ")))
 		}
 	}
-	if (message.startsWith("!points")) {
+	if(message.startsWith("!points")) {
 		if (fs.existsSync(pointStoreFile)) {
 			var pointStoreFile = './user/_' + user.username + '/profile.json';
 			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
-			bot.say(channel, "You have " + pointsGet.profile.points + " points!")
+			bot.whisper(user.username, "You have " + pointsGet.profile.points + " points!")
 		}
 	}
 });
