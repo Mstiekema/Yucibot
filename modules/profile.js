@@ -14,10 +14,8 @@ module.exports = {
 updateProfile: function () {
 
 bot.on('message', function (channel, user, message, self) {
-
-var file = './user/_' + user.username + '/logs.json'
-var profFile = './user/_' + user.username + '/profile.json'
-
+	var file = './user/_' + user.username + '/logs.json'
+	var profFile = './user/_' + user.username + '/profile.json'
 	var time = new Date();
 	var day = time.getDate();
 	var month = time.getMonth();
@@ -25,92 +23,42 @@ var profFile = './user/_' + user.username + '/profile.json'
 	var hours = time.getHours();
 	var minutes = time.getMinutes();
 	var seconds = time.getSeconds();
-	var logDate = [day + '-' + month + '-' + year]
-	var logTime = [hours + ':' + minutes + ':' + seconds]
-	var log = [
-		'{' +
-		'"date": ' + '"' + logDate + '", ' +
-		'"time": ' + '"' + logTime + '", ' +
-		'"chatter": ' + '"' + user.username + '", ' +
-		'"message": ' + '"' + message + '"'
-		+ '} ]}'
-	]
-	var logNew = [
-	'{"messages": [ \n'
-	+ log
-	]
-	var profNew = [
-		"{\n" +
-			'"profile": {\n' +
-			'"points": 0,\n' +
-			'"lines": 0\n' +
-		'}\n' +
-		"}"
-		]
+	var logDate = day + '-' + month + '-' + year
+	var logTime = hours + ':' + minutes + ':' + seconds
+	var log = '{"date": "' + logDate + '", "time": "' + logTime + '", "chatter": "' + user.username + '", "message": "' + message  +'"}]}'
+	var logNew = '{"messages": [ \n' + log
+	var profNew = '{\n "profile": {\n "points": 0,\n "lines": 0\n }\n}'
 
-if (fs.existsSync(file || profFile)) {
+	if (fs.existsSync(file || profFile)) {
+		addLine = function() {
+			linesGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
+			linesGet.profile.lines = linesGet.profile.lines + 1
+			fs.writeFile(profFile, JSON.stringify(linesGet, null, 2))
+		}
+		setTimeout(addLine, 100)
 
-addLine = function() {
-	linesGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
-	linesGet.profile.lines = linesGet.profile.lines + 1
-	fs.writeFile(profFile, JSON.stringify(linesGet, null, 2))
-}
-
-setTimeout(addLine, 100)
-
-	// Replace end of log-file
-	function removeFromLog() {
-		fs.readFile(file, 'utf8', function(err, data) {
-    		if (err) {
-    		  return
-    		}
-
-    		var result = data.replace("]}", ", \n");
-    		fs.writeFile(file, result, 'utf8', function(err) {
-    		    if (err) {
-    		       return
-    		    }
-    		})
+		fs.readFile(file, 'utf8', function(err, data) {if (err) {return}
+	   		var result = data.replace("]}", ",\n");
+	   		fs.writeFile(file, result, 'utf8', function(err) {
+	   		    if (err) {
+	   		       return
+	   		    }
+	   		})
 		});
-	}
-
-	// Write to log file
-	function writeToLog() {
-		fs.appendFile(file, log, function(err){
-			if(err) {
-				return
-			}
-		})
-	};
-
-	// Call both functions
-	removeFromLog();
-	setTimeout(writeToLog, 100);
+		fs.appendFileSync(file, '{"date": "' + logDate + '", "time": "' + logTime + '", "chatter": "' + user.username + '", "message": "' + message  +'"}]}');
 	}
 	else {
 		mkdirp('./user/_' + user.username, function(err) {}); 
-		fs.appendFile(profFile, profNew, function(err){
-			if(err) {
-				return;
-			}
-		});
+		fs.writeFileSync(profFile, profNew)
 		mkdirp('./user/_' + user.username, function(err) {}); 
-		fs.appendFile(file, logNew, function(err){
-			if(err) {
-				return
-		}});
+		fs.appendFileSync(file, logNew)
 	}
-}
-
-
-);
+});
 },
 
 fetchProfile: function() {
 
 bot.on('message', function (channel, user, message, self) {
-
-	// Get randomline
 	if (message.startsWith("!rq")) {
 		function giveRQ() {
 			var obj = JSON.parse(fs.readFileSync('./user/_' + user.username + '/logs.json', 'utf8'));
@@ -118,7 +66,8 @@ bot.on('message', function (channel, user, message, self) {
 			var i = Math.floor(Math.random() * count);
 			bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
 		}
-		limiter.submit(giveRQ);
+		function doComm() {limiter.submit(giveRQ)}
+		setTimeout(doComm, 100)
 	};
 
 	var pointStoreFile = './user/_' + user.username + '/profile.json';
