@@ -11,6 +11,7 @@ exp.commands = function() {
 	basic.basicCommands();
 	overwatch.owCommands();
 	points.updatePoints();
+	points.pointCommands();
 	timers.fourtwenty();
 	timers.twitter();
 	profile.updateProfile();
