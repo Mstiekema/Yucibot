@@ -48,7 +48,7 @@ module.exports = {
 			};
 
 			if(message.startsWith("!viewers")) {
-				function callback(error, response, body) {
+				function viewers(error, response, body) {
 				  if (!error && response.statusCode == 200) {
 				    var info = JSON.parse(body).streams[0];
 				    if(info != undefined) {
@@ -59,10 +59,10 @@ module.exports = {
 				    }
 				  }
 				}
-				request(info, callback)
+				request(info, viewers)
 			}
-			if(message.startsWith("!game")) {
-				function callback(error, response, body) {
+			else if(message.startsWith("!game")) {
+				function game(error, response, body) {
 				  if (!error && response.statusCode == 200) {
 				    var info = JSON.parse(body).streams[0];
 				    if(info != undefined) {
@@ -74,10 +74,10 @@ module.exports = {
 				    }
 				  }
 				}
-				request(info, callback)
+				request(info, game)
 			}
-			if(message.startsWith("!title")) {
-				function callback(error, response, body) {
+			else if(message.startsWith("!title")) {
+				function title(error, response, body) {
 				  if (!error && response.statusCode == 200) {
 				    var info = JSON.parse(body).streams[0];
 				    if(info != undefined) {
@@ -89,7 +89,7 @@ module.exports = {
 				    }
 				  }
 				}
-				request(info, callback)
+				request(info, title)
 			}
 		})
 	}
