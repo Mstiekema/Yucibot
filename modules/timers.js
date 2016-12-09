@@ -1,11 +1,11 @@
-var tmi = require('tmi.js');
+var tmi 	= require('tmi.js');
 var options = require('../config.js')
 var connect = require('../app.js')
-var bot = connect.bot
+var bot 	= connect.bot
 var CronJob = require('cron').CronJob;
 var request = require("request");
-var mkdirp = require('mkdirp');
-var fs = require('fs');
+var mkdirp 	= require('mkdirp');
+var fs 		= require('fs');
 
 module.exports = {
 

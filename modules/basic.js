@@ -1,10 +1,10 @@
-var tmi = require('tmi.js');
-var options = require('../config.js')
-var connect = require('../app.js')
-var bot = connect.bot
-var options = require('../config.js')
-var request = require("request");
-var clientID = options.identity.clientId
+var tmi 		= require('tmi.js');
+var options 	= require('../config.js')
+var connect 	= require('../app.js')
+var bot 		= connect.bot
+var options 	= require('../config.js')
+var request 	= require("request");
+var clientID 	= options.identity.clientId
 
 module.exports = {
 

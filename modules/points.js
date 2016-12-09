@@ -1,12 +1,12 @@
-var tmi = require('tmi.js');
-var options = require('../config.js')
-var connect = require('../app.js')
-var bot = connect.bot
-var request = require("request");
-var clientID = options.identity.clientId
-var CronJob = require('cron').CronJob;
-var mkdirp = require('mkdirp');
-var fs = require('fs');
+var tmi 		= require('tmi.js');
+var options		= require('../config.js')
+var connect 	= require('../app.js')
+var bot 		= connect.bot
+var request 	= require("request");
+var clientID 	= options.identity.clientId
+var CronJob 	= require('cron').CronJob;
+var mkdirp 		= require('mkdirp');
+var fs 			= require('fs');
 
 module.exports = {
 

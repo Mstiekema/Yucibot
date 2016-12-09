@@ -1,7 +1,7 @@
-var tmi = require('tmi.js');
+var tmi 	= require('tmi.js');
 var options = require('../config.js')
 var connect = require('../app.js')
-var bot = connect.bot
+var bot 	= connect.bot
 var request = require("request");
 
 module.exports = {

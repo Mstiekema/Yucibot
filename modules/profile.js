@@ -1,12 +1,12 @@
-var tmi = require('tmi.js');
-var options = require('../config.js')
-var connect = require('../app.js')
-var bot = connect.bot
-var fs = require('fs');
-var Bottleneck = require("bottleneck");
-var CronJob = require('cron').CronJob;
-var request = require("request");
-var mkdirp = require('mkdirp');
+var tmi 		= require('tmi.js');
+var options 	= require('../config.js')
+var connect 	= require('../app.js')
+var bot 		= connect.bot
+var fs 			= require('fs');
+var Bottleneck 	= require("bottleneck");
+var CronJob 	= require('cron').CronJob;
+var request 	= require("request");
+var mkdirp 		= require('mkdirp');
 
 module.exports = {
 
