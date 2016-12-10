@@ -3,6 +3,7 @@ var overwatch 	= require('./ow.js');
 var timers 		= require('./timers.js')
 var profile 	= require('./profile.js')
 var points 		= require('./points.js')
+var songrequest	= require('./songrequest.js')
 
 var exp = module.exports = {}
 
@@ -16,4 +17,5 @@ exp.commands = function() {
 	timers.twitter();
 	profile.updateProfile();
 	profile.fetchProfile();
+	songrequest.getSR();
 };

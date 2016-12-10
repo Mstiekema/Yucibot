@@ -14,49 +14,6 @@ function removeShit() {
 	fs.writeFile(songlistshit, result, 'utf8', function(err) {if (err) {return}})});
 }
 
-requestVideoInfo(0)
-
-function requestVideoInfo(count) {
-  if(count < allSongs.length) {
-    ytId = allSongs[count]
-    request("https://www.googleapis.com/youtube/v3/videos?id=" + ytId + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status", function (error, response, body) {
-      var sd = JSON.parse(body);
-      var xd = sd.items[0].snippet.title
-      var aus = sd.items[0].snippet
-      name = aus.title
-      tn = aus.thumbnails.default.url
-      var data = '\n{"name": "' + name + '", "user": "Mstiekema", "img": "' + tn + '"}]'
-      fs.appendFile(songlistshit, data, 'utf8', function(err) {
-        if (err)
-          console.log('Error', e);
-        else
-          requestVideoInfo(++count);
-      // start to request the next video into once this one is done
-      })
-    })
-    removeShit();
-  }
-  else if(count - 1 == allSongs.length) {
-    ytId = allSongs[count]
-    request("https://www.googleapis.com/youtube/v3/videos?id=" + ytId + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status", function (error, response, body) {
-      var sd = JSON.parse(body);
-      var xd = sd.items[0].snippet.title
-      var aus = sd.items[0].snippet
-      name = aus.title
-      tn = aus.thumbnails.default.url
-      var data = '\n{"name": "' + name + '", "user": "Mstiekema", "img": "' + tn + '"}]'
-      fs.appendFile(songlistshit, data, 'utf8', function(err) {
-        if (err)
-          console.log('Error', e);
-        else
-          requestVideoInfo(++count);
-      // start to request the next video into once this one is done
-      })
-    })
-  }
-}
-
-
 app.use(express.static(path.join(__dirname, 'static')));
 
 app.get('/', function(req, res) {
