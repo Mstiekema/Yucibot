@@ -2,9 +2,14 @@ var tag 			= document.createElement('script');
 tag.src 			= "https://www.youtube.com/iframe_api";
 var firstScriptTag 	= document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+var time = new Date();
+var day = time.getDate();
+var month = time.getMonth() + 1;
+var year = time.getFullYear();
+var file = '../json/songlists/songlist' + year + "-" + month + "-" + day + ".json";
 
 function getVideos(count) {
-	$.getJSON('../json/songlistinfo.json', function(json) {
+	$.getJSON(file, function(json) {
 		if(count < json.length) {
 			xd = json[count].id
 			if ($.inArray(xd, allVideos) != true) {
@@ -63,7 +68,7 @@ function nextVideo() {
 }		
 
 function getSongName() {
-	$.getJSON('../json/songlistinfo.json', function(json) {
+	$.getJSON(file, function(json) {
 		xd = json[i].name 
 		$(".videoTitle").html(function() {
 			return "Current song: " + xd;
@@ -88,10 +93,9 @@ function onPlayerStateChange(event) {
 var yucibot = angular.module('yucibot',[]);
 yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 	$scope.reload = function() {
-	$http.get('../json/songlistinfo.json')
+	$http.get(file)
 	.then(response => {
 	    if (!response.data) return $log.error('No result was found')
-	    $scope.allSongs = response.data
 	    $scope.allSongs = response.data.slice(i)
 	})}
 	$scope.reload()

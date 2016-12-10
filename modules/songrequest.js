@@ -7,13 +7,16 @@ var request 	= require("request");
 var fs 			= require('fs');
 
 module.exports = {
-
 	getSR: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!sr")) {
-				songlink = message.split(" ")
-				console.log(songlink[1])
+				var time = new Date();
+				var day = time.getDate();
+				var month = time.getMonth() + 1;
+				var year = time.getFullYear();
+				var file = './static/json/songlists/songlist' + day + "_" + month + "_" + year + ".json";
 				var match = String(songlink).match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
+				var songlink = message.split(" ")
 				if(match != null) {
 					id = match[1]
 					var url = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status"
@@ -28,29 +31,32 @@ module.exports = {
 						thumb = base.snippet.thumbnails.default.url
 						user = user.username
 						// length = base.contentDetails.duration
-						var file = './static/json/songlistinfo.json'
 						function newLine () {
-							var file = './static/json/songlistinfo.json'
 							var newLine = ['{"name": "' + title + '", "user": "' + user + '", "id": "' + id + '", "img": "' + thumb + '"}]']
 							fs.appendFileSync(file, newLine)
 						}
-						fs.readFile(file, 'utf8', function(err, data) {if (err) {return}
-							if (data.includes(title)) {
-								bot.whisper(user, "This song has already been requested :/")
-							} else {
-								var replace = data.replace("}]", "},\n");
-	   							fs.writeFile(file, replace)
-	   							setTimeout(newLine, 10)
-	   							bot.whisper(user, "Succesfully added your song to the queue! :D")
-	   						}
-						});
-					});
-				}
+						if (fs.existsSync(file)) {
+							fs.readFile(file, 'utf8', function(err, data) {if (err) {return}
+								if (data.includes(title)) {
+									bot.whisper(user, "This song has already been requested :/")
+								} else {
+									var replace = data.replace("}]", "},\n");
+		   							fs.writeFile(file, replace)
+		   							setTimeout(newLine, 10)
+		   							bot.whisper(user, "Succesfully added your song to the queue! :D")
+		   						}
+							});
+						}
+						else {
+							fs.writeFile(file, '[')
+							setTimeout(newLine, 10)
+							bot.whisper(user, "Succesfully added your song to the queue! :D")
+						}
+					}
+				)}
 				else {
 					bot.whisper(user.username, "That's not a valid YT video :/")				
 				}
-
-
 			}
 		});
 	}

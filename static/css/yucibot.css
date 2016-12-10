@@ -4,6 +4,12 @@ body {
     overflow: hidden;
 }
 
+#selectDate {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
 .button {
     background-color: #248d8a;
     text-align: center;
@@ -65,6 +71,38 @@ body {
     background-color: #22292b;
     padding: 0px 20px 20px 20px;
     overflow:auto;
+}
+
+.songQueueHistory {
+    position: absolute;
+    padding-top: 20px;
+    font-size: 16px;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    height: 800px;
+    background-color: #22292b;
+    padding: 0px 20px 20px 20px;
+    overflow:auto;
+}
+
+#ytlink {
+    color: lightblue;
+}
+
+#songItemHistory {
+    border-style: solid;
+    border-width: 1px;
+    background-color: #2f3a3c;
+    height: 90px;
+    top: 20px;
+    padding-right: 20px;
+}
+
+#songItemInfoHistory {
+    position: relative;
+    padding-left: 140px;
+    bottom: 70px;
 }
 
 #songItem {

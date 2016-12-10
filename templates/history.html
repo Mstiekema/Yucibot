@@ -1,0 +1,37 @@
+<html lang="en" ng-app="yucibot" >
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/yucibot.css">
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="../js/menu.js"></script>
+<script>	
+function change() {
+    var x = document.getElementById("myDate");
+    var currentVal = x.value;
+    window.location.href = "/history/" + currentVal;
+}
+</script>
+<title>Yucibot</title>
+</head>
+<body>
+<div class="logo"></div>
+<div class="top"><h1>Songlist history</h1></div>
+<div ng-include="'../html/menu.htm'"></div>
+<div class="search"><input id="searchBar" type="text"></div>
+<div class="main">
+<div class="songQueueHistory" ng-app="yucibot" ng-controller="songQueueHistory">
+	<div id="songlistSelector">
+	<h2>Songlist of {{date}}</h2>
+	<div id="selectDate"><label>Select stream date</label>
+	<input type="date" id="myDate" onchange="change()" value="{{date}}"></div>
+	<div id="songItemHistory" ng-repeat="x in allSongs">
+	
+	<div><img ng-src={{x.img}}></div><div id ="songItemInfoHistory"> [{{ $index + 1 }}] {{ x.name }} requested by: {{ x.user }} 
+	<a ng-href="https://www.youtube.com/watch?v={{ x.id }}" target="_blank" id="ytlink">YouTube link</a></div>
+	</div>
+	</div>
+</div>
+<script type="text/javascript" src="../js/yucisite.js"></script>
+<script type="text/javascript" src="../js/mainController.js"></script>
+<script type="text/javascript" src="../js/songlisthistory.js"></script>
+</body>
