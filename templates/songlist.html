@@ -15,7 +15,7 @@
 <div class="songQueue" ng-app="yucibot" ng-controller="songQueue">
 <h2>Songlist queue</h2>
 <div id="songItem" ng-repeat="x in allSongs">
-	<div><img src="{{ x.img }}"></div><div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.name }} requested by: {{ x.user }}</div>
+	<div><img ng-src={{x.img}}></div><div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.name }} requested by: {{ x.user }}</div>
 </div>
 </div>
 
