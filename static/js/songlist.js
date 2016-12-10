@@ -92,6 +92,7 @@ yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 	.then(response => {
 	    if (!response.data) return $log.error('No result was found')
 	    $scope.allSongs = response.data
+	    $scope.allSongs = response.data.slice(i)
 	})}
 	$scope.reload()
 	$interval($scope.reload, 5000);
