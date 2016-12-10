@@ -4,7 +4,6 @@ var path          = require('path');
 var request       = require("request");
 var fs            = require('fs');
 var songlistshit  = './static/json/songlistinfo.json'
-var allSongs      = require('./static/json/songlist.json')
 var options       = require('./config.js')
 var ytApiKey      = options.identity.ytApiKey
 

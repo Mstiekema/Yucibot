@@ -29,16 +29,21 @@ module.exports = {
 						user = user.username
 						// length = base.contentDetails.duration
 						var file = './static/json/songlistinfo.json'
-						fs.readFile(file, 'utf8', function(err, data) {if (err) {return}
-	   						var replace = data.replace("}]", "},\n");
-	   						fs.writeFile(file, replace)
-						});
 						function newLine () {
 							var file = './static/json/songlistinfo.json'
 							var newLine = ['{"name": "' + title + '", "user": "' + user + '", "id": "' + id + '", "img": "' + thumb + '"}]']
 							fs.appendFileSync(file, newLine)
 						}
-						setTimeout(newLine, 10)
+						fs.readFile(file, 'utf8', function(err, data) {if (err) {return}
+							if (data.includes(title)) {
+								bot.whisper(user, "This song has already been requested :/")
+							} else {
+								var replace = data.replace("}]", "},\n");
+	   							fs.writeFile(file, replace)
+	   							setTimeout(newLine, 10)
+	   							bot.whisper(user, "Succesfully added your song to the queue! :D")
+	   						}
+						});
 					});
 				}
 				else {
