@@ -1,6 +1,6 @@
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
+var tag 			= document.createElement('script');
+tag.src 			= "https://www.youtube.com/iframe_api";
+var firstScriptTag 	= document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 function getVideos(count) {
@@ -63,9 +63,8 @@ function nextVideo() {
 }		
 
 function getSongName() {
-	var url = "https://www.googleapis.com/youtube/v3/videos?id=" + videos[i] + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status"
-	var meh = $.getJSON(url, function(json) {
-		xd = json.items[0].snippet.title
+	$.getJSON('../json/songlistinfo.json', function(json) {
+		xd = json[i].name 
 		$(".videoTitle").html(function() {
 			return "Current song: " + xd;
 		});
@@ -74,6 +73,7 @@ function getSongName() {
 
 function onPlayerStateChange(event) {
 	if (event.data == YT.PlayerState.ENDED) {
+		i++
 		nextVideo();
 		event.target.playVideo();
 		getVideos(0)
