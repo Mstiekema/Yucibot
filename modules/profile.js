@@ -10,96 +10,97 @@ var mkdirp 		= require('mkdirp');
 
 module.exports = {
 
-updateProfile: function () {
+	updateProfile: function () {
 
-bot.on('message', function (channel, user, message, self) {
-	var file = './user/_' + user.username + '/logs.json'
-	var profFile = './user/_' + user.username + '/profile.json'
-	var time = new Date();
-	var day = time.getDate();
-	var month = time.getMonth();
-	var year = time.getFullYear();
-	var hours = time.getHours();
-	var minutes = time.getMinutes();
-	var seconds = time.getSeconds();
-	var logDate = day + '-' + month + '-' + year
-	var logTime = hours + ':' + minutes + ':' + seconds
-	var log = '{"date": "' + logDate + '", "time": "' + logTime + '", "chatter": "' + user.username + '", "message": "' + message  +'"}]}'
-	var logNew = '{"messages": [ \n' + log
-	var profNew = '{\n "profile": {\n "points": 0,\n "lines": 0\n }\n}'
+		bot.on('message', function (channel, user, message, self) {
+			var file = './user/_' + user.username + '/logs.json'
+			var profFile = './user/_' + user.username + '/profile.json'
+			var time = new Date();
+			var day = time.getDate();
+			var month = time.getMonth();
+			var year = time.getFullYear();
+			var hours = time.getHours();
+			var minutes = time.getMinutes();
+			var seconds = time.getSeconds();
+			var logDate = day + '-' + month + '-' + year
+			var logTime = hours + ':' + minutes + ':' + seconds
+			var log = '{"date": "' + logDate + '", "time": "' + logTime + '", "chatter": "' + user.username + '", "message": "' + message  +'"}]}'
+			var logNew = '{"messages": [ \n' + log
+			var profNew = '{\n "profile": {\n "points": 0,\n "lines": 0\n }\n}'
 
-	if (fs.existsSync(file || profFile)) {
-		addLine = function() {
-			linesGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
-			linesGet.profile.lines = linesGet.profile.lines + 1
-			fs.writeFile(profFile, JSON.stringify(linesGet, null, 2))
-		}
-		setTimeout(addLine, 100)
+			if (fs.existsSync(file || profFile)) {
+				addLine = function() {
+					linesGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
+					linesGet.profile.lines = linesGet.profile.lines + 1
+					fs.writeFile(profFile, JSON.stringify(linesGet, null, 2))
+				}
+				setTimeout(addLine, 100)
 
-		fs.readFile(file, 'utf8', function(err, data) {if (err) {return}
-	   		var result = data.replace("]}", ",\n");
-	   		fs.writeFile(file, result, 'utf8', function(err) {
-	   		    if (err) {
-	   		       return
-	   		    }
-	   		})
-		});
-		var message = message.replace(/\\\\/, "");
-		var message = message.replace(/\\/, "");
-		fs.appendFileSync(file, '{"date": "' + logDate + '", "time": "' + logTime + '", "chatter": "' + user.username + '", "message": "' + message  +'"}]}');
-	}
-	else {
-		mkdirp('./user/_' + user.username, function(err) {}); 
-		fs.writeFileSync(profFile, profNew)
-		mkdirp('./user/_' + user.username, function(err) {}); 
-		fs.appendFileSync(file, logNew)
-	}
-});
-},
-
-fetchProfile: function() {
-
-var rqCd = new Bottleneck(0, 5000, 0);
-var lineCd = new Bottleneck(0, 5000, 0);
-var pointCd = new Bottleneck(0, 5000, 0);
-
-bot.on('message', function (channel, user, message, self) {
-	if (message.startsWith("!rq")) {
-		function giveRQ() {
-			var obj = JSON.parse(fs.readFileSync('./user/_' + user.username + '/logs.json', 'utf8'));
-			var count = Object.keys(obj.messages).length;
-			var i = Math.floor(Math.random() * count);
-			bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
-		}
-		function doComm() {rqCd.submit(giveRQ)}
-		setTimeout(doComm, 100)
-	};
-
-	var pointStoreFile = './user/_' + user.username + '/profile.json';
-	if (message.startsWith("!lines")) {
-		function giveLines() {
-			if (fs.existsSync(pointStoreFile)) {
-				pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
-				bot.whisper(user.username, "You have written " + pointsGet.profile.lines + " lines in this chat!")
+				fs.readFile(file, 'utf8', function(err, data) {if (err) {return}
+			   		var result = data.replace("]}", ",\n");
+			   		fs.writeFile(file, result, 'utf8', function(err) {
+			   		    if (err) {
+			   		       return
+			   		    }
+			   		})
+				});
+				var message = message.replace(/\\\\/, "");
+				var message = message.replace(/\\/, "");
+				fs.appendFileSync(file, '{"date": "' + logDate + '", "time": "' + logTime + '", "chatter": "' + user.username + '", "message": "' + message  +'"}]}');
 			}
-		}
-		lineCd.submit(giveLines)
-	}
-	if (message.startsWith("!addpoints")) {
-		if (fs.existsSync(pointStoreFile) && (user.mod === true || user.username == channel.substring(1))) {
+			else {
+				mkdirp('./user/_' + user.username, function(err) {}); 
+				fs.writeFileSync(profFile, profNew)
+				mkdirp('./user/_' + user.username, function(err) {}); 
+				fs.appendFileSync(file, logNew)
+			}
+		});
+	},
+
+	fetchProfile: function() {
+
+		var rqCd = new Bottleneck(0, 5000, 0);
+		var lineCd = new Bottleneck(0, 5000, 0);
+		var pointCd = new Bottleneck(0, 5000, 0);
+
+		bot.on('message', function (channel, user, message, self) {
+			if (message.startsWith("!rq")) {
+				function giveRQ() {
+					var obj = JSON.parse(fs.readFileSync('./user/_' + user.username + '/logs.json', 'utf8'));
+					var count = Object.keys(obj.messages).length;
+					var i = Math.floor(Math.random() * count);
+					bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
+				}
+				function doComm() {rqCd.submit(giveRQ)}
+				setTimeout(doComm, 100)
+			};
+
 			var pointStoreFile = './user/_' + user.username + '/profile.json';
-			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
-			pointsGet.profile.points = pointsGet.profile.points + 1000
-			fs.writeFile(pointStoreFile, JSON.stringify(pointsGet, null, 2))
-			bot.whisper(user.username, "Added 1000 points", message.substring(message.indexOf(" ")))
-		}
+			if (message.startsWith("!lines")) {
+				function giveLines() {
+					if (fs.existsSync(pointStoreFile)) {
+						pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
+						bot.whisper(user.username, "You have written " + pointsGet.profile.lines + " lines in this chat!")
+					}
+				}
+				lineCd.submit(giveLines)
+			}
+			if (message.startsWith("!addpoints")) {
+				if (fs.existsSync(pointStoreFile) && (user.mod === true || user.username == channel.substring(1))) {
+					var pointStoreFile = './user/_' + user.username + '/profile.json';
+					pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
+					pointsGet.profile.points = pointsGet.profile.points + 1000
+					fs.writeFile(pointStoreFile, JSON.stringify(pointsGet, null, 2))
+					bot.whisper(user.username, "Added 1000 points", message.substring(message.indexOf(" ")))
+				}
+			}
+			if(message.startsWith("!points")) {
+				if (fs.existsSync(pointStoreFile)) {
+					var pointStoreFile = './user/_' + user.username + '/profile.json';
+					pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
+					bot.whisper(user.username, "You have " + pointsGet.profile.points + " points!")
+				}
+			}
+		});
 	}
-	if(message.startsWith("!points")) {
-		if (fs.existsSync(pointStoreFile)) {
-			var pointStoreFile = './user/_' + user.username + '/profile.json';
-			pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
-			bot.whisper(user.username, "You have " + pointsGet.profile.points + " points!")
-		}
-	}
-});
-}}
+}

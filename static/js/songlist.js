@@ -63,7 +63,7 @@ function nextVideo() {
 }		
 
 function getSongName() {
-	var url = "https://www.googleapis.com/youtube/v3/videos?id=" + videos[i] + "&key=AIzaSyDI91lLeIzNm94yV7cScSiYn-aa4uh2TFE%20&part=snippet,contentDetails,statistics,status"
+	var url = "https://www.googleapis.com/youtube/v3/videos?id=" + videos[i] + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status"
 	var meh = $.getJSON(url, function(json) {
 		xd = json.items[0].snippet.title
 		$(".videoTitle").html(function() {
@@ -96,5 +96,3 @@ yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 	$scope.reload()
 	$interval($scope.reload, 5000);
 })
-
-// https://developers.google.com/youtube/iframe_api_reference
