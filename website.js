@@ -27,12 +27,13 @@ app.get('/songlist', function(req, res) {
     res.sendFile(path.join(__dirname + '/templates/songlist.html'));
 });
 
-app.get('/history/:id' + date, function(req, res) {
+app.get('/history/:id', function(req, res) {
     res.sendFile(path.join(__dirname + '/templates/history.html'));
 });
 
 app.get('/history', function(req, res) {
-    res.redirect('/history/'+ date)
+    res.redirect('/history/'+ date);
+    res.sendFile(path.join(__dirname + '/templates/history.html'));
 });
 
 console.log("Started website")
