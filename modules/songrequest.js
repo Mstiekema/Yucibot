@@ -9,7 +9,7 @@ var fs 			= require('fs');
 module.exports = {
 	getSR: function () {
 		bot.on('message', function (channel, user, message, self) {
-			if (message.startsWith("!sr")) {
+			if (message.startsWith("!sr") || message.startsWith("!songrequest")) {
 				var time = new Date();
 				var day = time.getDate();
 				var month = time.getMonth() + 1;
