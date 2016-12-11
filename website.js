@@ -7,7 +7,7 @@ var time 	= new Date();
 var day 	= time.getDate();
 var month 	= time.getMonth() + 1;
 var year 	= time.getFullYear();
-var date	= day + "_" + month + "_" + year;
+var date	= year + "-" + month + "-" + day;
 
 app.use(express.static(path.join(__dirname, 'static')));
 
@@ -31,6 +31,9 @@ app.get('/history/:id' + date, function(req, res) {
     res.sendFile(path.join(__dirname + '/templates/history.html'));
 });
 
+app.get('/history', function(req, res) {
+    res.redirect('/history/'+ date)
+});
 
 console.log("Started website")
 

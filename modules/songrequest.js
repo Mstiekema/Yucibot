@@ -14,9 +14,9 @@ module.exports = {
 				var day = time.getDate();
 				var month = time.getMonth() + 1;
 				var year = time.getFullYear();
-				var file = './static/json/songlists/songlist' + day + "_" + month + "_" + year + ".json";
+				var file = './static/json/songlists/songlist' + year + "-" + month + "-" + day + ".json";
+				songlink = message.split(" ")
 				var match = String(songlink).match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
-				var songlink = message.split(" ")
 				if(match != null) {
 					id = match[1]
 					var url = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status"
@@ -48,7 +48,7 @@ module.exports = {
 							});
 						}
 						else {
-							fs.writeFile(file, '[')
+							fs.writeFileSync(file, '[')
 							setTimeout(newLine, 10)
 							bot.whisper(user, "Succesfully added your song to the queue! :D")
 						}
