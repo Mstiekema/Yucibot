@@ -13,8 +13,8 @@ module.exports = {
 	updateProfile: function () {
 
 		bot.on('message', function (channel, user, message, self) {
-			var file = './user/_' + user.username + '/logs.json'
-			var profFile = './user/_' + user.username + '/profile.json'
+			var file = './static/user/_' + user.username + '/logs.json'
+			var profFile = './static/user/_' + user.username + '/profile.json'
 			var time = new Date();
 			var day = time.getDate();
 			var month = time.getMonth();
@@ -44,14 +44,13 @@ module.exports = {
 			   		    }
 			   		})
 				});
-				var message = message.replace(/\\\\/, "");
-				var message = message.replace(/\\/, "");
+				var message = message.replace(/[`\'",.<>\{\}\[\]\\\/]/gi, '')
 				fs.appendFileSync(file, '{"date": "' + logDate + '", "time": "' + logTime + '", "chatter": "' + user.username + '", "message": "' + message  +'"}]}');
 			}
 			else {
-				mkdirp('./user/_' + user.username, function(err) {}); 
+				mkdirp('./static/user/_' + user.username, function(err) {}); 
 				fs.writeFileSync(profFile, profNew)
-				mkdirp('./user/_' + user.username, function(err) {}); 
+				mkdirp('./static/user/_' + user.username, function(err) {}); 
 				fs.appendFileSync(file, logNew)
 			}
 		});
@@ -66,7 +65,7 @@ module.exports = {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!rq")) {
 				function giveRQ() {
-					var obj = JSON.parse(fs.readFileSync('./user/_' + user.username + '/logs.json', 'utf8'));
+					var obj = JSON.parse(fs.readFileSync('./static/user/_' + user.username + '/logs.json', 'utf8'));
 					var count = Object.keys(obj.messages).length;
 					var i = Math.floor(Math.random() * count);
 					bot.say(channel, obj.messages[i].chatter + ': ' + obj.messages[i].message)
@@ -75,7 +74,7 @@ module.exports = {
 				setTimeout(doComm, 100)
 			};
 
-			var pointStoreFile = './user/_' + user.username + '/profile.json';
+			var pointStoreFile = './static/user/_' + user.username + '/profile.json';
 			if (message.startsWith("!lines")) {
 				function giveLines() {
 					if (fs.existsSync(pointStoreFile)) {
@@ -96,7 +95,7 @@ module.exports = {
 			}
 			if(message.startsWith("!points")) {
 				if (fs.existsSync(pointStoreFile)) {
-					var pointStoreFile = './user/_' + user.username + '/profile.json';
+					var pointStoreFile = './static/user/_' + user.username + '/profile.json';
 					pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
 					bot.whisper(user.username, "You have " + pointsGet.profile.points + " points!")
 				}

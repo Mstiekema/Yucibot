@@ -32,7 +32,7 @@ module.exports = {
 							var moderators = chatters.chatters.moderators
 							var viewers = normViewers.concat(moderators);
 							for (var i = 0; i < viewers.length; i++) {
-								var profFile = './user/_' + viewers[i] + '/profile.json';
+								var profFile = './static/user/_' + viewers[i] + '/profile.json';
 								if (fs.existsSync(profFile)) {
 									pointsGet = JSON.parse(fs.readFileSync(profFile, 'utf8'))
 									pointsGet.profile.points = pointsGet.profile.points + 1
@@ -46,7 +46,7 @@ module.exports = {
 					    					'"lines": 0\n' +
 					  					'}\n' +
 									"}"
-									mkdirp('./user/_' + viewers[i], function(err) {}); 
+									mkdirp('./static/user/_' + viewers[i], function(err) {}); 
 									fs.appendFile(profFile, profNew, function(err){
 										if(err) {
 											return;
@@ -69,7 +69,7 @@ module.exports = {
 	pointCommands: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!roulette")) {
-				var profFile = './user/_' + user.username + '/profile.json';
+				var profFile = './static/user/_' + user.username + '/profile.json';
 				var y = message.split(' ');
 				var bet = y[1]
 
@@ -127,7 +127,7 @@ module.exports = {
 			}	
 
 			if (message.startsWith("!slot")) {
-				var profFile = './user/_' + user.username + '/profile.json';
+				var profFile = './static/user/_' + user.username + '/profile.json';
 				var emoteFile = JSON.parse(fs.readFileSync('./static/json/emotes.json', 'utf8'));
 				var emoteCount = 4
 				var setCount = 3
