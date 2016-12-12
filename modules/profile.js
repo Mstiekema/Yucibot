@@ -86,7 +86,7 @@ module.exports = {
 			}
 			if (message.startsWith("!addpoints")) {
 				if (fs.existsSync(pointStoreFile) && (user.mod === true || user.username == channel.substring(1))) {
-					var pointStoreFile = './user/_' + user.username + '/profile.json';
+					var pointStoreFile = './static/user/_' + user.username + '/profile.json';
 					pointsGet = JSON.parse(fs.readFileSync(pointStoreFile, 'utf8'))
 					pointsGet.profile.points = pointsGet.profile.points + 1000
 					fs.writeFile(pointStoreFile, JSON.stringify(pointsGet, null, 2))

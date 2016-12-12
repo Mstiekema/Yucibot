@@ -25,9 +25,8 @@ function change() {
 	<div id="selectDate"><label>Select stream date</label>
 	<input type="date" id="myDate" onchange="change()" value="{{date}}"></div>
 	<div id="songItemHistory" ng-repeat="x in allSongs">
-	
 	<div><img ng-src={{x.img}}></div><div id ="songItemInfoHistory"> [{{ $index + 1 }}] {{ x.name }} requested by: {{ x.user }} 
-	<a ng-href="https://www.youtube.com/watch?v={{ x.id }}" target="_blank" id="ytlink">YouTube link</a></div>
+	<br><a ng-href="https://www.youtube.com/watch?v={{ x.id }}" target="_blank" id="ytlink">YouTube link</a></div>
 	</div>
 	</div>
 </div>

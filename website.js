@@ -15,8 +15,12 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/templates/index.html'));
 });
 
-app.get('/user', function(req, res) {
-	res.sendFile(path.join(__dirname + '/templates/error.html'))
+app.get('/user/:id', function(req, res) {
+	res.sendFile(path.join(__dirname + '/templates/user.html'))
+});
+
+app.get('/user/:id/logs', function(req, res) {
+	res.sendFile(path.join(__dirname + '/templates/logs.html'))
 });
 
 app.get('/commands', function(req, res) {
