@@ -4,6 +4,7 @@ var timers 		= require('./timers.js')
 var profile 	= require('./profile.js')
 var points 		= require('./points.js')
 var songrequest	= require('./songrequest.js')
+var dungeon 	= require('./dungeon.js')
 
 var exp = module.exports = {}
 
@@ -18,4 +19,5 @@ exp.commands = function() {
 	profile.updateProfile();
 	profile.fetchProfile();
 	songrequest.getSR();
+	dungeon.dungeon();
 };

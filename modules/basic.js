@@ -11,7 +11,7 @@ module.exports = {
 	basicCommands: function () {
 
 		bot.on('message', function (channel, user, message, self) {
-			 if (message.startsWith("!test")) {
+			if (message.startsWith("!test")) {
 		    	bot.say(channel, "This is a command xD")
 			   	console.log('Did the thing')
 			}
