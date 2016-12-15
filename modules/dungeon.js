@@ -31,7 +31,7 @@ module.exports = {
 							var i = Math.floor(Math.random() * count);
 							var winner = getFile.participants[i]
 							getFile.participants.splice(i, 1);
-								getFile.winners.push(winner)
+							getFile.winners.push(winner)
 							newUserFile = JSON.stringify(getFile)
 							fs.writeFileSync(file, newUserFile)
 						}
@@ -48,7 +48,7 @@ module.exports = {
 							var i = Math.floor(Math.random() * count);
 							var winner = getFile.participants[i]
 							getFile.participants.splice(i, 1);
-								getFile.winners.push(winner)
+							getFile.winners.push(winner)
 							newUserFile = JSON.stringify(getFile)
 							fs.writeFileSync(file, newUserFile)
 						}
