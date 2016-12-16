@@ -1,10 +1,12 @@
-{"modules": [
-	{
-		"twitchapi": true,
-		"overwatch": true,
-		"updatePoints": true,
-		"pointCommands": true,
-		"fetchProfile": true,
-		"dungeon": true
-	}
-]}
+{
+  "modules": [
+    {
+      "twitchapi": true,
+      "overwatch": true,
+      "updatePoints": true,
+      "pointCommands": true,
+      "fetchProfile": true,
+      "dungeon": true
+    }
+  ]
+}

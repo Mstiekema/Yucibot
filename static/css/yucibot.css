@@ -182,3 +182,12 @@ body {
     background-color: #2f3a3c;
     overflow: hidden;
 }
+
+table, th, td {
+    border: 1px solid black;
+    text-align: left;
+}
+
+th, td {
+    padding: 5px;
+}

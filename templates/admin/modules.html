@@ -1,0 +1,62 @@
+<html lang="en" ng-app="yucibot" >
+<head>
+<link rel="stylesheet" type="text/css" href="/../css/yucibot.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/../js/menu.js"></script>
+<title>Yucibot</title>
+</head>
+<body>
+<div class="logo"></div>
+<div ng-include="'/../html/menu.htm'"></div>
+<div ng-app="yucibot" ng-controller="adminController">
+<div class="top"><h1>Modules</h1></div>
+<div class="search"><input id="searchBar" type="text"></div>
+<div class="main">
+
+<h2>Enable / disable modules</h2>
+
+<table>
+  <tr>
+    <th>Module</th>
+    <th>State</th> 
+    <th>Change</th>
+  </tr>
+  <tr>
+    <td>Twitchapi commands</td>
+    <td>{{ twitchapi }}</td> 
+    <td><button onclick="changeState(false, 'twitchapi')">Disable</button><button onclick="changeState(true, 'twitchapi')">Enable</button></td>
+  </tr>
+  <tr>
+    <td>Overwatch commands</td>
+    <td>{{ overwatch }}</td> 
+    <td><button onclick="changeState(false, 'overwatch')">Disable</button><button onclick="changeState(true, 'overwatch')">Enable</button></td>
+  </tr>
+  <tr>
+    <td>Profile commands</td>
+    <td>{{ fetchProfile }}</td> 
+    <td><button onclick="changeState(false, 'fetchProfile')">Disable</button><button onclick="changeState(true, 'fetchProfile')">Enable</button></td>
+  </tr>
+  <tr>
+    <td>Point commands</td>
+    <td>{{ pointCommands }}</td> 
+    <td><button onclick="changeState(false, 'pointCommands')">Disable</button><button onclick="changeState(true, 'pointCommands')">Enable</button></td>
+  </tr>
+  <tr>
+    <td>Update points</td>
+    <td>{{ updatePoints }}</td> 
+    <td><button onclick="changeState(false, 'updatePoints')">Disable</button><button onclick="changeState(true, 'updatePoints')">Enable</button></td>
+  </tr>
+  <tr>
+    <td>Dungeon</td>
+    <td>{{ dungeon }}</td> 
+    <td><button onclick="changeState(false, 'dungeon')">Disable</button><button onclick="changeState(true, 'dungeon')">Enable</button></td>
+  </tr>
+</table>
+
+</div>
+</div>
+
+<script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/admin.js"></script>
+</body>
