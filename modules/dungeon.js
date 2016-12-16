@@ -11,6 +11,22 @@ module.exports = {
 		bot.on('message', function(channel, user, message, self) {
 			var file = './static/json/dungeon.json'
 			
+			function toAdminLog(toLog) {
+				var time = new Date(); 
+				var day = time.getDate(); 
+				var month = time.getMonth(); 
+				var year = time.getFullYear();
+				var hours = time.getHours(); 
+				var minutes = time.getMinutes(); 
+				var seconds = time.getSeconds();
+				var logTime = "[" + day + '-' + month + '-' + year + " / " + hours + ':' + minutes + ':' + seconds + "] "
+				var toLog = logTime + toLog
+				getLog = JSON.parse(fs.readFileSync('./static/json/logs.json', 'utf8'))
+				getLog.points.push(toLog)
+				newLog = JSON.stringify(getLog)
+				fs.writeFileSync('./static/json/logs.json', newLog)
+			}
+			
 			if (message.startsWith("!startdungeon") && (user.username === channel.substring(1) || user.mod === true)) {
 				fs.writeFileSync(file, '{"participants":[],"winners":[],"enabled":true}')
 				bot.say(channel, "The dungeon queue has started! Type !enter in the chat to join the queue")
@@ -54,8 +70,11 @@ module.exports = {
 						}
 						poolDiv = Math.floor(pointPool / winners)
 						console.log("Pooldiv: " + poolDiv)
+						// Points to userfiles \\\
 						bot.say(channel, getFile.winners + " each won " + poolDiv + " points! PogChamp //")
 						fs.writeFileSync(file, '{"participants":[],"winners":[],"enabled":false}')
+						var toLog = getFile.winners + ' won ' + poolDiv + ' points each with a dungeon.'
+						toAdminLog(toLog);
 					}
 				}
 

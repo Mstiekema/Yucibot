@@ -68,6 +68,23 @@ module.exports = {
 
 	pointCommands: function () {
 		bot.on('message', function (channel, user, message, self) {
+
+			function toAdminLog(toLog) {
+				var time = new Date(); 
+				var day = time.getDate(); 
+				var month = time.getMonth(); 
+				var year = time.getFullYear();
+				var hours = time.getHours(); 
+				var minutes = time.getMinutes(); 
+				var seconds = time.getSeconds();
+				var logTime = "[" + day + '-' + month + '-' + year + " / " + hours + ':' + minutes + ':' + seconds + "] "
+				var toLog = logTime + user.username + toLog
+				getLog = JSON.parse(fs.readFileSync('./static/json/logs.json', 'utf8'))
+				getLog.points.push(toLog)
+				newLog = JSON.stringify(getLog)
+				fs.writeFileSync('./static/json/logs.json', newLog)
+			}
+
 			if (message.startsWith("!roulette")) {
 				var profFile = './static/user/_' + user.username + '/profile.json';
 				var y = message.split(' ');
@@ -86,6 +103,8 @@ module.exports = {
 								pointsGet.profile.points = newPoints
 								fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
 								bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points! You now have " + newPoints + " points")
+								var toLog = ' won ' + bet + ' points with roulette.'
+								toAdminLog(toLog);
 							}
 							else {
 								var q = parseInt(oldPoints)
@@ -94,6 +113,8 @@ module.exports = {
 								pointsGet.profile.points = newPoints
 								fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
 								bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points! You now have " + newPoints + " points")
+								var toLog = ' lost ' + bet + ' points with roulette.'
+								toAdminLog(toLog);
 							}								
 						}
 						else {
@@ -108,6 +129,8 @@ module.exports = {
 							pointsGet.profile.points = newPoints
 							fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
 							bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points! You now have " + newPoints + " points")
+							var toLog = ' won ' + bet + ' points with roulette.'
+							toAdminLog(toLog);
 						}
 						else {
 							var q = parseInt(oldPoints)
@@ -115,6 +138,8 @@ module.exports = {
 							pointsGet.profile.points = newPoints
 							fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
 							bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points! You now have 0 points")
+							var toLog = ' lost ' + bet + ' points with roulette.'
+							toAdminLog(toLog);
 						}	
 					}
 					else {
@@ -147,6 +172,8 @@ module.exports = {
 						pointsGet.profile.points = newPoints
 						fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))
 						bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! They are the same, you win 1000 points! PogChamp")
+						var toLog = ' won 1000 points with the slot machine.'
+						toAdminLog(toLog);
 					}
 					else if (a == b || b == c){
 						var q = parseInt(oldPoints)
@@ -154,6 +181,8 @@ module.exports = {
 						pointsGet.profile.points = newPoints
 						fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))					
 						bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! So close, but yet so far FeelsBadMan You get 100 points")
+						var toLog = ' won 100 points with the slot machine.'
+						toAdminLog(toLog);
 					}
 					else if (a == c) {
 						var q = parseInt(oldPoints)
@@ -161,6 +190,8 @@ module.exports = {
 						pointsGet.profile.points = newPoints
 						fs.writeFile(profFile, JSON.stringify(pointsGet, null, 2))					
 						bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! It's something SeemsGood You get 10 points")
+						var toLog = ' won 10 points with the slot machine.'
+						toAdminLog(toLog);
 					}
 					else {
 						bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! Not Even close DansGame")

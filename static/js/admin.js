@@ -4,6 +4,7 @@ function changeState(state, name) {
 	window.location.href = "/admin/modules/" + name + "/" + state;
 }
 
+var logs = '/../json/logs.json'
 var modules = '/../json/modules.json'
 var yucibot = angular.module('yucibot',[]);
 yucibot.controller('adminController', function($scope, $http, $log) {
@@ -15,5 +16,12 @@ yucibot.controller('adminController', function($scope, $http, $log) {
 		$scope.pointCommands = json.pointCommands
 		$scope.fetchProfile = json.fetchProfile
 		$scope.dungeon = json.dungeon
+	})
+
+	$http.get(logs)
+	.then(response => {
+	    if (!response.data) return $log.error('No result was found')
+	    $log.log(response.data)
+		$scope.adminLogs = response.data.points
 	})
 })

@@ -63,6 +63,23 @@ module.exports = {
 		var pointCd = new Bottleneck(0, 5000, 0);
 
 		bot.on('message', function (channel, user, message, self) {
+
+			function toAdminLog(toLog) {
+				var time = new Date(); 
+				var day = time.getDate(); 
+				var month = time.getMonth(); 
+				var year = time.getFullYear();
+				var hours = time.getHours(); 
+				var minutes = time.getMinutes(); 
+				var seconds = time.getSeconds();
+				var logTime = "[" + day + '-' + month + '-' + year + " / " + hours + ':' + minutes + ':' + seconds + "] "
+				var toLog = logTime + user.username + toLog
+				getLog = JSON.parse(fs.readFileSync('./static/json/logs.json', 'utf8'))
+				getLog.points.push(toLog)
+				newLog = JSON.stringify(getLog)
+				fs.writeFileSync('./static/json/logs.json', newLog)
+			}
+
 			if (message.startsWith("!rq")) {
 				function giveRQ() {
 					var obj = JSON.parse(fs.readFileSync('./static/user/_' + user.username + '/logs.json', 'utf8'));
@@ -91,6 +108,8 @@ module.exports = {
 					pointsGet.profile.points = pointsGet.profile.points + 1000
 					fs.writeFile(pointStoreFile, JSON.stringify(pointsGet, null, 2))
 					bot.whisper(user.username, "Added 1000 points", message.substring(message.indexOf(" ")))
+					var toLog = ' got 1000 points with !addpoints.'
+					toAdminLog(toLog);
 				}
 			}
 			if(message.startsWith("!points")) {
