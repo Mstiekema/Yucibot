@@ -28,10 +28,6 @@ app.get('/commands', function(req, res) {
     res.sendFile(path.join(__dirname + '/templates/commands.html'));
 });
 
-app.get('/songlist', function(req, res) {
-    res.sendFile(path.join(__dirname + '/templates/songlist.html'));
-});
-
 app.get('/history/:id', function(req, res) {
     res.sendFile(path.join(__dirname + '/templates/history.html'));
 });
@@ -43,6 +39,10 @@ app.get('/history', function(req, res) {
 
 app.get('/admin', function(req, res) {
     res.sendFile(path.join(__dirname + '/templates/admin/home.html'));
+});
+
+app.get('/admin/songlist', function(req, res) {
+    res.sendFile(path.join(__dirname + '/templates/admin/songlist.html'));
 });
 
 app.get('/admin/pointlogs', function(req, res) {
