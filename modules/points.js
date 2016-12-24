@@ -42,8 +42,10 @@ module.exports = {
 									var profNew =
 									"{\n" +
 					  					'"profile": {\n' +
+					    					'"level": 1,\n' +
 					    					'"points": 0,\n' +
-					    					'"lines": 0\n' +
+					    					'"lines": 0,\n' +
+					    					'"isSub": false\n' +
 					  					'}\n' +
 									"}"
 									mkdirp('./static/user/_' + viewers[i], function(err) {}); 
