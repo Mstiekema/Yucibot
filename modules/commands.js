@@ -6,6 +6,7 @@ var profile 	= require('./profile.js')
 var points 		= require('./points.js')
 var songrequest	= require('./songrequest.js')
 var dungeon 	= require('./dungeon.js')
+var sub 		= require('./sub.js')
 var modules		= JSON.parse(fs.readFileSync('./static/json/modules.json', 'utf8')).modules[0]
 var exp = module.exports = {}
 
@@ -57,5 +58,12 @@ exp.commands = function() {
 	}
 	else {
 		console.log("[COMMANDS] Dungeon module is disabled")
+	}
+
+	if(modules.sub === true) {
+		sub.sub();
+	}
+	else {
+		console.log("[COMMANDS] Sub notifications are disabled")
 	}
 };

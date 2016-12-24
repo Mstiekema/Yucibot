@@ -37,6 +37,7 @@ module.exports = {
 				
 				// Setting user levels
 
+				// Sub
 				if (user.subscriber === true) {
 					level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
 					level.profile.level = 150

@@ -6,7 +6,8 @@
       "updatePoints": true,
       "pointCommands": true,
       "fetchProfile": true,
-      "dungeon": true
+      "dungeon": true,
+      "sub": true
     }
   ]
 }
