@@ -1,7 +1,9 @@
+// Settings
 var clientID = "jzlu9iswyn1syr2jpyz40ut3d7fkcxm"
 var redirect = "http://localhost:3000"
 var channel = "midnan"
 
+// Searchbar
 $("#searchBar").keyup(function(ev) {
    if (ev.which === 13) {
       var xD = $("input").val();
@@ -9,6 +11,7 @@ $("#searchBar").keyup(function(ev) {
    }
 }); 
 
+//Menu
 function home() {
    window.location.href = '/';
 }
@@ -57,7 +60,7 @@ function logout() {
 	window.location.href = '/';
 }
 
-// Check if logging in
+// Login
 var hash = location.hash
 var token = hash.substring(hash.indexOf('=')+1,hash.indexOf("&"))
 if (location.hash != "") {
@@ -114,8 +117,8 @@ function checkSub() {
 
 var pt1 = $("<p onclick='login()'></p>").text("Login");
 var pt2 = $("<p onclick='logout()'></p>").text("Logout");
-var pt3 = $("<p onclick='admin()'></p>").text(" • Admin pages");
-var pt4 = $("<p onclick='sub()'></p>").text(" • Sub pages");
+var pt3 = $("<p onclick='admin()'></p>").text(" • Admin home");
+var pt4 = $("<p onclick='sub()'></p>").text(" • Sub home");
 var pt5 = $("<u id='test'></u>").text("Hello " + localStorage.displayName);
 
 function changeLogin() {
@@ -126,9 +129,6 @@ function changeLogin() {
 		if((sub == "true" && mod == "true") || mod == "true") {
 			$(".login").append(pt5, pt3, pt4, pt2)
 		}
-		// else if (mod == "true") {
-		// 	$(".login").append(pt5, pt3, pt4, pt2)
-		// }
 		else if (sub == "true") {
 			$(".login").append(pt5, pt4, pt2)
 		}
@@ -141,3 +141,22 @@ function changeLogin() {
 }
 
 window.onload = changeLogin()
+
+//Angular
+var yucibot = angular.module('yucibot',[]);
+yucibot.controller('template', ['$scope', function($scope) {
+    $scope.streamer = "Mstiekema";
+    $scope.botName = "Yucibot";
+
+	var mod = localStorage.mod
+	var sub = localStorage.sub
+	if((sub == "true" && mod == "true") || mod == "true") {
+		$scope.menu = '/../html/subadminmenu.htm'
+	}
+	else if (sub == "true") {
+		$scope.menu = '/../html/submenu.htm'
+	}
+	else {
+		$scope.menu = '/../html/menu.htm'
+	}
+}]);

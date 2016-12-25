@@ -5,6 +5,9 @@ function checkMod() {
 	if(localStorage.sub == "true") {
 		return
 	}
+	else if (localStorage.mod == "true") {
+		return
+	}
 	else {
 		window.location.href = "/"
 	}
