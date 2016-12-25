@@ -38,38 +38,37 @@ module.exports = {
 				// Setting user levels
 
 				// Sub
-				if (user.subscriber === true) {
-					level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
-					level.profile.level = 150
-					level.profile.isSub = true
-					fs.writeFile(profFile, JSON.stringify(level, null, 2))
+				setLevel = function() {
+					if (user.subscriber === true) {
+						level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
+						level.profile.level = 150
+						level.profile.isSub = true
+						fs.writeFile(profFile, JSON.stringify(level, null, 2))
+					}
+					// Mod
+					if (user.mod === true) {
+						level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
+						level.profile.level = 200
+						fs.writeFile(profFile, JSON.stringify(level, null, 2))
+					}
+					// Broadcaster
+					if (user.badges.broadcaster != undefined) {
+						level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
+						level.profile.level = 300
+						fs.writeFile(profFile, JSON.stringify(level, null, 2))
+					}
+					// Admin
+					if (user.username === options.identity.admin){
+						level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
+						level.profile.level = 500
+						fs.writeFile(profFile, JSON.stringify(level, null, 2))
+					}
 				}
-				// Mod
-				if (user.mod === true) {
-					level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
-					level.profile.level = 200
-					fs.writeFile(profFile, JSON.stringify(level, null, 2))
-				}
-				// Broadcaster
-				if (user.badges.broadcaster != undefined) {
-					level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
-					level.profile.level = 300
-					fs.writeFile(profFile, JSON.stringify(level, null, 2))
-				}
-				// Admin
-				if (user.username === options.identity.admin){
-					level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
-					level.profile.level = 500
-					fs.writeFile(profFile, JSON.stringify(level, null, 2))
-				}
+				setTimeout(setLevel, 150)
 
 				fs.readFile(file, 'utf8', function(err, data) {if (err) {return}
 			   		var result = data.replace("]}", ",\n");
-			   		fs.writeFile(file, result, 'utf8', function(err) {
-			   		    if (err) {
-			   		       return
-			   		    }
-			   		})
+			   		fs.writeFile(file, result, 'utf8', function(err) {if (err){return}})
 				});
 				var message = message.replace(/[`\'",.<>\{\}\[\]\\\/]/gi, '')
 				fs.appendFileSync(file, '{"date": "' + logDate + '", "time": "' + logTime + '", "chatter": "' + user.username + '", "message": "' + message  +'"}]}');
