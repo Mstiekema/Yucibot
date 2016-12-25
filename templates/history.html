@@ -16,7 +16,7 @@ function change() {
 <div class="logo"></div>
 <div class="top"><h1>Songlist history</h1></div>
 <div class="login"></div>
-<div ng-include="'../html/menu.htm'"></div>
+<div ng-app="yucibot" ng-controller="template" ng-include=menu></div>
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main">
 <div class="songQueueHistory" ng-app="yucibot" ng-controller="songQueueHistory">

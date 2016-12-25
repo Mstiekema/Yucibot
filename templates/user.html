@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="logo"></div>
-<div ng-include="'../html/menu.htm'"></div>
+<div ng-app="yucibot" ng-controller="template" ng-include=menu></div>
 <div class="login"></div>
 <div ng-app="yucibot" ng-controller="userPage">
 <div class="top"><h1>User page | {{ user }} </h1></div>
