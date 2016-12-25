@@ -26,3 +26,19 @@ yucibot.controller('adminController', function($scope, $http, $log) {
 		$scope.adminLogs = response.data.points
 	})
 })
+
+function checkMod() {
+	var name = localStorage.name
+	$.ajax('../json/mods.json')
+	.done(function(data) {
+		var data = data.mods
+		if(data.indexOf(name) + 1 != 0) {
+			return
+		}
+		else {
+			window.location.href = "/"
+		}
+	});
+}
+
+window.onload = checkMod()

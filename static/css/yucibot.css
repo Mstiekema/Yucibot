@@ -4,7 +4,7 @@
     width: 150px;
     bottom: 50px;
     border: 3px solid gray;
-    padding: 1px;
+    padding: 5px;
     text-align: center;
     z-index:1;
 }
@@ -172,8 +172,16 @@
     overflow: auto;
 }
 
-div.menu p:hover { 
+div.menu p:hover, div.login p:hover { 
     background-color: #384447;
+}
+
+div.menu p, .login p {
+    margin: 0px;
+}
+
+div.menu h3 {
+    margin: 5px;
 }
 
 footer {

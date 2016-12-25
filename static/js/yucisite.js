@@ -1,5 +1,6 @@
-var clientID = "putclientidhere"
+var clientID = "jzlu9iswyn1syr2jpyz40ut3d7fkcxm"
 var redirect = "http://localhost:3000"
+var channel = "midnan"
 
 $("#searchBar").keyup(function(ev) {
    if (ev.which === 13) {
@@ -32,6 +33,10 @@ function module() {
    window.location.href = '/admin/modules';
 }
 
+function sub() {
+   window.location.href = '/sub';
+}
+
 var time = new Date();
 var day = time.getDate();
 var month = time.getMonth() + 1;
@@ -56,7 +61,6 @@ function logout() {
 var hash = location.hash
 var token = hash.substring(hash.indexOf('=')+1,hash.indexOf("&"))
 if (location.hash != "") {
-	console.log("Test")
 	$.ajax({
 	    url: 'https://api.twitch.tv/kraken/user',
 		headers: {
@@ -64,29 +68,75 @@ if (location.hash != "") {
 			"Authorization": "OAuth " + token
 		},
 		success: function(data){
-			window.location.href = "/"
-			changeLogin()
-			// alert("Welcome " + data.display_name)
 			console.log("Welcome " + data.display_name)
 			localStorage.login = true
 			localStorage.displayName = data.display_name
 			localStorage.name = data.name
+			checkMod()
+			checkSub()
 		}
 	});
+	changeLogin()
+	setTimeout(function(){window.location.href = "/"}, 1500)
 }
 
-var pt1 = $("<p id='test'></p>").text("Hello " + localStorage.displayName);
-var pt2 = $("<p onclick='login()'></p>").text("Login");
-var pt3 = $("<p onclick='admin()'></p>").text(" - Admin");
-var pt4 = $("<p onclick='logout()'></p>").text(" - Logout");
+function checkMod() {
+	$.ajax('../json/mods.json')
+	.done(function(data) {
+		var data = data.mods
+		if(data.indexOf(localStorage.name) + 1 != 0) {
+			localStorage.mod = true
+		}
+		else {
+			localStorage.mod = false
+		}
+	})
+}
+
+function checkSub() {
+	$.ajax({
+		url: 'https://api.twitch.tv/kraken/users/' + localStorage.name + '/subscriptions/' + channel,
+		headers: {
+			'Client-ID': clientID,
+			"Authorization": "OAuth " + token
+		}
+	}).done(function(data) {
+		if(data.channel != undefined) {
+			localStorage.sub = true
+		}
+		else {
+			localStorage.sub = false
+		}
+	}).fail(function(data) {
+		localStorage.sub = false
+	})
+}
+
+var pt1 = $("<p onclick='login()'></p>").text("Login");
+var pt2 = $("<p onclick='logout()'></p>").text("Logout");
+var pt3 = $("<p onclick='admin()'></p>").text(" • Admin pages");
+var pt4 = $("<p onclick='sub()'></p>").text(" • Sub pages");
+var pt5 = $("<u id='test'></u>").text("Hello " + localStorage.displayName);
 
 function changeLogin() {
 	if(localStorage.login == "true") {
-		$(".login").append(pt1, pt3, pt4)
-		console.log("xD")
+		var mod = localStorage.mod
+		var sub = localStorage.sub
+
+		if((sub == "true" && mod == "true") || mod == "true") {
+			$(".login").append(pt5, pt3, pt4, pt2)
+		}
+		// else if (mod == "true") {
+		// 	$(".login").append(pt5, pt3, pt4, pt2)
+		// }
+		else if (sub == "true") {
+			$(".login").append(pt5, pt4, pt2)
+		}
+		else {
+			$(".login").append(pt5, pt2)
+		}
 	} else {
-		$(".login").append(pt2)
-		console.log("...")
+		$(".login").append(pt1)
 	}
 }
 
