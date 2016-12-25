@@ -1,14 +1,15 @@
-var express = require('express');
-var app     = express();
-var path    = require('path');
-var request = require("request");
-var fs 		= require('fs');
-var file = './static/json/modules.json'
-var time 	= new Date();
-var day 	= time.getDate();
-var month 	= time.getMonth() + 1;
-var year 	= time.getFullYear();
-var date	= year + "-" + month + "-" + day;
+var express     = require('express');
+var app         = express();
+var path        = require('path');
+var request     = require("request");
+var fs          = require('fs');
+var testing     = require('./static/js/login.js')
+var file        = './static/json/modules.json'
+var time        = new Date();
+var day         = time.getDate();
+var month       = time.getMonth() + 1;
+var year        = time.getFullYear();
+var date        = year + "-" + month + "-" + day;
 
 app.use(express.static(path.join(__dirname, 'static')));
 

@@ -1,3 +1,14 @@
+.login {
+    position: absolute;
+    left: 20px;
+    width: 150px;
+    bottom: 50px;
+    border: 3px solid gray;
+    padding: 1px;
+    text-align: center;
+    z-index:1;
+}
+
 #selectDate {
     position: absolute;
     right: 20px;
