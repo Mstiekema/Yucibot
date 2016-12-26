@@ -6,6 +6,7 @@ function changeState(state, name) {
 
 var logs = '/../json/logs.json'
 var modules = '/../json/modules.json'
+var yucibot = angular.module('yucibot',[]);
 yucibot.controller('adminController', function($scope, $http, $log) {
 	$.getJSON(modules, function(json) {
 		var json = json.modules[0]

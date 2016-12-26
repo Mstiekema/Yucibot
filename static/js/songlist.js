@@ -90,6 +90,7 @@ function onPlayerStateChange(event) {
 	}
 }
 
+var yucibot = angular.module('yucibot',[]);
 yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 	$scope.reload = function() {
 	$http.get(file)
