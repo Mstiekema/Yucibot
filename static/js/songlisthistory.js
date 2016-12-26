@@ -6,7 +6,6 @@ var urlDate = window.location.href
 var date = urlDate.split('/')[4]
 var file = '../json/songlists/songlist' + date + ".json";
 
-var yucibot = angular.module('yucibot',[]);
 yucibot.controller('songQueueHistory', function($scope, $http, $log, $interval) {
 	$scope.reload = function() {
 	$http.get(file)

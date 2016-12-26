@@ -1,4 +1,3 @@
-var yucibot = angular.module('yucibot',[]);
 var getUrl = window.location.href;
 var user = getUrl.split('/')[4]
 var profile = '../user/_' + user.toLowerCase() + '/profile.json'
