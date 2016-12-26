@@ -16,10 +16,10 @@ function change() {
 <div class="logo"></div>
 <div class="top"><h1>Songlist history</h1></div>
 <div class="login"></div>
-<div ng-app="yucibot" ng-controller="template" ng-include=menu></div>
+<div ng-controller="template" ng-include=menu></div>
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main">
-<div class="songQueueHistory" ng-app="yucibot" ng-controller="songQueueHistory">
+<div class="songQueueHistory" ng-controller="songQueueHistory">
 	<div id="songlistSelector">
 	<h2>Songlist of {{date}}</h2>
 	<div id="selectDate"><label>Select stream date</label>
@@ -31,6 +31,5 @@ function change() {
 	</div>
 </div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
-<script type="text/javascript" src="../js/mainController.js"></script>
 <script type="text/javascript" src="../js/songlisthistory.js"></script>
 </body>

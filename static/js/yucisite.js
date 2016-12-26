@@ -143,8 +143,8 @@ function changeLogin() {
 window.onload = changeLogin()
 
 //Angular
-var yucibot = angular.module('yucibot',[]);
-yucibot.controller('template', ['$scope', function($scope) {
+var yucibot = angular.module('yucibot', []);
+yucibot.controller('template', function($scope) {
     $scope.streamer = "Mstiekema";
     $scope.botName = "Yucibot";
 
@@ -159,4 +159,6 @@ yucibot.controller('template', ['$scope', function($scope) {
 	else {
 		$scope.menu = '/../html/menu.htm'
 	}
-}]);
+});
+
+// http://www.teebow.net/splitting-angularjs-controllers-separate-files/
