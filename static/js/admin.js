@@ -16,6 +16,10 @@ yucibot.controller('adminController', function($scope, $http, $log) {
 		$scope.fetchProfile = json.fetchProfile
 		$scope.dungeon = json.dungeon
 		$scope.sub = json.sub
+		$scope.update = json.update
+		$scope.fourtwenty = json.fourtwenty
+		$scope.twitter = json.twitter
+		$scope.songrequest = json.songrequest
 	})
 
 	$http.get(logs)

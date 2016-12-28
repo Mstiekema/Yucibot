@@ -13,10 +13,6 @@ var exp = module.exports = {}
 exp.commands = function() {
 
 	basic.basicCommands();
-	profile.updateProfile();
-	timers.fourtwenty();
-	timers.twitter();
-	songrequest.getSR();
 
 	if(modules.twitchapi === true) {
 		basic.useTwitchAPI();
@@ -65,5 +61,33 @@ exp.commands = function() {
 	}
 	else {
 		console.log("[COMMANDS] Sub notifications are disabled")
+	}
+
+	if(modules.update === true) {
+		profile.updateProfile();
+	}
+	else {
+		console.log("[COMMANDS] Profile updater is disabled")
+	}
+
+	if(modules.fourtwenty === true) {
+		timers.fourtwenty();
+	}
+	else {
+		console.log("[COMMANDS] 420 timer is disabled")
+	}
+
+	if(modules.twitter === true) {
+		timer.twitter();
+	}
+	else {
+		console.log("[COMMANDS] Twitter timer is disabled")
+	}
+
+	if(modules.songrequest === true) {
+		songrequest.getSR();
+	}
+	else {
+		console.log("[COMMANDS] Songrequest is disabled")
 	}
 };
