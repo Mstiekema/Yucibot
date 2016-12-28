@@ -59,9 +59,6 @@ module.exports = {
 						console.log("[DEBUG] Succesfully added points")
 						});
 			    	}
-			    	else {
-			    		console.log(channel.substring(1) + " is offline")
-			    	}
 			  	}
 			}
 			request(info, callback)
