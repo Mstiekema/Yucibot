@@ -7,6 +7,7 @@ var points 		= require('./points.js')
 var songrequest	= require('./songrequest.js')
 var dungeon 	= require('./dungeon.js')
 var sub 		= require('./sub.js')
+var mod 		= require('./mod.js')
 var modules		= JSON.parse(fs.readFileSync('./static/json/modules.json', 'utf8')).modules[0]
 var exp = module.exports = {}
 
@@ -89,5 +90,19 @@ exp.commands = function() {
 	}
 	else {
 		console.log("[COMMANDS] Songrequest is disabled")
+	}
+
+	if(modules.modnazi === true) {
+		mod.mod();
+	}
+	else {
+		console.log("[COMMANDS] Moderation tools are disabled")
+	}
+
+	if(modules.modlogs === true) {
+		mod.logs();
+	}
+	else {
+		console.log("[COMMANDS] Moderation logs are disabled")
 	}
 };

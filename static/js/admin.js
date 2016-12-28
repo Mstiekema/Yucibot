@@ -20,6 +20,8 @@ yucibot.controller('adminController', function($scope, $http, $log) {
 		$scope.fourtwenty = json.fourtwenty
 		$scope.twitter = json.twitter
 		$scope.songrequest = json.songrequest
+		$scope.modnazi = json.modnazi
+		$scope.modlogs = json.modlogs
 	})
 
 	$http.get(logs)

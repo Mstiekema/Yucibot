@@ -36,17 +36,17 @@ module.exports = {
 				}
 				setTimeout(addLine, 100)
 				
-				// Setting user levels
-
-				addMod = function() {
-					userMod = user.username
-					modx = JSON.parse(fs.readFileSync(modFile, 'utf8'))
-					if (modx.mods.indexOf(userMod) == false) {
-						modx.mods.push(userMod)
-						fs.writeFileSync(modFile, JSON.stringify(modx, null, 2));
-					}
-				}				
-						
+				// // Setting user levels
+				// 
+				// addMod = function() {
+				// 	userMod = user.username
+				// 	modx = JSON.parse(fs.readFileSync(modFile, 'utf8'))
+				// 	if (modx.mods.indexOf(userMod) == false) {
+				// 		modx.mods.push(userMod)
+				// 		fs.writeFileSync(modFile, JSON.stringify(modx, null, 2));
+				// 	}
+				// }				
+				// 
 				// setLevel = function() {
 				// 	// Sub
 				// 	if (user.subscriber === true) {

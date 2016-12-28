@@ -11,7 +11,9 @@
       "update": true,
       "fourtwenty": true,
       "twitter": true,
-      "songrequest": true
+      "songrequest": true,
+      "modnazi": true,
+      "modlogs": true
     }
   ]
 }
