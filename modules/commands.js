@@ -78,7 +78,7 @@ exp.commands = function() {
 	}
 
 	if(modules.twitter === true) {
-		timer.twitter();
+		timers.twitter();
 	}
 	else {
 		console.log("[COMMANDS] Twitter timer is disabled")

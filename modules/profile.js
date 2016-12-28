@@ -61,7 +61,7 @@ module.exports = {
 						setTimeout(addMod, 50)
 					}
 					// Broadcaster
-					if (user.badges.broadcaster != undefined) {
+					if (user.badges != null && user.badges.broadcaster != undefined) {
 						level = JSON.parse(fs.readFileSync(profFile, 'utf8'))
 						level.profile.level = 300
 						fs.writeFile(profFile, JSON.stringify(level, null, 2))
