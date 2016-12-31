@@ -24,6 +24,20 @@ module.exports = {
 			else if (message.startsWith("!slap")) {
 				bot.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")
 			}
+			else if (message.startsWith("!google")) {
+				var q = message.substring(message.indexOf(" ") + 1);
+				var question = q.split(' ').join('+');
+				var base = "https://www.google.nl/search?q=";
+				var link = base + question
+				bot.say(channel, user.username + " Google is je beste vriend! " + link)
+			}
+			else if (message.startsWith("!lmgtfy")) {
+				var q = message.substring(message.indexOf(" ") + 1);
+				var question = q.split(' ').join('+');
+				var base = "https://lmgtfy.com/?q=";
+				var link = base + question
+				bot.say(channel, user.username + " Google is je beste vriend! " + link)
+			}
 			else if (message.startsWith("1quit")) {
 				if (user.mod === true || user.username == channel.substring(1)) {
 					bot.say(channel, "Shutting down Yucibot MrDestructoid")
