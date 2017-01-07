@@ -5,8 +5,6 @@ var connect 	= require('../app.js')
 var bot 		= connect.bot
 var request 	= require("request");
 var CronJob 	= require('cron').CronJob;
-var mkdirp 		= require('mkdirp');
-var fs 			= require('fs');
 
 module.exports = {
 	roulette: function () {

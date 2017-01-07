@@ -4,8 +4,6 @@ var connect = require('../app.js')
 var bot 	= connect.bot
 var CronJob = require('cron').CronJob;
 var request = require("request");
-var mkdirp 	= require('mkdirp');
-var fs 		= require('fs');
 
 module.exports = {
 	fourtwenty: function () {

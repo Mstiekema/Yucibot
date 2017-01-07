@@ -4,7 +4,6 @@ var connect 	= require('../app.js')
 var bot 		= connect.bot
 var ytApiKey 	= options.identity.ytApiKey
 var request 	= require("request");
-var fs 			= require('fs');
 var connection 	= require("./connection.js")
 
 module.exports = {
