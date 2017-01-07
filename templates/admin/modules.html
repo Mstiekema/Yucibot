@@ -1,6 +1,6 @@
 <% include ../header.ejs %>
 <script>
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect('<%= website %>');
 function disableModule(name) {
   socket.emit('disableModule', name)
   setTimeout(function() {window.location.reload(true)}, 100); 

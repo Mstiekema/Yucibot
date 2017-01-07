@@ -158,7 +158,9 @@ app.get('/admin/songlist', function(req, res) {
             res.render('admin/srerror.html')
         }
         else{
-            res.render('admin/songlist.html');
+            res.render('admin/songlist.html', {
+                website: options.identity.websiteUrl
+            });
         }
     });
 });
@@ -200,7 +202,8 @@ app.get('/admin/logs', function(req, res) {
 app.get('/admin/modules', function(req, res) {
     connection.query('select * from module WHERE id != 15', function(err, result) {
         res.render('admin/modules.html', { 
-            moduleList: result
+            moduleList: result,
+            website: options.identity.websiteUrl
         });
     });
 });

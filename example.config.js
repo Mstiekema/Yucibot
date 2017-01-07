@@ -20,8 +20,9 @@ module.exports = {
 		// Fill in your API key, get it with this tutorial: bit.ly/getYTapikey
 		clientId: 'id',
 		clientSecret: 'secret',
-		redirectUrl: 'http://localhost:3000/login'
+		redirectUrl: 'http://localhost:3000/login',
 		// Get these at https://www.twitch.tv/kraken/oauth2/clients/new
+		websiteUrl: 'http://localhost:3000'
 	},
 	mysql: {
 		user: 'username',
