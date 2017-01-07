@@ -18,38 +18,60 @@
 .button {
     background-color: #248d8a;
     text-align: center;
+    padding-top: 20px;
     vertical-align: middle;
     right: 10px;
     width: 150px;
-    height: 40px;
+    height: 20px;
     color: #d4dbdd;
-    padding-top: 10px;
+    padding-top: 20px;
     line-height: 0px;
 }
 
 .videoTitle {
     position: absolute;
-    top: 605px;
+    height: 30px;
+    top: 20px;
     left: 20px;
-    width: 1000px;
+    width: 1130px;
     background-color: #22292b;
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
+}
+
+.queueLength {
+    position: absolute;
+    background-color: #22292b;
+    width: 190px;
+    height: 26px;
+    top: 80px;
+    left: 170px;
+    padding-left: 10px;
+    text-align: left;
+    padding-top: 12px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #2f3a3c;
+    font-size: 12px;
 }
 
 #previousVideo {
     position: absolute;
+    width: 150px;
     left: 20px;
-    top: 680px;
+    top: 80px;
 }
 
 #skipVideo {
     position: absolute;
-    left: 180px;
-    top: 680px;
+    left: 370px;
+    width: 150px;
+    top: 80px;
 }
 
 #player {
-    padding-top: 20px;
+    position: absolute;
+    left: 550px;
+    top: 100px;
 }
 
 #searchBar {
@@ -76,8 +98,8 @@
 .songQueue {
     position: absolute;
     font-size: 14px;
-    top: 20px;
-    right: 20px;
+    top: 120px;
+    left: 20px;
     bottom: 20px;
     width: 460px;
     background-color: #22292b;
@@ -106,15 +128,13 @@
     border-style: solid;
     border-width: 1px;
     background-color: #2f3a3c;
-    height: 90px;
-    top: 20px;
-    padding-right: 20px;
 }
 
-#songItemInfoHistory {
+#songItemInfoHistory p {
     position: relative;
     padding-left: 140px;
-    bottom: 70px;
+    bottom: 75px;
+    margin-bottom: -46px
 }
 
 #songItem {

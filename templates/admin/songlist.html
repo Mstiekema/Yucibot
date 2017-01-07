@@ -1,31 +1,107 @@
-<html lang="en" ng-app="yucibot" >
-<head>
-<link rel="stylesheet" type="text/css" href="../css/yucibot.css">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
-<title>Yucibot</title>
-</head>
-<body>
-<div class="logo"></div>
-<div class="top"><h1>Songlist</h1></div>
-<div ng-app="yucibot" ng-controller="template" ng-include=menu></div>
-<div class="login"></div>
-<div class="main">
+<% include ../header.ejs %>
+<script>
+var tag 			= document.createElement('script');
+tag.src 			= "https://www.youtube.com/iframe_api";
+var firstScriptTag 	= document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+var socket = io.connect('http://localhost:3000');
 
-<div class="songQueue" ng-app="yucibot" ng-controller="songQueue">
+function getVideos() {
+	socket.on('pushSonglist', function (data) {
+		videos.length = 0
+		for (a = 0; a < data.length; a++) {
+			var songArr = data[a]
+			videos.push(songArr)
+		}
+	})
+}
+
+socket.emit('refreshData')
+getVideos()
+
+var videos = new Array;
+var player;
+
+function onYouTubeIframeAPIReady() {
+	player = new YT.Player('player', {
+		height: '360',
+		width: '640',
+		videoId: videos[0].songid,
+		events: {
+			'onReady': onPlayerReady,
+			'onStateChange': onPlayerStateChange
+		}
+	});
+}
+
+function onPlayerReady(event) {
+	event.target.playVideo();
+}
+
+function previousVideo() {
+	--i
+	nextVideo();
+}
+
+function skipVideo() {
+	++i
+	nextVideo();
+}
+
+var i = 0;
+function nextVideo() {
+	player.loadVideoById({
+	'videoId': videos[i].songid,
+	'startSeconds': 0,
+	'suggestedQuality': 'large'
+	});
+}		
+
+function getSongName() {
+	title = videos[i].title
+	user = videos[i].name
+	$(".videoTitle").html("Current song: " + title + "<br>" + "Requested by: " + user);
+}
+
+function onPlayerStateChange(event) {
+	if (event.data == YT.PlayerState.ENDED) {
+		socket.emit('refreshData')
+		i++
+		nextVideo();
+		event.target.playVideo();
+		getVideos()
+	}
+	if (event.data == -1) {
+		socket.emit('refreshData')
+		event.target.playVideo();
+		getSongName();
+		getVideos()
+	}
+}
+
+var yucibot = angular.module('yucibot',[]);
+yucibot.controller('songQueue', function($scope, $http, $log, $interval) { 
+	$scope.reload = function() {
+		$scope.allSongs = videos.slice(i)
+	}
+	$scope.reload()
+	$interval($scope.reload, 1000);
+})
+
+</script>
+<div class="top"><h1>Songlist</h1></div>
+<div class="search"><input id="searchBar" type="text"></div>
+<div class="main" ng-app="yucibot" ng-controller="songQueue">
+<div class="videoTitle"></div>
+<div id="player"><button onclick="location.reload(true)">Start songlist</button></div>
+<div class="songQueue">
 <h2>Songlist queue</h2>
 <div id="songItem" ng-repeat="x in allSongs">
-	<div><img ng-src={{x.img}}></div><div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.name }} requested by: {{ x.user }}</div>
+	<div><img ng-src={{x.thumb}}></div><div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.title }} requested by: {{ x.name }}</div>
 </div>
 </div>
-
-<div class="button" id="skipVideo" onclick="skipVideo()"><p>Skip video</div>
-<div class="button" id="previousVideo" onclick="previousVideo()"><p>Previous video</div>
-<div class="videoTitle"><p><p></div>
-<div id="player"></div>
-</div>
-
-<div class="search"><input id="searchBar" type="text"></div>
+<div class="queueLength"></div>
+<div class="button" id="skipVideo" onclick="skipVideo()">Skip video</div>
+<div class="button" id="previousVideo" onclick="previousVideo()">Previous video</div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
-<script type="text/javascript" src="../js/songlist.js"></script>
 </body>

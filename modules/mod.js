@@ -4,84 +4,52 @@ var connect 	= require('../app.js')
 var bot 		= connect.bot
 var request 	= require("request");
 var fs 			= require('fs');
-var wordList 	= './static/json/words.json'
+var connection 	= require("./connection.js")
 
 module.exports = {
 	mod: function () {
 		bot.on("message", function (channel, user, message, self) {
 		    var message = message.toLowerCase()
-
-		    if (user.mod == false) { if (user.username != channel.substring(1)) { if (user.sub == false) {
-			    var purge = JSON.parse(fs.readFileSync(wordList, 'utf8')).purge
-				if (new RegExp(purge.join("|")).test(message)) {
-	    			bot.timeout(channel, user.username, 10, "Used a banned word")
-				}
-			    var timeout = JSON.parse(fs.readFileSync(wordList, 'utf8')).timeout
-				if (new RegExp(timeout.join("|")).test(message)) {
-	    			bot.timeout(channel, user.username, 600, "Used a banned word")
-				}
-			    var ban = JSON.parse(fs.readFileSync(wordList, 'utf8')).ban
-				if (new RegExp(ban.join("|")).test(message)) {
-	    			bot.ban(channel, user.username, "Used a banned word");
-				}
-			}}}
-
+		    if (user.mod == false) { if (user.username != channel.substring(1)) { if (user.sub == false || user.sub == undefined) {
+		    	connection.query('select * from timeout where type = "purge"', function(err, result) {
+		    		var purge = result.map(function(a) {return a.word;})
+					if (new RegExp(purge.join("|")).test(message) && purge[0]) {
+	    				bot.timeout(channel, user.username, 10, "Used a banned word")
+					}
+		    	})
+		    	connection.query('select * from timeout where type = "timeout"', function(err, result) {
+		    		var timeout = result.map(function(a) {return a.word;})
+					if (new RegExp(timeout.join("|")).test(message) && timeout[0]) {
+	    				bot.timeout(channel, user.username, 600, "Used a banned word")
+					}
+		    	})
+		    	connection.query('select * from timeout where type = "ban"', function(err, result) {
+		    		var ban = result.map(function(a) {return a.word;})
+		    		if (new RegExp(ban.join("|")).test(message) && ban[0]) {
+	    				bot.ban(channel, user.username, "Used a banned word");
+					}
+		    	})
+		    }}}
 			if (user.mod || user.username == channel.substring(1)) {
-				if (message.startsWith("!addpurge")) {
-					var message = message.split(" ");
-					var word = message[1]
-					getWords = JSON.parse(fs.readFileSync(wordList, 'utf8'))
-					getWords.purge.push(word)
-					newBan = JSON.stringify(getWords)
-					fs.writeFileSync(wordList, newBan)
-					return
-				}
-				if (message.startsWith("!addtimeout")) {
-					var message = message.split(" ");
-					var word = message[1]
-					getWords = JSON.parse(fs.readFileSync(wordList, 'utf8'))
-					getWords.timeout.push(word)
-					newBan = JSON.stringify(getWords)
-					fs.writeFileSync(wordList, newBan)
-					return
-				}
-				if (message.startsWith("!addban")) {
-					var message = message.split(" ");
-					var word = message[1]
-					getWords = JSON.parse(fs.readFileSync(wordList, 'utf8'))
-					getWords.ban.push(word)
-					newBan = JSON.stringify(getWords)
-					fs.writeFileSync(wordList, newBan)
-					return
+				var message = message.split(" ");
+				if (message.length == 2) {
+					if (message[0] == "!addpurge") {
+						var newWord = {word: message[1], type: "purge"}
+						connection.query('insert into timeout set ?', newWord, function (err, result) {if (err) {return}})
+						bot.whisper(user.username, "Succesfully added a new purge word: " + message[1])
+					}
+					if (message[0] == "!addtimeout") {
+						var newWord = {word: message[1], type: "timeout"}
+						connection.query('insert into timeout set ?', newWord, function (err, result) {if (err) {return}})
+						bot.whisper(user.username, "Succesfully added a new timeout word: " + message[1])
+					}
+					if (message[0] == "!addban") {
+						var newWord = {word: message[1], type: "ban"}
+						connection.query('insert into timeout set ?', newWord, function (err, result) {if (err) {return}})
+						bot.whisper(user.username, "Succesfully added a new bam word: " + message[1])
+					}
 				}
 			}
-		});
-	},
-	logs: function() {
-		var logFile = "./static/json/logs.json"
-		var time = new Date(); 
-		var day = time.getDate(); 
-		var month = time.getMonth(); 
-		var year = time.getFullYear();
-		var hours = time.getHours(); 
-		var minutes = time.getMinutes(); 
-		var seconds = time.getSeconds();
-		var logTime = "[" + day + '-' + month + '-' + year + " / " + hours + ':' + minutes + ':' + seconds + "] "
-		
-		bot.on("ban", function (channel, username, reason) {
-    		var message = logTime + "[BAN] " + username + " has been banned. Reason: " + reason
-    		getBans = JSON.parse(fs.readFileSync(logFile, 'utf8'))
-			getBans.timeout.push(message)
-			newBan = JSON.stringify(getBans)
-			fs.writeFileSync(logFile, newBan)
-		});
-			
-		bot.on("timeout", function (channel, username, reason, duration) {
-    		var message = logTime + "[TIMEOUT] " + username + " has been timed out for " + duration + " minutes. Reason: " + reason
-    		getBans = JSON.parse(fs.readFileSync(logFile, 'utf8'))
-			getBans.timeout.push(message)
-			newBan = JSON.stringify(getBans)
-			fs.writeFileSync(logFile, newBan)
 		});
 	}
 }

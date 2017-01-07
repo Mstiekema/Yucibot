@@ -1,95 +1,41 @@
-<html lang="en" ng-app="yucibot" >
-<head>
-<link rel="stylesheet" type="text/css" href="/../css/yucibot.css">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
-<title>Yucibot</title>
-</head>
-<body>
-<div class="logo"></div>
-<div ng-app="yucibot" ng-controller="template" ng-include=menu></div>
-<div class="login"></div>
-<div ng-app="yucibot" ng-controller="adminController">
+<% include ../header.ejs %>
+<script>
+var socket = io.connect('http://localhost:3000');
+function disableModule(name) {
+  socket.emit('disableModule', name)
+  setTimeout(function() {window.location.reload(true)}, 100); 
+}
+function enableModule(name) {
+  socket.emit('enableModule', name)
+  setTimeout(function() {window.location.reload(true)}, 100); 
+}
+</script>
 <div class="top"><h1>Modules</h1></div>
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main">
 
 <h2>Enable / disable modules</h2>
-
+<p>You can enable or disable all the modules here. <br> You'll have to restart the bot for the changes to take effect.</p>
 <table>
   <tr>
     <th>Module</th>
     <th>State</th> 
+    <th>Description</th> 
     <th>Change</th>
   </tr>
+<% moduleList.forEach(function(moduleList) { %>
   <tr>
-    <td>Twitchapi commands</td>
-    <td>{{ twitchapi }}</td> 
-    <td><button onclick="changeState(false, 'twitchapi')">Disable</button><button onclick="changeState(true, 'twitchapi')">Enable</button></td>
+    <td><%= moduleList.moduleName %></td>
+    <td><%= moduleList.state %></td> 
+    <td><%= moduleList.moduleDescription %></td> 
+    <td>
+    <button onclick="disableModule('<%= moduleList.moduleName %>')">Disable</button>
+    <button onclick="enableModule('<%= moduleList.moduleName %>')">Enable</button>
+    </td>
   </tr>
-  <tr>
-    <td>Overwatch commands</td>
-    <td>{{ overwatch }}</td> 
-    <td><button onclick="changeState(false, 'overwatch')">Disable</button><button onclick="changeState(true, 'overwatch')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Profile commands</td>
-    <td>{{ fetchProfile }}</td> 
-    <td><button onclick="changeState(false, 'fetchProfile')">Disable</button><button onclick="changeState(true, 'fetchProfile')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Point commands</td>
-    <td>{{ pointCommands }}</td> 
-    <td><button onclick="changeState(false, 'pointCommands')">Disable</button><button onclick="changeState(true, 'pointCommands')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Update points</td>
-    <td>{{ updatePoints }}</td> 
-    <td><button onclick="changeState(false, 'updatePoints')">Disable</button><button onclick="changeState(true, 'updatePoints')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Dungeon</td>
-    <td>{{ dungeon }}</td> 
-    <td><button onclick="changeState(false, 'dungeon')">Disable</button><button onclick="changeState(true, 'dungeon')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Sub alerter</td>
-    <td>{{ sub }}</td> 
-    <td><button onclick="changeState(false, 'sub')">Disable</button><button onclick="changeState(true, 'sub')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Profile updater</td>
-    <td>{{ update }}</td> 
-    <td><button onclick="changeState(false, 'update')">Disable</button><button onclick="changeState(true, 'update')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>420 Timer</td>
-    <td>{{ fourtwenty }}</td> 
-    <td><button onclick="changeState(false, 'fourtwenty')">Disable</button><button onclick="changeState(true, 'fourtwenty')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Twitter timer</td>
-    <td>{{ twitter }}</td> 
-    <td><button onclick="changeState(false, 'twitter')">Disable</button><button onclick="changeState(true, 'twitter')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Songrequest</td>
-    <td>{{ songrequest }}</td> 
-    <td><button onclick="changeState(false, 'songrequest')">Disable</button><button onclick="changeState(true, 'songrequest')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Moderation tools</td>
-    <td>{{ modnazi }}</td> 
-    <td><button onclick="changeState(false, 'modnazi')">Disable</button><button onclick="changeState(true, 'modnazi')">Enable</button></td>
-  </tr>
-  <tr>
-    <td>Moderation logs</td>
-    <td>{{ modlogs }}</td> 
-    <td><button onclick="changeState(false, 'modlogs')">Disable</button><button onclick="changeState(true, 'modlogs')">Enable</button></td>
-  </tr>
+<% }); %>
 </table>
-</div>
+
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>
-<script type="text/javascript" src="/../js/admin.js"></script>
 </body>

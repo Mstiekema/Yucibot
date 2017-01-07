@@ -2,14 +2,11 @@ var tmi 		= require('tmi.js');
 var options 	= require('../config.js')
 var connect 	= require('../app.js')
 var bot 		= connect.bot
-var options 	= require('../config.js')
 var request 	= require("request");
 var clientID 	= options.identity.clientId
 
 module.exports = {
-
 	basicCommands: function () {
-
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!test")) {
 		    	bot.say(channel, "This is a command xD")
@@ -51,7 +48,6 @@ module.exports = {
 			};
 		});
 	},
-
 	useTwitchAPI: function () {
 		bot.on('message', function(channel, user, message, self) {
 			var info = {
@@ -60,7 +56,6 @@ module.exports = {
 	  			  'Client-ID': clientID
 	  			}
 			};
-
 			if(message.startsWith("!viewers")) {
 				function viewers(error, response, body) {
 				  if (!error && response.statusCode == 200) {

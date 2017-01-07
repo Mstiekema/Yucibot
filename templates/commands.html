@@ -1,20 +1,10 @@
-<html lang="en" ng-app="yucibot" >
-<head>
-<link rel="stylesheet" type="text/css" href="../css/yucibot.css">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
-<title>Yucibot</title>
-</head>
-<body>
-<div class="logo"></div>
+<% include header.ejs %>
 <div class="top"><h1>Commands</h1></div>
-<div class="login"></div>
-<div ng-app="yucibot" ng-controller="template" ng-include=menu></div>
-
-<div class="main" ng-app="yucibot" ng-controller="template">
-	<p>Commands test page</p>
-</div>
-
 <div class="search"><input id="searchBar" type="text"></div>
+<div class="main">
+
+<p>Commands test page</p>
+
+</div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
 </body>

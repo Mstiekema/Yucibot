@@ -3,7 +3,7 @@ var options = require('./config.js')
 var request = require("request");
 var bot = new tmi.client(options);
 module.exports.bot = bot;
-var commands = require('./modules/commands.js')
+var commands = require('./modules/modules.js')
 
 bot.connect();
 

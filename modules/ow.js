@@ -5,9 +5,7 @@ var bot 	= connect.bot
 var request = require("request");
 
 module.exports = {
-
 	owCommands: function () {
-
 		bot.on('message', function(channel, user, message, self) {
 			if(message.startsWith("!owrank")) {
 				if(message.length < 8) {

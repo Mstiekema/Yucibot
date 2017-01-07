@@ -8,7 +8,6 @@ var mkdirp 	= require('mkdirp');
 var fs 		= require('fs');
 
 module.exports = {
-
 	fourtwenty: function () {
 		var channel = JSON.stringify(options.channels).slice(2, -2);
 		var job = new CronJob('00 20 16 * * *', function() {
@@ -20,11 +19,10 @@ module.exports = {
 			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip")
 		}, function () {}, true );
 	},
-
 	twitter: function () {
 		var channel = JSON.stringify(options.channels).slice(2, -2);
 		var job = new CronJob('*/20 * * * *', function() {
-			bot.say(channel, "Follow me on Twitter: " + options.identity.twitter)
+			bot.say(channel, "Follow me on Twitter: https://twitter.com/" + options.identity.twitter)
 			}, function () {}, true );
 	}
 }

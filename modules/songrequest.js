@@ -5,16 +5,12 @@ var bot 		= connect.bot
 var ytApiKey 	= options.identity.ytApiKey
 var request 	= require("request");
 var fs 			= require('fs');
+var connection 	= require("./connection.js")
 
 module.exports = {
-	getSR: function () {
+	getSongs: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!sr") || message.startsWith("!songrequest")) {
-				var time = new Date();
-				var day = time.getDate();
-				var month = time.getMonth() + 1;
-				var year = time.getFullYear();
-				var file = './static/json/songlists/songlist' + year + "-" + month + "-" + day + ".json";
 				songlink = message.split(" ")
 				var match = String(songlink).match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
 				if(match != null) {
@@ -27,36 +23,35 @@ module.exports = {
 							return
 						}
 						base = info.items[0]
-						title = base.snippet.title
-						thumb = base.snippet.thumbnails.default.url
-						user = user.username
-						// length = base.contentDetails.duration
-						function newLine () {
-							var newLine = ['{"name": "' + title + '", "user": "' + user + '", "id": "' + id + '", "img": "' + thumb + '"}]']
-							fs.appendFileSync(file, newLine)
+						var length = base.contentDetails.duration
+						var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+						var hours = 0, minutes = 0, seconds = 0, totalseconds;
+					  	var matches = reptms.exec(length);
+						if (matches[1]) hours = Number(matches[1]);
+						if (matches[2]) minutes = Number(matches[2]);
+					    if (matches[3]) seconds = Number(matches[3]);
+					    totalseconds = Number(hours * 3600  + minutes * 60 + seconds);
+						console.log(totalseconds)
+						var title = base.snippet.title
+						var srInfo = {
+							title: base.snippet.title,
+							thumb: base.snippet.thumbnails.default.url,
+							name: user.username,
+							length: totalseconds,
+							songid: id
 						}
-						if (fs.existsSync(file)) {
-							fs.readFile(file, 'utf8', function(err, data) {if (err) {return}
-								if (data.includes(title)) {
-									bot.whisper(user, "This song has already been requested :/")
-								} else {
-									var replace = data.replace("}]", "},\n");
-		   							fs.writeFile(file, replace)
-		   							setTimeout(newLine, 10)
-		   							bot.whisper(user, "Succesfully added your song to the queue! :D")
-		   						}
-							});
-						}
-						else {
-							fs.writeFileSync(file, '[')
-							setTimeout(newLine, 10)
-							bot.whisper(user, "Succesfully added your song to the queue! :D")
-						}
+						var getTime = new Date();
+						connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = DATE_FORMAT(NOW(),"%Y-%m-%d")', function(err, result) {
+							var songNames = result.map(function(a) {return a.title;})
+							if (songNames.indexOf(title) == -1) {
+								connection.query('insert into songrequest set ?', srInfo, function (err, result) {if (err) {return}})
+								bot.whisper(user.username, "Succesfully added your song to the queue!")
+							} else {
+								bot.whisper(user.username, "This song has already been requested :/")
+							}
+						})
 					}
 				)}
-				else {
-					bot.whisper(user.username, "That's not a valid YT video :/")				
-				}
 			}
 		});
 	}
