@@ -11,10 +11,18 @@ function connectDatabase() {
 			database: options.mysql.database,
 			port: 3306
 		});
-
-        connection.connect(function(err){
+        connection.connect(function(err) {
             if(err) {
-                console.log(err);
+                console.log('error when connecting to db:', err);
+                setTimeout(connectDatabase, 2000);
+            }
+        });
+        connection.on('error', function(err) {
+            console.log('db error', err);
+            if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+                connectDatabase();
+            } else {
+                throw err;
             }
         });
     }

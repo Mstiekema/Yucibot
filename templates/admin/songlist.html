@@ -23,6 +23,7 @@ var videos = new Array;
 var player;
 
 function onYouTubeIframeAPIReady() {
+	setTimeout(function() {
 	player = new YT.Player('player', {
 		height: '360',
 		width: '640',
@@ -32,6 +33,7 @@ function onYouTubeIframeAPIReady() {
 			'onStateChange': onPlayerStateChange
 		}
 	});
+}, 100);
 }
 
 function onPlayerReady(event) {
@@ -93,7 +95,7 @@ yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main" ng-app="yucibot" ng-controller="songQueue">
 <div class="videoTitle"></div>
-<div id="player"><button onclick="location.reload(true)">Start songlist</button></div>
+<div id="player"></div>
 <div class="songQueue">
 <h2>Songlist queue</h2>
 <div id="songItem" ng-repeat="x in allSongs">
