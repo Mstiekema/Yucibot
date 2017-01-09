@@ -99,7 +99,7 @@ app.get('/logout', function(req, res) {
 app.get('/user/:id', function(req, res) {
     connection.query('select * from user where name = ?', req.params.id, function(err, result) {
         if (result[0] == undefined) {
-            res.render("error.html");
+            res.render("error404.html");
         } else {
             res.render('user.html', { 
                 user: result[0].name,
@@ -113,7 +113,7 @@ app.get('/user/:id', function(req, res) {
 app.get('/user/:id/logs', function(req, res) {
     connection.query('select * from chatlogs where name = ?', req.params.id, function(err, result) {
         if (result[0] == undefined) {
-            res.render("error.html");
+            res.render("error404.html");
         } else {
             res.render('logs.html', { 
                 log: result,
@@ -206,6 +206,14 @@ app.get('/admin/modules', function(req, res) {
             website: options.identity.websiteUrl
         });
     });
+});
+
+app.get('/403', function(req, res) {
+    connection.query('select * from streaminfo', function(err, result) {res.render('error403.html')});
+});
+
+app.all('*', function(req, res, next) {
+    connection.query('select * from streaminfo', function(err, result) {res.render('error404.html')});
 });
 
 console.log("Started website")

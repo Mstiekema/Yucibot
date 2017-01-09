@@ -1,0 +1,41 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/../css/yucibot.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script> 
+<% if (locals.login == true) { %>
+function userHome() {
+   window.location.href = '/user/' + '<%= locals.name %>';
+}
+<% } %>
+<% if (locals.mod != true) { %>
+window.location.replace("/403")
+<% } %>
+</script>
+<meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+<meta http-equiv="expires" content="Sat, 31 Oct 2014 00:00:00 GMT">
+<meta http-equiv="pragma" content="no-cache">
+<title>Yucibot</title>
+</head>
+<body>
+<div class="logo"></div>
+<div>
+<% if (locals.mod == true) { %>
+<% include ../../static/html/adminmenu.htm %>
+<% } else { %>
+<% include ../../static/html/menu.htm %>
+<% } %>
+</div>
+<div class="login">
+
+<% if (locals.login == true) { %>
+<u id='test'>Hello <%= locals.name %> </u>	
+<% if (locals.mod == true) { %> <p onclick='admin()'>• Admin home</p> <% } %>
+<p onclick='userHome()'>• User page</p>
+<p onclick='logout()'>Logout</p>
+<% } else { %>
+<p onclick='login()'>Login</p>
+<% } %>
+</div>
