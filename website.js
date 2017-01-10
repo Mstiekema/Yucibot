@@ -228,7 +228,7 @@ app.get('/admin/logs/points', function(req, res) {
 });
 
 app.get('/admin/logs/sub', function(req, res) {
-    connection.query('select * from adminlogs where type = "sub" AND type = "resub"', function(err, result) {
+    connection.query('select * from adminlogs where type = "sub" OR type = "resub"', function(err, result) {
         if (result[0] == undefined) {
             res.render("admin/adminlogs.html", {
                 log: false
@@ -242,7 +242,7 @@ app.get('/admin/logs/sub', function(req, res) {
 });
 
 app.get('/admin/logs/timeout', function(req, res) {
-    connection.query('select * from adminlogs where type = "timeout" AND type = "ban"', function(err, result) {
+    connection.query('select * from adminlogs where type = "timeout" OR type = "ban"', function(err, result) {
         if (result[0] == undefined) {
             res.render("admin/adminlogs.html", {
                 log: false
