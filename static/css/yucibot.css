@@ -192,7 +192,20 @@
     overflow: auto;
 }
 
-div.menu p:hover, div.login p:hover { 
+#logMenu {
+    background-color: #22292b;;
+    position: absolute;
+    right: 20px;
+    border: 1px solid gray;
+    text-align: center;
+}
+
+#logMenu p {
+    width: 80px;
+    margin: 0px;
+}
+
+div.menu p:hover, div.login p:hover, div#logMenu p:hover { 
     background-color: #384447;
 }
 

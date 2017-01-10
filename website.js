@@ -154,7 +154,7 @@ app.get('/admin', function(req, res) {
 
 app.get('/admin/songlist', function(req, res) {
     connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
-        if (result[1] == undefined) {
+        if (result == undefined || result[1] == undefined) {
             res.render('admin/srerror.html')
         }
         else{
@@ -187,6 +187,62 @@ io.on('connection', function (socket) {
 
 app.get('/admin/logs', function(req, res) {
     connection.query('select * from adminlogs', function(err, result) {
+        if (result[0] == undefined) {
+            res.render("admin/adminlogs.html", {
+                log: false
+            });
+        } else {
+            res.render('admin/adminlogs.html', { 
+                log: result
+            });
+        };
+    });
+});
+
+app.get('/admin/logs/login', function(req, res) {
+    connection.query('select * from adminlogs where type = "login"', function(err, result) {
+        if (result[0] == undefined) {
+            res.render("admin/adminlogs.html", {
+                log: false
+            });
+        } else {
+            res.render('admin/adminlogs.html', { 
+                log: result
+            });
+        };
+    });
+});
+
+app.get('/admin/logs/points', function(req, res) {
+    connection.query('select * from adminlogs where type = "points"', function(err, result) {
+        if (result[0] == undefined) {
+            res.render("admin/adminlogs.html", {
+                log: false
+            });
+        } else {
+            res.render('admin/adminlogs.html', { 
+                log: result
+            });
+        };
+    });
+});
+
+app.get('/admin/logs/sub', function(req, res) {
+    connection.query('select * from adminlogs where type = "sub" AND type = "resub"', function(err, result) {
+        if (result[0] == undefined) {
+            res.render("admin/adminlogs.html", {
+                log: false
+            });
+        } else {
+            res.render('admin/adminlogs.html', { 
+                log: result
+            });
+        };
+    });
+});
+
+app.get('/admin/logs/timeout', function(req, res) {
+    connection.query('select * from adminlogs where type = "timeout" AND type = "ban"', function(err, result) {
         if (result[0] == undefined) {
             res.render("admin/adminlogs.html", {
                 log: false

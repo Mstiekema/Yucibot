@@ -3,6 +3,15 @@
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main"><br>
 
+<div id="logMenu">
+<u>Log menu</u>
+<p onclick="window.location.replace('/admin/logs')">All</p>
+<p onclick="window.location.replace('/admin/logs/points')">Points</p>
+<p onclick="window.location.replace('/admin/logs/timeout')">Timeout</p>
+<p onclick="window.location.replace('/admin/logs/sub')">Subs</p>
+<p onclick="window.location.replace('/admin/logs/login')">Login</p>
+</div>
+
 <% if (log != false) { %>
 <% log.forEach(function(log) { %>
 <tt>
@@ -11,7 +20,7 @@
 </tt>
 <% }); %>
 <% } else { %>
-There are no timeouts or bans recorded.
+There are no logs recorded
 <% } %>
 
 </div>
