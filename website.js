@@ -56,6 +56,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 app.all('*', function(req, res, next) {
+    res.locals.website = options.identity.websiteUrl
     res.locals.botName = options.identity.username
     res.locals.streamer = options.channels[0]
     if (req.user) {
@@ -127,9 +128,25 @@ app.get('/commands', function(req, res) {
     connection.query('select * from commands', function(err, result) {res.render('commands.html')});
 });
 
+app.get('/clips', function(req, res) {
+    connection.query('select * from streaminfo', function(err, result) {
+        request({
+            url: 'https://api.twitch.tv/kraken/clips/top?limit=5&channel=' + options.channels[0],
+            headers: {
+                "Accept": "application/vnd.twitchtv.v4+json",
+                "Client-ID": clientID
+            }
+        }, function(err, res, body) {
+            var info = JSON.parse(body)
+            io.emit('sendClips', body)
+        });
+        res.render('clips.html')
+    });
+});
+
 app.get('/history/:id', function(req, res) {
     connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
-        if (result[0] == undefined) {
+        if (result == undefined || result[0] == undefined) {
             res.render("history.html", {
                 songInfo: false,
                 listDate: req.params.id

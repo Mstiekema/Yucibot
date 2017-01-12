@@ -22,6 +22,7 @@ function connectDatabase() {
             if(err.code === 'PROTOCOL_CONNECTION_LOST') {
                 connectDatabase();
             } else {
+                connectDatabase();
                 throw err;
             }
         });

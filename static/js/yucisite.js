@@ -15,6 +15,10 @@ function commands() {
    window.location.href = '/commands';
 }
 
+function clips() {
+   window.location.href = '/clips';
+}
+
 function admin() {
    window.location.href = '/admin';
 }
