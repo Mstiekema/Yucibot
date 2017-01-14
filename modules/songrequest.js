@@ -11,9 +11,20 @@ module.exports = {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!sr") || message.startsWith("!songrequest")) {
 				songlink = message.split(" ")
-				var id = songlink[1]
-				var match = String(songlink).match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
-				if(match != null || id.length == 11) {
+				function match () {
+					var link = String(songlink).match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
+					var id = songlink[1]
+					if (link != null) {
+						return link[1]
+					} else if (id.length == 11){
+						return id
+					} else {
+						return null
+					}
+				}
+				console.log(match())
+				if(match() != null) {
+					var id = match()
 					var url = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status"
 					request(url, function (error, response, body) {
 						info = JSON.parse(body)
