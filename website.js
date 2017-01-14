@@ -175,9 +175,7 @@ app.get('/admin/songlist', function(req, res) {
             res.render('admin/srerror.html')
         }
         else{
-            res.render('admin/songlist.html', {
-                website: options.identity.websiteUrl
-            });
+            res.render('admin/songlist.html');
         }
     });
 });

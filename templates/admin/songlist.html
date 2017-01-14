@@ -4,14 +4,16 @@ var tag 			= document.createElement('script');
 tag.src 			= "https://www.youtube.com/iframe_api";
 var firstScriptTag 	= document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-var socket = io.connect('<%= website %>');
+var socket = io.connect('<%= locals.website %>');
 
 function getVideos() {
 	socket.on('pushSonglist', function (data) {
 		videos.length = 0
 		for (a = 0; a < data.length; a++) {
 			var songArr = data[a]
+			var length = data[a].length
 			videos.push(songArr)
+			lengths.push(length)
 		}
 	})
 }
@@ -19,6 +21,7 @@ function getVideos() {
 socket.emit('refreshData')
 getVideos()
 
+var lengths = new Array;
 var videos = new Array;
 var player;
 
@@ -83,11 +86,20 @@ function onPlayerStateChange(event) {
 
 var yucibot = angular.module('yucibot',[]);
 yucibot.controller('songQueue', function($scope, $http, $log, $interval) { 
-	$scope.reload = function() {
-		$scope.allSongs = videos.slice(i)
+	$scope.getVideos = function() {
+		var vids = videos.slice(i)
+		var total = 0;
+	    for(count = 0; count < vids.length; count++){
+	        total += vids[count].length
+	    }
+		var h = Math.floor(total / 3600);
+		var m = Math.floor(total % 3600 / 60);
+		var s = Math.floor(total % 3600 % 60);
+	    $scope.length = (h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s
+		$scope.allSongs = vids
 	}
-	$scope.reload()
-	$interval($scope.reload, 1000);
+	$scope.getVideos()
+	$interval($scope.getVideos, 1000);
 })
 
 </script>
@@ -102,7 +114,7 @@ yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 	<div><img ng-src={{x.thumb}}></div><div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.title }} requested by: {{ x.name }}</div>
 </div>
 </div>
-<div class="queueLength"></div>
+<div class="queueLength">Queue length: {{ length }}</div>
 <div class="button" id="skipVideo" onclick="skipVideo()">Skip video</div>
 <div class="button" id="previousVideo" onclick="previousVideo()">Previous video</div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
