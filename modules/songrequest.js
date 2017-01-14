@@ -11,9 +11,9 @@ module.exports = {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!sr") || message.startsWith("!songrequest")) {
 				songlink = message.split(" ")
+				var id = songlink[1]
 				var match = String(songlink).match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
-				if(match != null) {
-					id = match[1]
+				if(match != null || id.length == 11) {
 					var url = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status"
 					request(url, function (error, response, body) {
 						info = JSON.parse(body)
@@ -30,7 +30,6 @@ module.exports = {
 						if (matches[2]) minutes = Number(matches[2]);
 					    if (matches[3]) seconds = Number(matches[3]);
 					    totalseconds = Number(hours * 3600  + minutes * 60 + seconds);
-						console.log(totalseconds)
 						var title = base.snippet.title
 						var srInfo = {
 							title: base.snippet.title,
