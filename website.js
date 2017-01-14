@@ -100,7 +100,11 @@ app.get('/', function(req, res) {
                         viewers: base.viewers,
                         title: base.channel.status
                     })
-                } 
+                } else {
+                    res.render('index.html', {
+                        status: 0
+                    })
+                }
             });
         } else {
             res.render('index.html', {
