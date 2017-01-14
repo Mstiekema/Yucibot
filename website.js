@@ -82,8 +82,33 @@ app.all('*', function(req, res, next) {
 });
 
 app.get('/', function(req, res) {
-    connection.query('select * from streaminfo', function(err, result) {res.render('index.html')});
-});
+    var info = {
+        url: 'https://api.twitch.tv/kraken/streams?channel=' + JSON.stringify(options.channels).slice(2, -2),
+        headers: {
+            'Client-ID': clientID
+        }
+    }
+    request(info, function (error, response, body) {
+        var base = JSON.parse(body).streams[0]
+        if (base != undefined) {
+            var streamid = base._id
+            connection.query('select * from streaminfo where streamid = ?', streamid, function(err, result) {
+                if (result[0] != undefined) {
+                    res.render('index.html', {
+                        status: 1,
+                        game: base.game,
+                        viewers: base.viewers,
+                        title: base.channel.status
+                    })
+                } 
+            });
+        } else {
+            res.render('index.html', {
+                status: 0
+            })
+        }
+    });
+})
 
 app.get("/login", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
     res.redirect('/user/' + req.user);
@@ -166,7 +191,11 @@ app.get('/history', function(req, res) {
 });
 
 app.get('/admin', function(req, res) {
-    connection.query('select * from streaminfo', function(err, result) {res.render('admin/home.html')});
+    connection.query('select * from streaminfo', function(err, result) {
+        res.render('admin/home.html', {
+            info: result
+        })
+    });
 });
 
 app.get('/admin/songlist', function(req, res) {

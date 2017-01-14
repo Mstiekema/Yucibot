@@ -1,3 +1,10 @@
+.allStreams {
+    width: 700px;
+    border: 3px solid #808080;
+    background-color: #384447;
+    margin-bottom: 20px;
+}
+
 .allClips {
     position: relative;
     height: 416px;
@@ -250,4 +257,8 @@ table, th, td {
 
 th, td {
     padding: 5px;
+}
+
+a {
+    color: #4995c7;
 }

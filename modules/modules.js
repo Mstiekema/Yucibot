@@ -6,10 +6,12 @@ var points 		= require('./points.js')
 var songrequest	= require('./songrequest.js')
 var mod 		= require('./mod.js')
 var events 		= require('./events.js')
+var streaminfo 	= require('./streaminfo.js')
 var connection 	= require("./connection.js")
 var exp = module.exports = {}
 
 exp.commands = function() {
+	streaminfo.fetchInfo()
 	connection.query('select * from module', function(err, result) {
 		if (result[0].state == 1) {
 			basic.useTwitchAPI()

@@ -5,6 +5,18 @@
 
 <h3> Welcome <%= locals.name %></h3>
 
+<p>Previous stream details</p>
+<% info.forEach(function(info) { %>
+<div class="allStreams">
+<b>Stream start:</b> <%= info.date %><br>
+<b>Title:</b> <%= info.title %><br>
+<b>Games:</b> <%= info.game %><br>
+<b>VOD:</b> <a href="<%= info.vod %>"  target="_blank"><%= info.vod %></a><br>
+<b>Lowest viewer count:</b> <%= info.lowView %><br>
+<b>Highest viewer count:</b> <%= info.highView %><br>
+</div>
+<% }); %>
+
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>
 </body>

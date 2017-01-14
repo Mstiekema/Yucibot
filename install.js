@@ -14,7 +14,7 @@ connection.query(
 
 connection.query(
 	'CREATE TABLE streaminfo (' +
-	'id INT AUTO_INCREMENT PRIMARY KEY,' +
+	'streamid VARCHAR(20) PRIMARY KEY,' +
 	'date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
 	'title VARCHAR(100),' +
 	'game VARCHAR(100),' +

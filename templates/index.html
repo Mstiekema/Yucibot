@@ -3,7 +3,14 @@
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main">
 
-<p> Hey there! I'm <%= botName %> and I moderate <%= streamer %> 's channel!</p>
+<p>Hey there! I'm <%= botName %> and I moderate <%= streamer %> 's channel!<br>
+<% if (status == 1) { %>
+The stream is currently <b>LIVE</b> with <%= viewers %> viewers.The current game is <%= game %><br> Title: <%= title %></p>
+<iframe src="https://www.twitch.tv/<%= streamer %>/chat?popout=" frameborder="0" scrolling="no" height="563" width="350" align="left"></iframe>
+<iframe src='http://player.twitch.tv/?channel=<%= streamer %>&autoplay=false' height="563" width="1000" frameborder="0" scrolling="no" allowfullscreen="true"></iframe>
+<% } else { %>
+The stream is currently <b>OFFLINE</b></p>
+<% } %>
 
 </div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
