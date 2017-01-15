@@ -1,3 +1,17 @@
+.donate {
+    width: 100px;
+    height: 30px;
+    background-color: #808080;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 25px;
+}
+
+.footer {
+    font-size: 12px;
+    color: #a2a8b7;
+}
+
 .twitch {
     width: 1350px;
 }
@@ -21,7 +35,7 @@
     position: absolute;
     left: 20px;
     width: 150px;
-    bottom: 50px;
+    bottom: 60px;
     border: 3px solid gray;
     padding: 5px;
     text-align: center;

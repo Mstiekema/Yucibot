@@ -50,3 +50,19 @@ function login() {
 function logout() {
 	window.location.href = '/logout';
 }
+
+function about() {
+   window.location.href = '/about';
+}
+
+function github() {
+   window.location.href = 'https://www.github.com/Mstiekema/Yucibot';
+}
+
+function support() {
+   window.location.href = '/support';
+}
+
+function donate() {
+   window.location.href = 'https://www.paypal.me/Mstiekema';
+}

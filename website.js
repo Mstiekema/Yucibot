@@ -114,6 +114,14 @@ app.get('/', function(req, res) {
     });
 })
 
+app.get('/about', function(req, res) {
+    connection.query('select * from streaminfo', function(err, result) {res.render('about.html')});
+});
+
+app.get('/support', function(req, res) {
+    connection.query('select * from streaminfo', function(err, result) {res.render('support.html')});
+});
+
 app.get("/login", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
     res.redirect('/user/' + req.user);
 });
