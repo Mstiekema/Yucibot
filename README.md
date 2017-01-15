@@ -1,6 +1,8 @@
 # Yucibot
 *A multipurpose Twitch bot and website*
 
+[Installation guide](https://github.com/Mstiekema/Yucibot/wiki/Installation-guide)
+
 Yucibot is a project created and managed by Mstiekema. I created this bot as a fun project after being inspired by pajbot and other Twitch bots. 
 <br>
 I saw that a lot of bots lacked some features. With this project, I want to create a bot that has everything that a streamer needs. It should have a songlist, polling system, point system and a lot more! I also started this project so I could learn some coding. The project itself is written in JavaScript / node.js. 
