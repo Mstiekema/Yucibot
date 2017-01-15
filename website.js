@@ -139,10 +139,27 @@ app.get('/user/:id', function(req, res) {
         if (result[0] == undefined) {
             res.render("error404.html");
         } else {
-            res.render('user.html', { 
-                user: result[0].name,
-                points: result[0].points,
-                lines: result[0].num_lines
+            var info = {
+                url: 'https://api.twitch.tv/kraken/users/' + req.params.id,
+                headers: {
+                    'Client-ID': clientID
+                }
+            }
+            request(info, function (error, response, body) {
+                var getAge = JSON.stringify(new Date(JSON.parse(body).created_at)).substring(1, 20)
+                var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
+                var days = Math.round(Math.abs((new Date(JSON.parse(body).created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
+                request("https://api.rtainc.co/twitch/channels/" + options.channels[0] + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
+                    var fa = body
+                    res.render('user.html', {
+                        age: age,
+                        days: days,
+                        followAge: fa,
+                        user: result[0].name,
+                        points: result[0].points,
+                        lines: result[0].num_lines
+                    })
+                })
             });
         };
     });
