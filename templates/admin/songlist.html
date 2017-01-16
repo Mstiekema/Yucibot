@@ -44,14 +44,15 @@ function onPlayerReady(event) {
 }
 
 function previousVideo() {
-	--i
-	nextVideo();
+	socket.emit('prevSong')
+	i--
+	socket.on('nextSong', function() {setTimeout(function() {getVideos(); nextVideo()}, 1000); })
 }
 
 function skipVideo() {
 	socket.emit('endSong', videos[i].songid)
-	++i
-	nextVideo();
+	i++
+	socket.on('nextSong', function() {setTimeout(function() {getVideos(); nextVideo()}, 1000); })
 }
 
 var i = 0;
@@ -76,20 +77,18 @@ function onPlayerStateChange(event) {
 		i++
 		nextVideo();
 		event.target.playVideo();
-		getVideos()
 	}
 	if (event.data == -1) {
 		socket.emit('refreshData')
 		event.target.playVideo();
 		getSongName();
-		getVideos()
 	}
 }
 
 var yucibot = angular.module('yucibot',[]);
 yucibot.controller('songQueue', function($scope, $http, $log, $interval) { 
 	$scope.getVideos = function() {
-		var vids = videos
+		var vids = videos.slice(i)
 		var total = 0;
 	    for(count = 0; count < vids.length; count++){
 	        total += vids[count].length
