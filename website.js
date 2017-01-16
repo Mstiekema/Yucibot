@@ -229,11 +229,11 @@ app.get('/admin', function(req, res) {
 
 app.get('/admin/songlist', function(req, res) {
     connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
-        if (result == undefined || result[1] == undefined) {
-            res.render('admin/srerror.html')
+        if (result == undefined || result[0] == undefined) {
+            res.render('admin/songlist.html', {songs: false})
         }
         else{
-            res.render('admin/songlist.html');
+            res.render('admin/songlist.html', {songs: true});
         }
     });
 });

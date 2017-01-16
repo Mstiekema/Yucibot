@@ -109,10 +109,15 @@ yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 <div class="videoTitle"></div>
 <div id="player"></div>
 <div class="songQueue">
+<% if(songs == true) { %>
 <h2>Songlist queue</h2>
 <div id="songItem" ng-repeat="x in allSongs">
 	<div><img ng-src={{x.thumb}}></div><div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.title }} requested by: {{ x.name }}</div>
 </div>
+<% } else { %>
+<h3>No songs have been requested so far</h3>
+<p>Refresh if people have requested something</p>
+<% } %>
 </div>
 <div class="queueLength">Queue length: {{ length }}</div>
 <div class="button" id="skipVideo" onclick="skipVideo()">Skip video</div>
