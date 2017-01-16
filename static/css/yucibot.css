@@ -94,6 +94,12 @@
     top: 80px;
 }
 
+#skip {
+    position: absolute;
+    left: 404px;
+    top: -20px;
+}
+
 #skipVideo {
     position: absolute;
     left: 370px;
