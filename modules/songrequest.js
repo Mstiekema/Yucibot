@@ -22,7 +22,6 @@ module.exports = {
 						return null
 					}
 				}
-				console.log(match())
 				if(match() != null) {
 					var id = match()
 					var url = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status"
@@ -61,6 +60,12 @@ module.exports = {
 						})
 					}
 				)}
+			}
+			if (message.startsWith("!currentsong")) {
+				connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
+					console.log(result)
+					bot.say(channel, "The song that is currently playing is: " + result[0].title + " https://www.youtube.com/watch?v=" + result[0].songid)
+				});
 			}
 		});
 	}

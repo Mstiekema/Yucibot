@@ -228,7 +228,7 @@ app.get('/admin', function(req, res) {
 });
 
 app.get('/admin/songlist', function(req, res) {
-    connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+    connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
         if (result == undefined || result[0] == undefined) {
             res.render('admin/songlist.html', {songs: false})
         }
@@ -240,9 +240,13 @@ app.get('/admin/songlist', function(req, res) {
 
 io.on('connection', function (socket) {
     socket.on('refreshData', function (data) {
-        connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+        connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
             socket.emit('pushSonglist', result);
         })
+    })
+    socket.on('endSong', function (data) {
+        connection.query('update songrequest set playState = 1 where songid = ?', data, function(err, result) {})
+        socket.emit('nextSong');
     })
     socket.on('disableModule', function(data) {
         connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {

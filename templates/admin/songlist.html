@@ -49,6 +49,7 @@ function previousVideo() {
 }
 
 function skipVideo() {
+	socket.emit('endSong', videos[i].songid)
 	++i
 	nextVideo();
 }
@@ -70,6 +71,7 @@ function getSongName() {
 
 function onPlayerStateChange(event) {
 	if (event.data == YT.PlayerState.ENDED) {
+		socket.emit('endSong', videos[i].songid)
 		socket.emit('refreshData')
 		i++
 		nextVideo();
@@ -87,7 +89,7 @@ function onPlayerStateChange(event) {
 var yucibot = angular.module('yucibot',[]);
 yucibot.controller('songQueue', function($scope, $http, $log, $interval) { 
 	$scope.getVideos = function() {
-		var vids = videos.slice(i)
+		var vids = videos
 		var total = 0;
 	    for(count = 0; count < vids.length; count++){
 	        total += vids[count].length
