@@ -200,16 +200,21 @@ app.get('/clips', function(req, res) {
 
 app.get('/history/:id', function(req, res) {
     connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
+        var songInfo = result
         if (result == undefined || result[0] == undefined) {
             res.render("history.html", {
                 songInfo: false,
                 listDate: req.params.id
             });
         } else {
-            res.render('history.html', { 
-                songInfo: result,
-                listDate: req.params.id
-            });
+            connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id LIMIT 1', req.params.id, function(err, result) {
+                console.log(result)
+                res.render('history.html', { 
+                    currSong: result,
+                    songInfo: songInfo,
+                    listDate: req.params.id
+                });
+            })
         };
     });
 });

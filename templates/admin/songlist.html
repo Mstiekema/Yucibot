@@ -43,8 +43,6 @@ function onPlayerReady(event) {
 	event.target.playVideo();
 }
 
-// setInterval(function(){ console.log(videos[0]) }, 3000);
-
 function previousVideo() {
 	socket.emit('prevSong')
 	socket.on('nextSong', function (data) {
