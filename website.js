@@ -208,6 +208,7 @@ app.get('/history/:id', function(req, res) {
             });
         } else {
             connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id LIMIT 1', req.params.id, function(err, result) {
+                console.log(result)
                 res.render('history.html', { 
                     currSong: result,
                     songInfo: songInfo,
