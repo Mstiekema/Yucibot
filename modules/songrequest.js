@@ -49,11 +49,19 @@ module.exports = {
 							songid: id
 						}
 						var getTime = new Date();
-						connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = DATE_FORMAT(NOW(),"%Y-%m-%d")', function(err, result) {
+						connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = DATE_FORMAT(NOW(),"%Y-%m-%d") AND playState = 0', function(err, result) {
 							var songNames = result.map(function(a) {return a.title;})
 							if (songNames.indexOf(title) == -1) {
-								connection.query('insert into songrequest set ?', srInfo, function (err, result) {if (err) {return}})
-								bot.whisper(user.username, "Succesfully added your song to the queue!")
+								var users = result.map(function(a) {return a.name;})
+								var allNames = users.filter(function(b) {return b == user.username;});
+								var result = allNames.length;
+								console.log(result)
+								if (result <= 2) {
+									connection.query('insert into songrequest set ?', srInfo, function (err, result) {if (err) {return}})
+									bot.whisper(user.username, "Succesfully added your song to the queue!")
+								} else {
+									bot.whisper(user.username, "You have more than 3 songs in the queue, please wait a minute before you request more")
+								}
 							} else {
 								bot.whisper(user.username, "This song has already been requested :/")
 							}
