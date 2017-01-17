@@ -12,7 +12,9 @@ function change() {
 <div class="songQueueHistory">
 
 <h2>Songlist of <%= listDate %> </h2>
+<% if (currSong[0].songid != undefined) { %>
 <p>Current song: <%= currSong[0].title %><br>Requested by: <%= currSong[0].name %> <a href="https://www.youtube.com/watch?v=<%= currSong[0].name %>">YouTube link</a>
+<% } %>
 <div id="selectDate"><label>Select stream date</label>
 <input type="date" id="myDate" onchange="change()" value="<%= listDate %>"></div>
 <% if (songInfo != false) { %>

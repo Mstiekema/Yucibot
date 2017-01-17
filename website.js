@@ -203,16 +203,25 @@ app.get('/history/:id', function(req, res) {
         var songInfo = result
         if (result == undefined || result[0] == undefined) {
             res.render("history.html", {
+                currSong: [{"title": "The songlist has finished"}],
                 songInfo: false,
                 listDate: req.params.id
             });
         } else {
             connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id LIMIT 1', req.params.id, function(err, result) {
-                res.render('history.html', { 
-                    currSong: result,
-                    songInfo: songInfo,
-                    listDate: req.params.id
-                });
+                if (result == undefined || result[0] == undefined) {
+                    res.render('history.html', { 
+                        currSong: [{"title": "The songlist has finished"}],
+                        songInfo: songInfo,
+                        listDate: req.params.id
+                    });
+                } else {
+                    res.render('history.html', { 
+                        currSong: result,
+                        songInfo: songInfo,
+                        listDate: req.params.id
+                    });
+                }
             })
         };
     });
