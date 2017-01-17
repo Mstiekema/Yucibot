@@ -44,59 +44,75 @@ function onPlayerReady(event) {
 }
 
 function previousVideo() {
-	--i
-	nextVideo();
+	socket.emit('prevSong')
+	socket.on('nextSong', function (data) {
+		socket.emit('refreshData');
+		nextVideo();
+	})
 }
 
 function skipVideo() {
-	++i
-	nextVideo();
+	socket.emit('endSong', videos[0].songid)
+	socket.on('nextSong', function (data) {
+		socket.emit('refreshData');
+		nextVideo();
+	})
 }
 
-var i = 0;
 function nextVideo() {
+	setTimeout(function() {
 	player.loadVideoById({
-	'videoId': videos[i].songid,
+	'videoId': videos[0].songid,
 	'startSeconds': 0,
+	'endSeconds': 600,
 	'suggestedQuality': 'large'
 	});
-}		
+}, 200);
+}
 
 function getSongName() {
-	title = videos[i].title
-	user = videos[i].name
+	title = videos[0].title
+	user = videos[0].name
 	$(".videoTitle").html("Current song: " + title + "<br>" + "Requested by: " + user);
 }
 
 function onPlayerStateChange(event) {
 	if (event.data == YT.PlayerState.ENDED) {
-		socket.emit('refreshData')
-		i++
-		nextVideo();
-		event.target.playVideo();
-		getVideos()
+		socket.emit('endSong', videos[0].songid)
+		socket.on('nextSong', function (data) {
+			socket.emit('refreshData');
+			nextVideo();
+			event.target.playVideo();
+		})
 	}
 	if (event.data == -1) {
 		socket.emit('refreshData')
 		event.target.playVideo();
 		getSongName();
-		getVideos()
 	}
 }
 
 var yucibot = angular.module('yucibot',[]);
 yucibot.controller('songQueue', function($scope, $http, $log, $interval) { 
 	$scope.getVideos = function() {
-		var vids = videos.slice(i)
+		var vids = videos
 		var total = 0;
 	    for(count = 0; count < vids.length; count++){
-	        total += vids[count].length
+	        if (vids[count].length < 600) {
+	        	total += vids[count].length
+	        } else {
+	        	total += 600
+	        }
 	    }
 		var h = Math.floor(total / 3600);
 		var m = Math.floor(total % 3600 / 60);
 		var s = Math.floor(total % 3600 % 60);
 	    $scope.length = (h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s
 		$scope.allSongs = vids
+	}
+	$scope.skip = function(id) {
+		socket.emit('removeSong', id)
+		socket.emit('refreshData')
 	}
 	$scope.getVideos()
 	$interval($scope.getVideos, 1000);
@@ -109,10 +125,15 @@ yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 <div class="videoTitle"></div>
 <div id="player"></div>
 <div class="songQueue">
+<% if(songs == true) { %>
 <h2>Songlist queue</h2>
 <div id="songItem" ng-repeat="x in allSongs">
-	<div><img ng-src={{x.thumb}}></div><div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.title }} requested by: {{ x.name }}</div>
+	<div><img ng-src={{x.thumb}}></div><div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.title }} <br> Requested by: <b>{{ x.name }}</b> <br><button ng-click="skip(x.songid)" id="skip">Delete</button></div>
 </div>
+<% } else { %>
+<h3>No songs have been requested so far</h3>
+<p>Refresh if people have requested something</p>
+<% } %>
 </div>
 <div class="queueLength">Queue length: {{ length }}</div>
 <div class="button" id="skipVideo" onclick="skipVideo()">Skip video</div>

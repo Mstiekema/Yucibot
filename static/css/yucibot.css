@@ -94,6 +94,12 @@
     top: 80px;
 }
 
+#skip {
+    position: absolute;
+    left: 404px;
+    top: -20px;
+}
+
 #skipVideo {
     position: absolute;
     left: 370px;
@@ -157,7 +163,15 @@
     color: lightblue;
 }
 
-#songItemHistory {
+#played {
+    background-color: #3c2f33;
+}
+
+#playing {
+    background-color: #303c2f;
+}
+
+.songItemHistory {
     border-style: solid;
     border-width: 1px;
     background-color: #2f3a3c;

@@ -63,7 +63,7 @@ connection.query(
 	'thumb VARCHAR(250),' +
 	'length INT,' +
 	'songid VARCHAR(30),' +
-	'playState BOOL DEFAULT FALSE)',
+	'playState INT DEFAULT FALSE)',
 	function (err, result) {if (err) {return}}
 )
 

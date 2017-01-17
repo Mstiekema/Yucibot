@@ -200,16 +200,20 @@ app.get('/clips', function(req, res) {
 
 app.get('/history/:id', function(req, res) {
     connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
+        var songInfo = result
         if (result == undefined || result[0] == undefined) {
             res.render("history.html", {
                 songInfo: false,
                 listDate: req.params.id
             });
         } else {
-            res.render('history.html', { 
-                songInfo: result,
-                listDate: req.params.id
-            });
+            connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id LIMIT 1', req.params.id, function(err, result) {
+                res.render('history.html', { 
+                    currSong: result,
+                    songInfo: songInfo,
+                    listDate: req.params.id
+                });
+            })
         };
     });
 });
@@ -228,21 +232,37 @@ app.get('/admin', function(req, res) {
 });
 
 app.get('/admin/songlist', function(req, res) {
-    connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
-        if (result == undefined || result[1] == undefined) {
-            res.render('admin/srerror.html')
+    connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+        if (result == undefined || result[0] == undefined) {
+            res.render('admin/songlist.html', {songs: false})
         }
         else{
-            res.render('admin/songlist.html');
+            res.render('admin/songlist.html', {songs: true});
         }
     });
 });
 
 io.on('connection', function (socket) {
     socket.on('refreshData', function (data) {
-        connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+        connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
             socket.emit('pushSonglist', result);
         })
+    })
+    socket.on('endSong', function (data) {
+        connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
+        socket.emit('nextSong');
+    })
+    socket.on('removeSong', function (data) {
+        connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
+            socket.emit('nextSong');
+        })
+    })
+    socket.on('prevSong', function (data) {
+        connection.query('select * from songrequest where playState = 1 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id DESC LIMIT 1', date, function(err,result){
+            if (result[0] != undefined) {
+            connection.query('update songrequest set playState = 0 where songid = ?', result[0].songid, function(err, result) {})
+            socket.emit('nextSong');
+        }})
     })
     socket.on('disableModule', function(data) {
         connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
