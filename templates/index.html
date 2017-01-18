@@ -2,8 +2,7 @@
 <div class="top"><h1>Welcome to Yucibot!</h1></div>
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main">
-
-<p>Hey there! I'm <%= botName %> and I moderate <%= streamer %> 's channel!<br>
+<p>Hey there! I'm <%= botName %> and I moderate <%= streamer %>'s channel!<br>
 <% if (status == 1) { %>
 The stream is currently <b>LIVE</b> with <%= viewers %> viewers.The current game is <u><%= game %></u><br> Title: <%= title %></p>
 <div class="twitch">
@@ -13,7 +12,6 @@ The stream is currently <b>LIVE</b> with <%= viewers %> viewers.The current game
 <% } else { %>
 The stream is currently <b>OFFLINE</b></p>
 <% } %>
-
 </div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
 </body>

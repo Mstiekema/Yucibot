@@ -1,4 +1,3 @@
-// // Searchbar
 $("#searchBar").keyup(function(ev) {
    if (ev.which === 13) {
       var name = $("input").val();
@@ -6,7 +5,6 @@ $("#searchBar").keyup(function(ev) {
    }
 }); 
 
-//Menu
 function home() {
    window.location.href = '/';
 }
@@ -15,8 +13,8 @@ function commands() {
    window.location.href = '/commands';
 }
 
-function clips() {
-   window.location.href = '/clips';
+function stats() {
+   window.location.href = '/stats';
 }
 
 function admin() {

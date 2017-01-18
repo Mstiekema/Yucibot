@@ -1,0 +1,57 @@
+<% include header.ejs %>
+<script>
+var socket = io.connect('<%= locals.website %>');
+var yucibot = angular.module('yucibot',[]).config(function($sceDelegateProvider) {$sceDelegateProvider.resourceUrlWhitelist(["https://clips.twitch.tv/**"])})
+yucibot.controller('clips', function($scope, $interval, $log, $timeout) { 
+	socket.on('sendClips', function (data) { 
+		var iframe = JSON.parse(data).clips
+		$log.log(iframe)
+	    $timeout(function () {
+	        $scope.iframe = iframe
+	    }, 100);
+	})
+})
+</script>
+<div class="top"><h1>Statistics</h1></div>
+<div class="search"><input id="searchBar" type="text"></div>
+<div class="main" ng-app="yucibot" ng-controller="clips">
+
+<h2>Stats</h2>
+<p>
+Yucibot has recorded a total of: <br>
+- <b><%= lines %></b> lines <br>
+- <b><%= user %></b> users <br>
+- <b><%= songrequest %></b> songrequests <br>
+- <b><%= stream %></b> streams <br>
+- <b><%= timeout %></b> timeouts <br>
+- <b><%= ban %></b> bans <br>
+
+<div class="top5">
+<h4>Top 5 points</h4>
+<p>
+#1 <%= toppoints[0].name %> - <%= toppoints[0].points %> points<br>
+#2 <%= toppoints[1].name %> - <%= toppoints[1].points %> points<br>
+#3 <%= toppoints[2].name %> - <%= toppoints[2].points %> points<br>
+#4 <%= toppoints[3].name %> - <%= toppoints[3].points %> points<br>
+#5 <%= toppoints[4].name %> - <%= toppoints[4].points %> points<br>
+</p>
+
+<h4>Top 5 chatters</h4>
+<p>
+#1 <%= toplines[0].name %> - <%= toplines[0].num_lines %> lines<br>
+#2 <%= toplines[1].name %> - <%= toplines[1].num_lines %> lines<br>
+#3 <%= toplines[2].name %> - <%= toplines[2].num_lines %> lines<br>
+#4 <%= toplines[3].name %> - <%= toplines[3].num_lines %> lines<br>
+#5 <%= toplines[4].name %> - <%= toplines[4].num_lines %> lines<br>
+</p>
+</div>
+<h4>Top 5 clips of the month</h4>
+<p class="allClips" ng-repeat="iframe in iframe">
+Title: {{ iframe.title }}<br>
+Creator: {{ iframe.curator.name }}<br>
+Views: {{ iframe.views }}<br>
+<iframe ng-src='{{ iframe.embed_url + "&autoplay=false"}}' width='640' height='360' frameborder='0' scrolling='no' allowfullscreen='true'></iframe>
+</p>
+</div>
+<script type="text/javascript" src="../js/yucisite.js"></script>
+</body>

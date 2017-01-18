@@ -182,7 +182,7 @@ app.get('/commands', function(req, res) {
     connection.query('select * from commands', function(err, result) {res.render('commands.html')});
 });
 
-app.get('/clips', function(req, res) {
+app.get('/stats', function(req, res) {
     connection.query('select * from streaminfo', function(err, result) {
         request({
             url: 'https://api.twitch.tv/kraken/clips/top?limit=5&channel=' + options.channels[0],
@@ -194,7 +194,37 @@ app.get('/clips', function(req, res) {
             var info = JSON.parse(body)
             io.emit('sendClips', body)
         });
-        res.render('clips.html')
+        var streams = result.length
+        connection.query('select * from chatlogs', function(err, result) {
+            var numLines = result.length
+            connection.query('select * from user ORDER BY points DESC', function(err, result) {
+                var user = result.length
+                var toppoints = result
+                connection.query('select * from user ORDER BY num_lines DESC', function(err, result) {
+                    var toplines = result
+                    connection.query('select title from songrequest', function(err, result) {
+                        var songrequest = result.length
+                        connection.query('select type from adminlogs', function(err, result) {
+                            var types = result.map(function(a) {return a.type;})
+                            var timeouts = types.filter(function(b) {return b == "timeout"});
+                            var bans = types.filter(function(b) {return b == "ban"});
+                            var allTimeouts = timeouts.length;
+                            var allBans = bans.length;
+                            res.render('stats.html', {
+                                lines: numLines,
+                                user: user,
+                                songrequest: songrequest,
+                                stream: streams,
+                                timeout: allTimeouts,
+                                ban: allBans,
+                                toppoints: toppoints,
+                                toplines: toplines
+                            })
+                        })
+                    });
+                })
+            });
+        });
     });
 });
 
