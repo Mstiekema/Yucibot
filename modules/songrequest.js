@@ -76,7 +76,11 @@ module.exports = {
 			)}
 			if (message.startsWith("!currentsong")) {
 				connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
-					bot.say(channel, "The song that is currently playing is: " + result[0].title + " requested by: " + result[0].name + " https://www.youtube.com/watch?v=" + result[0].songid)
+					if(result[0] == undefined) {
+						bot.say(channel, "There's no song currently playing :/")
+					} else {
+						bot.say(channel, "The song that is currently playing is: " + result[0].title + " requested by: " + result[0].name + " https://www.youtube.com/watch?v=" + result[0].songid)
+					}
 				});
 			}
 		});
