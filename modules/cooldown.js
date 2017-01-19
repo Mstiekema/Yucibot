@@ -10,13 +10,13 @@ var cooldowns = [];
 function cooldown(command, user, cooldown, time) {
 	if(cooldowns.includes(user)) {
 		if(cooldowns.user.includes(command)) {
-			return bot.whisper(user, "The command that you're trying to use is still on cooldown, please wait :)")
+			return true
 		} else {
 			cooldowns.push({"user": command})
-			return
+			return false
 		}
 	} else {
 		cooldowns.push({"user": command})
-		return
+		return false
 	}
 }
