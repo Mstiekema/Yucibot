@@ -1,8 +1,14 @@
 <% include adminheader.ejs %>
+<script>
+function createPoll() {
+	socket.emit('createPoll')
+	window.location.href = "/admin/poll/create"
+}
+</script>
 <div class="top"><h1>Polls</h1></div>
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main">
-<button onclick="socket.emit('createPoll')">Create poll</button>
+<button onclick="">Create poll</button>
 </div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
 </body>

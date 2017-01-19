@@ -261,6 +261,18 @@ app.get('/history', function(req, res) {
     res.render("history.html")
 });
 
+app.get('/poll', function(req, res) {
+    connection.query('select * from poll', function(err, result) {
+        res.render('poll.html')
+    });
+});
+
+app.get('/poll/:id', function(req, res) {
+    connection.query('select * from poll', function(err, result) {
+        res.render('poll.html')
+    });
+});
+
 app.get('/admin', function(req, res) {
     connection.query('select * from streaminfo', function(err, result) {
         res.render('admin/home.html', {
@@ -289,6 +301,9 @@ io.on('connection', function (socket) {
     socket.on('endSong', function (data) {
         connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
         socket.emit('nextSong');
+    })
+    socket.on('createPoll', function (data) {
+        connection.query('select * from poll', function(err, result) {})
     })
     socket.on('removeSong', function (data) {
         connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
@@ -392,6 +407,18 @@ app.get('/admin/modules', function(req, res) {
             moduleList: result,
             website: options.identity.websiteUrl
         });
+    });
+});
+
+app.get('/admin/poll', function(req, res) {
+    connection.query('select * from poll', function(err, result) {
+        res.render('admin/poll/index.html')
+    });
+});
+
+app.get('/admin/poll/create', function(req, res) {
+    connection.query('select * from poll', function(err, result) {
+        res.render('admin/poll/create.html')
     });
 });
 
