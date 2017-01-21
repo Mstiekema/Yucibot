@@ -25,30 +25,35 @@ module.exports = {
 				cd.cooldown("repo", "global", user.username, 10, repo)
 			}
 			else if (message.startsWith("!slap")) {
-				bot.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")
+				function slap() {bot.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")}
+				cd.cooldown("slap", "global", user.username, 10, slap)
 			}
 			else if (message.startsWith("!google")) {
+				function google() {
 				var q = message.substring(message.indexOf(" ") + 1);
 				var question = q.split(' ').join('+');
 				var base = "https://www.google.nl/search?q=";
 				var link = base + question
-				bot.say(channel, user.username + " Google is je beste vriend! " + link)
+				bot.say(channel, user.username + " Google is je beste vriend! " + link)}
+				cd.cooldown("google", "global", user.username, 10, google)
 			}
 			else if (message.startsWith("!lmgtfy")) {
+				function lmgtfy() {
 				var q = message.substring(message.indexOf(" ") + 1);
 				var question = q.split(' ').join('+');
 				var base = "https://lmgtfy.com/?q=";
 				var link = base + question
-				bot.say(channel, user.username + " Google is je beste vriend! " + link)
+				bot.say(channel, user.username + " Google is je beste vriend! " + link)}
+				cd.cooldown("lmgtfy", "global", user.username, 10, lmgtfy)
 			}
-			else if (message.startsWith("1quit")) {
-				if (user.mod === true || user.username == channel.substring(1)) {
-					bot.say(channel, "Shutting down Yucibot MrDestructoid")
-					bot.disconnect()}
-				else {
-					bot.say(channel, "You are not allowed to turn off the bot OMGScoots")
-				};
-			}
+			// else if (message.startsWith("1quit")) {
+			// 	if (user.mod === true || user.username == channel.substring(1)) {
+			// 		bot.say(channel, "Shutting down Yucibot MrDestructoid")
+			// 		bot.disconnect()}
+			// 	else {
+			// 		bot.say(channel, "You are not allowed to turn off the bot OMGScoots")
+			// 	};
+			// }
 			else if (message.includes("Alliance") || message.includes("alliance")) {
 				bot.say(channel, "LOK'TAR OGAR, FOR THE HORDE SMOrc")
 			};
