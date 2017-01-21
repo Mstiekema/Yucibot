@@ -14,13 +14,15 @@ module.exports = {
 		    		bot.say(channel, "This is a command xD")
 			   		console.log('Did the thing')
 			   	}
-			   	cd.cooldown("test", user.username, 10, test)
+			   	cd.cooldown("test", "global", user.username, 10, test)
 			}
 			else if (message.startsWith("!twitter")) {
-				bot.say(channel, channel.substring(1) + "'s Twitter is https://www.twitter.com/" + options.identity.twitter)
+				function twitter() {bot.say(channel, channel.substring(1) + "'s Twitter is https://www.twitter.com/" + options.identity.twitter)}
+				cd.cooldown("twitter", "global", user.username, 10, twitter)
 			}
 			else if (message.startsWith("!repo") || message.startsWith("!github")) {
-				bot.say(channel,"You can find the GitHub repo for the bot over at https://github.com/Mstiekema/Yucibot")
+				function repo() {bot.say(channel,"You can find the GitHub repo for the bot over at https://github.com/Mstiekema/Yucibot")}
+				cd.cooldown("repo", "global", user.username, 10, repo)
 			}
 			else if (message.startsWith("!slap")) {
 				bot.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")
