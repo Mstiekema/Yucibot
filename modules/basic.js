@@ -10,10 +10,12 @@ module.exports = {
 	basicCommands: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!test")) {
-		    	if (cd.cooldown("test", user.username, 10) == true) {
-		    	bot.say(channel, "This is a command xD")
-			   	console.log('Did the thing')
-			}}
+		    	function test() {
+		    		bot.say(channel, "This is a command xD")
+			   		console.log('Did the thing')
+			   	}
+			   	cd.cooldown("test", user.username, 10, test)
+			}
 			else if (message.startsWith("!twitter")) {
 				bot.say(channel, channel.substring(1) + "'s Twitter is https://www.twitter.com/" + options.identity.twitter)
 			}
