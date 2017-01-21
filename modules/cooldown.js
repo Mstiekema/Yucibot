@@ -15,10 +15,15 @@ module.exports = {
 				return
 			} else {
 				cooldowns.push(toCD)
+				cooldowns.push(command)
 				setTimeout(function() {
 					var index = cooldowns.indexOf(toCD);
 				    cooldowns.splice(index, 1);
 				}, cd);
+				setTimeout(function() {
+					var index = cooldowns.indexOf(command);
+				    cooldowns.splice(index, 1);
+				}, 10000);
 				exc()
 			}
 		} else {
