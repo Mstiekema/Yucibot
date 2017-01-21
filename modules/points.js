@@ -76,25 +76,28 @@ module.exports = {
 				var b = emotes[Math.floor(Math.random() * 4)]
 				var c = emotes[Math.floor(Math.random() * 4)]
 				if (a == b && b == c) {
-					connection.query('update user set points = points + 1000 where name = ?', user.username, function (err, result) {if (err) {return}})
-					bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! They are the same, you win 1000 points! PogChamp")
-					var newLog = {type: "points", log: user.username + " won 1000 points with the slot machine"}
+					connection.query('update user set points = points + 500 where name = ?', user.username, function (err, result) {if (err) {return}})
+					bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! They are the same, you win 500 points! PogChamp")
+					var newLog = {type: "points", log: user.username + " won 500 points with the slot machine"}
 					connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 				}
 				else if (a == b || b == c){
-					connection.query('update user set points = points + 100 where name = ?', user.username, function (err, result) {if (err) {return}})
-					bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! So close, but yet so far FeelsBadMan You get 100 points")
-					var newLog = {type: "points", log: user.username + " won 100 points with the slot machine"}
+					connection.query('update user set points = points + 50 where name = ?', user.username, function (err, result) {if (err) {return}})
+					bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! So close, but yet so far FeelsBadMan You get 50 points")
+					var newLog = {type: "points", log: user.username + " won 50 points with the slot machine"}
 					connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 				}
 				else if (a == c) {
-					connection.query('update user set points = points + 10 where name = ?', user.username, function (err, result) {if (err) {return}})
-					bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! It's something SeemsGood You get 10 points")
-					var newLog = {type: "points", log: user.username + " won 10 points with the slot machine"}
+					connection.query('update user set points = points - 50 where name = ?', user.username, function (err, result) {if (err) {return}})
+					bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! It's something, but you lose 50 points EleGiggle")
+					var newLog = {type: "points", log: user.username + " lost 50 points with the slot machine"}
 					connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 				}
 				else {
-					bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! Not Even close DansGame")
+					connection.query('update user set points = points - 100 where name = ?', user.username, function (err, result) {if (err) {return}})
+					bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! What is this? You got nothing? You lose 100 points LUL")
+					var newLog = {type: "points", log: user.username + " lost 100 points with the slot machine"}
+					connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 				}}
 				cd.cooldown("slot", "user", user.username, 300, slot)
 			}			
