@@ -11,10 +11,10 @@ module.exports = {
 		var toCD = user + command
 		var cd = cooldown * 1000
 		if(type == "user") {
-			if (cooldowns.includes(command)) {
+			if (cooldowns.indexOf(command) != -1) {
 				return
 			} else {
-				if (cooldowns.includes(toCD)) {
+				if (cooldowns.indexOf(toCD) != -1) {
 					return
 				} else {
 					cooldowns.push(toCD)
@@ -31,7 +31,7 @@ module.exports = {
 				}
 			}
 		} else {
-			if (cooldowns.includes(command)) {
+			if (cooldowns.indexOf(command) != -1) {
 				return
 			} else {
 				cooldowns.push(command)
