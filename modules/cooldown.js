@@ -7,16 +7,20 @@ var clientID 	= options.identity.clientId
 
 var cooldowns = [];
 
-function cooldown(command, user, cooldown, time) {
-	if(cooldowns.includes(user)) {
-		if(cooldowns.user.includes(command)) {
-			return true
-		} else {
-			cooldowns.push({"user": command})
+module.exports = {
+	cooldown: function(command, user, cooldown, exc) {
+		var toCD = user + command
+		var cd = cooldown * 1000
+		console.log(toCD)
+		if (cooldowns.includes(toCD)) {
 			return false
+		} else {
+			cooldowns.push(toCD)
+			setTimeout(function() {
+				var index = cooldowns.indexOf(toCD);
+			    cooldowns.splice(index, 1);
+			}, cd);
+			return true
 		}
-	} else {
-		cooldowns.push({"user": command})
-		return false
 	}
 }

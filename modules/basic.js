@@ -3,15 +3,17 @@ var options 	= require('../config.js')
 var connect 	= require('../app.js')
 var bot 		= connect.bot
 var request 	= require("request");
+var cd 			= require("./cooldown.js")
 var clientID 	= options.identity.clientId
 
 module.exports = {
 	basicCommands: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!test")) {
+		    	if (cd.cooldown("test", user.username, 10) == true) {
 		    	bot.say(channel, "This is a command xD")
 			   	console.log('Did the thing')
-			}
+			}}
 			else if (message.startsWith("!twitter")) {
 				bot.say(channel, channel.substring(1) + "'s Twitter is https://www.twitter.com/" + options.identity.twitter)
 			}
