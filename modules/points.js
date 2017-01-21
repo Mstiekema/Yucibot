@@ -10,6 +10,7 @@ module.exports = {
 	roulette: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!roulette")) {
+				function roulette() {
 				connection.query('select * from user where name = ?', user.username, function (err, result) {
 					var y = message.split(' ');
 					var bet = y[1]
@@ -54,13 +55,15 @@ module.exports = {
 					else {
 						bot.say(channel, "I'm sorry, but that's not a valid roulette command " + user.username)
 					}
-				})
+				})}
+				cd.cooldown("roulette", "user", user.username, 300, roulette)
 			}
 		})
 	},
 	slot: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!slot")) {
+				function slot() {
 				var sets = {
 					"1":["Kappa", "Keepo", "PogChamp", "OMGScoots"],
 					"2":["SeemsGood", "DansGame", "FeelsGoodMan", "FeelsBadMan"],
@@ -91,7 +94,8 @@ module.exports = {
 				}
 				else {
 					bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! Not Even close DansGame")
-				}
+				}}
+				cd.cooldown("slot", "user", user.username, 300, slot)
 			}			
 		})
 	}, 

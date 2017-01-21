@@ -68,48 +68,49 @@ module.exports = {
 	  			}
 			};
 			if(message.startsWith("!viewers")) {
-				function viewers(error, response, body) {
+				function getViewers(error, response, body) {
 				  if (!error && response.statusCode == 200) {
 				    var info = JSON.parse(body).streams[0];
 				    if(info != undefined) {
 						bot.say(channel, channel.substring(1) + " has " + info.viewers + " viewers!")
 				    }
 				    else {
-				    	console.log(channel.substring(1) + " is offline")
+				    	bot.say(channel, channel.substring(1) + " is offline")
 				    }
 				  }
 				}
-				request(info, viewers)
+				function viewers() {request(info, getViewers)}
+				cd.cooldown("viewers", "global", user.username, 10, viewers)
 			}
 			else if(message.startsWith("!game")) {
-				function game(error, response, body) {
+				function getGame(error, response, body) {
 				  if (!error && response.statusCode == 200) {
 				    var info = JSON.parse(body).streams[0];
 				    if(info != undefined) {
 						bot.say(channel, channel.substring(1) + " is currently playing " + info.game + "!")
 				    }
 				    else {
-				    	console.log(info)
-				    	console.log(channel.substring(1) + " is offline")
+				    	bot.say(channel, channel.substring(1) + " is offline")
 				    }
 				  }
 				}
-				request(info, game)
+				function game() {request(info, getGame)}
+				cd.cooldown("game", "global", user.username, 10, game)
 			}
 			else if(message.startsWith("!title")) {
-				function title(error, response, body) {
+				function getTitle(error, response, body) {
 				  if (!error && response.statusCode == 200) {
 				    var info = JSON.parse(body).streams[0];
 				    if(info != undefined) {
 						bot.say(channel, channel.substring(1) + "'s title is: " + info.channel.status + "!")
 				    }
 				    else {
-				    	console.log(info)
-				    	console.log(channel.substring(1) + " is offline")
+				    	bot.say(channel, channel.substring(1) + " is offline")
 				    }
 				  }
 				}
-				request(info, title)
+				function title() {request(info, getTitle)}
+				cd.cooldown("title", "global", user.username, 10, title)
 			}
 		})
 	}
