@@ -11,20 +11,24 @@ module.exports = {
 		var toCD = user + command
 		var cd = cooldown * 1000
 		if(type == "user") {
-			if (cooldowns.includes(toCD)) {
+			if (cooldowns.includes(command)) {
 				return
 			} else {
-				cooldowns.push(toCD)
-				cooldowns.push(command)
-				setTimeout(function() {
-					var index = cooldowns.indexOf(toCD);
-				    cooldowns.splice(index, 1);
-				}, cd);
-				setTimeout(function() {
-					var index = cooldowns.indexOf(command);
-				    cooldowns.splice(index, 1);
-				}, 10000);
-				exc()
+				if (cooldowns.includes(toCD)) {
+					return
+				} else {
+					cooldowns.push(toCD)
+					cooldowns.push(command)
+					setTimeout(function() {
+						var index = cooldowns.indexOf(toCD);
+					    cooldowns.splice(index, 1);
+					}, cd);
+					setTimeout(function() {
+						var index = cooldowns.indexOf(command);
+					    cooldowns.splice(index, 1);
+					}, 10000);
+					exc()
+				}
 			}
 		} else {
 			if (cooldowns.includes(command)) {

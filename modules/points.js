@@ -1,6 +1,7 @@
 var tmi 		= require('tmi.js');
 var options		= require('../config.js')
 var connection 	= require("./connection.js")
+var cd 			= require("./cooldown.js")
 var connect 	= require('../app.js')
 var bot 		= connect.bot
 var request 	= require("request");

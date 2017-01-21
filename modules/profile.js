@@ -5,6 +5,7 @@ var bot 		= connect.bot
 var CronJob 	= require('cron').CronJob;
 var request 	= require("request");
 var connection 	= require("./connection.js")
+var cd 			= require("./cooldown.js")
 var clientID 	= options.identity.clientId
 
 module.exports = {
