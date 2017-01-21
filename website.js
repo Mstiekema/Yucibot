@@ -89,7 +89,7 @@ app.get('/', function(req, res) {
         }
     }
     request(info, function (error, response, body) {
-        if (base != JSON.parse(body).streams[0]) {
+        if (JSON.parse(body).streams[0] != undefined) {
             var streamid = base._id
             connection.query('select * from streaminfo where streamid = ?', streamid, function(err, result) {
                 if (result[0] != undefined) {
