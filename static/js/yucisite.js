@@ -54,13 +54,9 @@ function about() {
 }
 
 function github() {
-   window.location.href = 'https://www.github.com/Mstiekema/Yucibot';
+   window.open("https://www.github.com/Mstiekema", "_blank");
 }
 
-function support() {
-   window.location.href = '/support';
-}
-
-function donate() {
-   window.location.href = 'https://www.paypal.me/Mstiekema';
+function dev() {
+   window.open("https://mstiekema.github.io", "_blank");
 }
