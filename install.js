@@ -92,6 +92,15 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
+connection.query(
+	'CREATE TABLE poll (' +
+	'id INT AUTO_INCREMENT PRIMARY KEY,' +
+	'question VARCHAR(500),' +
+	'answers VARCHAR(5000),' +
+	'results VARCHAR(500))',
+	function (err, result) {if (err) {return}}
+)
+
 connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
 if (options.identity.admin != options.channels[0]) {
 	connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true }, function (err, result) {if (err) {console.log(err)}})

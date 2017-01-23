@@ -89,7 +89,8 @@ app.get('/', function(req, res) {
         }
     }
     request(info, function (error, response, body) {
-        if (base != JSON.parse(body).streams[0]) {
+        if (JSON.parse(body).streams[0] != undefined) {
+            var base = JSON.parse(body).streams[0]
             var streamid = base._id
             connection.query('select * from streaminfo where streamid = ?', streamid, function(err, result) {
                 if (result[0] != undefined) {
@@ -262,14 +263,16 @@ app.get('/history', function(req, res) {
 });
 
 app.get('/poll', function(req, res) {
-    connection.query('select * from poll', function(err, result) {
-        res.render('poll.html')
+    connection.query('select * from poll ORDER BY id DESC LIMIT 1', function(err, result) {
+        res.redirect('/poll/' + result[0].id)
     });
 });
 
 app.get('/poll/:id', function(req, res) {
-    connection.query('select * from poll', function(err, result) {
-        res.render('poll.html')
+    connection.query('select * from poll where id = ?', req.params.id, function(err, result) {
+        res.render('poll.html', {
+            data: result[0]
+        })
     });
 });
 
@@ -303,7 +306,7 @@ io.on('connection', function (socket) {
         socket.emit('nextSong');
     })
     socket.on('createPoll', function (data) {
-        connection.query('select * from poll', function(err, result) {})
+        connection.query('insert into poll set ?', data, function(err, result) {})
     })
     socket.on('removeSong', function (data) {
         connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
@@ -412,13 +415,13 @@ app.get('/admin/modules', function(req, res) {
 
 app.get('/admin/poll', function(req, res) {
     connection.query('select * from poll', function(err, result) {
-        res.render('admin/poll/index.html')
+        res.render('admin/poll.html')
     });
 });
 
 app.get('/admin/poll/create', function(req, res) {
     connection.query('select * from poll', function(err, result) {
-        res.render('admin/poll/create.html')
+        res.render('admin/pollCreate.html')
     });
 });
 

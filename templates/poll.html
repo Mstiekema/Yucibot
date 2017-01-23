@@ -1,8 +1,36 @@
 <% include header.ejs %>
+<script>
+var importAnswers = "<%= data.answers %>"
+var answers = importAnswers.split("|")
+answers.pop()
+
+var yucibot = angular.module('yucibot',[]);
+yucibot.controller('songQueue', function($scope, $http, $log, $interval) { 
+	$scope.getAnswers = function() {
+		$scope.answer = answers
+	}
+	$scope.vote = function(index) {
+		$log.log(index)
+	}
+	$scope.getAnswers()
+	$interval($scope.getAnswers, 1000);
+})
+
+</script>
 <div class="top"><h1>Polls</h1></div>
 <div class="search"><input id="searchBar" type="text"></div>
-<div class="main">
+<div class="main" ng-app="yucibot" ng-controller="songQueue">
+<% if (data != undefined) { %>
+<p>Question: <%= data.question %><br><br>
 
+Answers:
+<div id="answers" ng-repeat="x in answer">
+	<p>[{{ $index + 1 }}] {{ x }} <button ng-click="vote($index)" id="vote">Vote</button></p>
+</div>
+
+<% } else { %>
+<p>Couldn't find a poll with this ID :/</p>
+<% } %>
 </div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
 </body>

@@ -264,6 +264,11 @@ div.menu h3 {
     margin: 5px;
 }
 
+button a {
+    color: black;
+    text-decoration: none;
+}
+
 footer {
     padding: 1em;
     text-align: center;
