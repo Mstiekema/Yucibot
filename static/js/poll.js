@@ -6,14 +6,17 @@ var socket = io.connect();
 	
 	function submitPoll() {
 		var q = $("input[id='pQuestion']").val();
-		var a = new String;
+		var answers = {}
 		$("input[id='answer[]']").each(function() {
-		    a += ($(this).val()) + "|"
+		    a = ($(this).val())
+		    answers[a] = 0
 		});
+		var pushAnswers = JSON.stringify(answers)
 		var newPoll = {
 			question: q,
-			answers: a
+			answers: pushAnswers
 		}
+		console.log(newPoll)
 		socket.emit('createPoll', newPoll)
 		window.location.href = "/poll"
 	}

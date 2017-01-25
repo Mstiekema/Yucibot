@@ -304,9 +304,6 @@ io.on('connection', function (socket) {
         connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
         socket.emit('nextSong');
     })
-    socket.on('createPoll', function (data) {
-        connection.query('insert into poll set ?', data, function(err, result) {})
-    })
     socket.on('removeSong', function (data) {
         connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
             socket.emit('nextSong');
@@ -318,6 +315,17 @@ io.on('connection', function (socket) {
             connection.query('update songrequest set playState = 0 where songid = ?', result[0].songid, function(err, result) {})
             socket.emit('nextSong');
         }})
+    })
+    socket.on('createPoll', function (data) {
+        connection.query('insert into poll set ?', data, function(err, result) {})
+    })
+    socket.on('getPoll', function (data) {
+        connection.query('select * from poll where id = ?', data, function(err, result) {
+            socket.emit('pollData', result[0].answers)
+        })
+    })
+    socket.on('addResult', function (data) {
+        connection.query('update poll set answers = ? where id = "' + data.id + '"', JSON.stringify(data.answers), function(err,result){})
     })
     socket.on('disableModule', function(data) {
         connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {

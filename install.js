@@ -96,8 +96,7 @@ connection.query(
 	'CREATE TABLE poll (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'question VARCHAR(500),' +
-	'answers VARCHAR(5000),' +
-	'results VARCHAR(500))',
+	'answers VARCHAR(5000))',
 	function (err, result) {if (err) {return}}
 )
 
