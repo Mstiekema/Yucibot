@@ -10,8 +10,12 @@ module.exports = {
 	getSongs: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!sr") || message.startsWith("!songrequest")) {
-				songlink = message.split(" ")
-				match(songlink, channel, user, message)
+				if(user.sub == true) {
+					songlink = message.split(" ")
+					match(songlink, channel, user, message)
+				} else {
+					bot.whisper(user.username, "You're not allowed to request songs in this channel")
+				}
 			}
 			function match (songlink, channel, user, message) {
 				var link = String(songlink).match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
