@@ -46,14 +46,16 @@ module.exports = {
 				bot.say(channel, user.username + " Google is je beste vriend! " + link)}
 				cd.cooldown("lmgtfy", "global", user.username, 10, lmgtfy)
 			}
-			// else if (message.startsWith("1quit")) {
-			// 	if (user.mod === true || user.username == channel.substring(1)) {
-			// 		bot.say(channel, "Shutting down Yucibot MrDestructoid")
-			// 		bot.disconnect()}
-			// 	else {
-			// 		bot.say(channel, "You are not allowed to turn off the bot OMGScoots")
-			// 	};
-			// }
+			else if (message.startsWith("1quit")) {
+				if (user.mod === true || user.username == channel.substring(1)) {
+					bot.say(channel, "Shutting down Yucibot MrDestructoid")
+					bot.disconnect()
+					process.exit(1)
+				}
+				else {
+					bot.say(channel, "You are not allowed to turn off the bot OMGScoots")
+				};
+			}
 			else if (message.includes("Alliance") || message.includes("alliance")) {
 				bot.say(channel, "LOK'TAR OGAR, FOR THE HORDE SMOrc")
 			};
