@@ -10,7 +10,7 @@ module.exports = {
 	getSongs: function () {
 		bot.on('message', function (channel, user, message, self) {
 			if (message.startsWith("!sr") || message.startsWith("!songrequest")) {
-				if(user.sub == true) {
+				if(user.subscriber == true) {
 					songlink = message.split(" ")
 					match(songlink, channel, user, message)
 				} else {
