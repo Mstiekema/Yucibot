@@ -388,7 +388,7 @@ app.get('/admin/logs/timeout', function(req, res) {
 });
 
 app.get('/admin/modules', function(req, res) {
-    connection.query('select * from module WHERE id != 15', function(err, result) {
+    connection.query('select * from module WHERE id != 1', function(err, result) {
         res.render('admin/modules.html', { 
             moduleList: result,
             website: options.identity.websiteUrl

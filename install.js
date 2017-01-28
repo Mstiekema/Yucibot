@@ -102,6 +102,7 @@ if (options.identity.admin != options.channels[0]) {
 
 var sql = "insert into module (moduleName, moduleDescription, state) values ?";
 var moduleSettings = [
+	["dungeonActive", "Dungeon", false],
 	['useTwitchAPI', "All the commands that use the Twitch API to fetch data", true],
 	['basicCommands', "Some of the bais commands to use", true],
 	['updateProfile', "Creates a profile for each user with points, lines, etc.", true],
@@ -114,9 +115,9 @@ var moduleSettings = [
 	['twitter', "Pushes the users Twitter each 20 minutes", true],
 	['getSongs', "Songrequest from chat (player still buggy)", true],
 	['mod', "Module that enables purge, timeout and ban words to be enabled", true],
+	['link', "Gives non-subs a 20 second timeout if they post a link in chat", true],
 	['sub', "Notifies chat if a user subs or resubs", true],
-	["timeout", "Saves a log if a user is timed out or banned", true],
-	["dungeonActive", "Dungeon", false]
+	['timeout', "Saves a log if a user is timed out or banned", true],
 ];
 connection.query(sql, [moduleSettings], function (err, result) {if (err) {console.log(err)}})
 
