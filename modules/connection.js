@@ -1,5 +1,5 @@
 var options	= require('../config.js')
-var mysql 	= require("mysql");
+var mysql = require("mysql");
 var connection;
 
 function connectDatabase() {

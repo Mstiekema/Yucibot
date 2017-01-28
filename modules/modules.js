@@ -1,56 +1,59 @@
-var basic 		= require('./basic.js');
-var overwatch 	= require('./ow.js');
-var timers 		= require('./timers.js')
-var profile 	= require('./profile.js')
-var points 		= require('./points.js')
+var basic = require('./basic.js');
+var profile = require('./profile.js')
+var points = require('./points.js')
 var songrequest	= require('./songrequest.js')
-var mod 		= require('./mod.js')
-var events 		= require('./events.js')
-var streaminfo 	= require('./streaminfo.js')
-var connection 	= require("./connection.js")
+var mod = require('./mod.js')
+var events = require('./events.js')
+var streaminfo = require('./streaminfo.js')
+var connection = require("./connection.js")
 var exp = module.exports = {}
 
-exp.commands = function() {
+exp.commands = function(channel, user, message, self) {
 	streaminfo.fetchInfo()
 	connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
-			basic.useTwitchAPI()
+			basic.useTwitchAPI(channel, user, message, self)
 		}
 		if (result[2].state == 1) {
-			basic.basicCommands()
+			basic.basicCommands(channel, user, message, self)
 		}
 		if (result[3].state == 1) {
-			overwatch.owCommands();
+			basic.owCommands(channel, user, message, self)
 		}
 		if (result[4].state == 1) {
-			profile.updateProfile();
+			profile.updateProfile(channel, user, message, self);
 		}
 		if (result[5].state == 1) {
-			profile.fetchProfile();
+			profile.fetchProfile(channel, user, message, self);
 		}
 		if (result[6].state == 1) {
-			points.roulette();
+			points.roulette(channel, user, message, self);
 		}
 		if (result[7].state == 1) {
-			points.slot();
+			points.slot(channel, user, message, self);
 		}
 		if (result[8].state == 1) {
-			points.dungeon();
-		}
-		if (result[9].state == 1) {
-			timers.fourtwenty();
-		}
-		if (result[10].state == 1) {
-			timers.twitter();
+			points.dungeon(channel, user, message, self);
 		}
 		if (result[11].state == 1) {
-			songrequest.getSongs();
+			songrequest.getSongs(channel, user, message, self);
 		}
 		if (result[12].state == 1) {
-			mod.mod();
+			mod.mod(channel, user, message, self);
 		}
 		if (result[13].state == 1) {
-			mod.link();
+			mod.link(channel, user, message, self);
+		}
+	})
+};
+
+exp.events = function(channel, user, message, self) {
+	connection.query('select * from module', function(err, result) {
+		if (result[9].state == 1) {
+			events.fourtwenty();
+		}
+		if (result[10].state == 1) {
+			events.twitter();
 		}
 		if (result[14].state == 1) {
 			events.sub();

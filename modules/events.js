@@ -1,15 +1,16 @@
-var tmi 		= require('tmi.js');
-var options 	= require('../config.js')
-var connect 	= require('../app.js')
-var bot 		= connect.bot
-var request 	= require("request");
-var connection 	= require("./connection.js")
+var tmi = require('tmi.js');
+var options = require('../config.js')
+var connect = require('../app.js')
+var bot = connect.bot
+var CronJob = require('cron').CronJob;
+var request = require("request");
+var connection = require("./connection.js")
 
 module.exports = {
 	sub: function () {
 		bot.on("resub", function (channel, username, months, message) {
-		    bot.say(channel, "Thanks " + username + " for resubbing " + months + " months in a row to " + channel + "! PogChamp //")
-		    var newLog = {type: "resub", log: username + " subbed for " + months + " months to " + channel + " with the following message: " + message}
+		  bot.say(channel, "Thanks " + username + " for resubbing " + months + " months in a row to " + channel + "! PogChamp //")
+		  var newLog = {type: "resub", log: username + " subbed for " + months + " months to " + channel + " with the following message: " + message}
 			connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 		});
 		bot.on("subscription", function (channel, username, method) {
@@ -28,4 +29,22 @@ module.exports = {
 			connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 		});
 	},
+	fourtwenty: function () {
+		var channel = JSON.stringify(options.channels).slice(2, -2);
+		var job = new CronJob('00 20 16 * * *', function() {
+			console.log("[DEBUG] 4:20 Timer initiated"),
+			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
+			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
+			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
+			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
+			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip")
+		}, function () {}, true );
+	},
+	twitter: function () {
+		console.log("test")
+		var channel = JSON.stringify(options.channels).slice(2, -2);
+		new CronJob('* */20 * * *', function() {
+			bot.say(channel, "Follow me on Twitter: https://twitter.com/" + options.identity.twitter)
+		}, function () {}, true );
+	}
 }
