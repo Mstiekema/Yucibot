@@ -94,13 +94,13 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-// connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-// if (options.identity.admin != options.channels[0]) {
-// 	connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-// 	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-// } else {
-// 	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-// }
+connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+if (options.identity.admin != options.channels[0]) {
+	connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+} else {
+	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+}
 
 var sql = "insert into module (moduleName, moduleDescription, state) values ?";
 var moduleSettings = [
@@ -121,7 +121,7 @@ var moduleSettings = [
 	['sub', "Notifies chat if a user subs or resubs", true],
 	['timeout', "Saves a log if a user is timed out or banned", true],
 ];
-// connection.query(sql, [moduleSettings], function (err, result) {if (err) {console.log(err)}})
+connection.query(sql, [moduleSettings], function (err, result) {if (err) {console.log(err)}})
 
 var sql2 = "insert into commands (commName, response, commDesc, cdType, cd, level, commUse) values ?"
 var standardCommands = [
