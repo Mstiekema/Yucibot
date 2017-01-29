@@ -30,414 +30,420 @@ app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, '/templates'));
 
 passport.use(new twitchStrategy({
-    clientID: clientID,
-    clientSecret: secret,
-    callbackURL: redirect,
-    scope: [
-        "user_read",
-        "channel_subscriptions",
-        "user_subscriptions"
-    ]},
-    function(accessToken, refreshToken, profile, done) {
-        var acc = accessToken
-        console.log("[DEBUG] " + profile.username + " logged into the website")
-        var newLog = {type: "login", log: profile.username + " just logged into the website"}
-        connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
-        return done(null, profile.username);
-    }
+  clientID: clientID,
+  clientSecret: secret,
+  callbackURL: redirect,
+  scope: [
+    "user_read",
+    "channel_subscriptions",
+    "user_subscriptions"
+  ]},
+  function(accessToken, refreshToken, profile, done) {
+    var acc = accessToken
+    console.log("[DEBUG] " + profile.username + " logged into the website")
+    var newLog = {type: "login", log: profile.username + " just logged into the website"}
+    connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
+    return done(null, profile.username);
+  }
 ));
 
 passport.serializeUser(function(user, done) {
-    done(null, user);
+  done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-    done(null, user);
-});
-
-app.all('*', function(req, res, next) {
-    res.locals.website = options.identity.websiteUrl
-    res.locals.botName = options.identity.username
-    res.locals.streamer = options.channels[0]
-    if (req.user) {
-        connection.query('select * from user where name = ?', req.user, function(err, result) {
-            if (result == undefined || result[0] == undefined) {
-                return
-            } else {
-                if (result[0].isMod == 1) {
-                    res.locals.login = true,
-                    res.locals.mod = true, 
-                    res.locals.name = req.user
-                } else {
-                    res.locals.login = true,
-                    res.locals.mod = false, 
-                    res.locals.name = req.user
-                }
-            };
-        });  
-    } else {
-        res.locals.login = false
-    }
-    next()
-});
-
-app.get('/', function(req, res) {
-    var info = {
-        url: 'https://api.twitch.tv/kraken/streams?channel=' + JSON.stringify(options.channels).slice(2, -2),
-        headers: {
-            'Client-ID': clientID
-        }
-    }
-    request(info, function (error, response, body) {
-        if (JSON.parse(body).streams[0] != undefined) {
-            var streamid = base._id
-            connection.query('select * from streaminfo where streamid = ?', streamid, function(err, result) {
-                if (result[0] != undefined) {
-                    res.render('index.html', {
-                        status: 1,
-                        game: base.game,
-                        viewers: base.viewers,
-                        title: base.channel.status
-                    })
-                } else {
-                    res.render('index.html', {
-                        status: 0
-                    })
-                }
-            });
-        } else {
-            res.render('index.html', {
-                status: 0
-            })
-        }
-    });
-})
-
-app.get('/about', function(req, res) {
-    connection.query('select * from streaminfo', function(err, result) {res.render('about.html')});
-});
-
-app.get('/support', function(req, res) {
-    connection.query('select * from streaminfo', function(err, result) {res.render('support.html')});
-});
-
-app.get("/login", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
-    res.redirect('/user/' + req.user);
-});
-
-app.get('/logout', function(req, res) {
-    req.logout();
-    res.locals.login = null
-    res.locals.mod = null
-    res.locals.name = null
-    res.redirect('/');
-});
-
-app.get('/user/:id', function(req, res) {
-    connection.query('select * from user where name = ?', req.params.id, function(err, result) {
-        if (result[0] == undefined) {
-            res.render("error404.html");
-        } else {
-            var info = {
-                url: 'https://api.twitch.tv/kraken/users/' + req.params.id,
-                headers: {
-                    'Client-ID': clientID
-                }
-            }
-            request(info, function (error, response, body) {
-                var getAge = JSON.stringify(new Date(JSON.parse(body).created_at)).substring(1, 20)
-                var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
-                var days = Math.round(Math.abs((new Date(JSON.parse(body).created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
-                request("https://api.rtainc.co/twitch/channels/" + options.channels[0] + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
-                    var fa = body
-                    res.render('user.html', {
-                        age: age,
-                        days: days,
-                        followAge: fa,
-                        user: result[0].name,
-                        points: result[0].points,
-                        lines: result[0].num_lines
-                    })
-                })
-            });
-        };
-    });
-});
-
-app.get('/user/:id/logs', function(req, res) {
-    connection.query('select * from chatlogs where name = ?', req.params.id, function(err, result) {
-        if (result[0] == undefined) {
-            res.render("error404.html");
-        } else {
-            res.render('logs.html', { 
-                log: result,
-                name: result[0].name
-            });
-        };
-    });
-});
-
-app.get('/commands', function(req, res) {
-    connection.query('select * from commands', function(err, result) {res.render('commands.html')});
-});
-
-app.get('/stats', function(req, res) {
-    connection.query('select * from streaminfo', function(err, result) {
-        request({
-            url: 'https://api.twitch.tv/kraken/clips/top?limit=5&channel=' + options.channels[0],
-            headers: {
-                "Accept": "application/vnd.twitchtv.v4+json",
-                "Client-ID": clientID
-            }
-        }, function(err, res, body) {
-            var info = JSON.parse(body)
-            io.emit('sendClips', body)
-        });
-        var streams = result.length
-        connection.query('select * from chatlogs', function(err, result) {
-            var numLines = result.length
-            connection.query('select * from user ORDER BY points DESC', function(err, result) {
-                var user = result.length
-                var toppoints = result
-                connection.query('select * from user ORDER BY num_lines DESC', function(err, result) {
-                    var toplines = result
-                    connection.query('select title from songrequest', function(err, result) {
-                        var songrequest = result.length
-                        connection.query('select type from adminlogs', function(err, result) {
-                            var types = result.map(function(a) {return a.type;})
-                            var timeouts = types.filter(function(b) {return b == "timeout"});
-                            var bans = types.filter(function(b) {return b == "ban"});
-                            var allTimeouts = timeouts.length;
-                            var allBans = bans.length;
-                            res.render('stats.html', {
-                                lines: numLines,
-                                user: user,
-                                songrequest: songrequest,
-                                stream: streams,
-                                timeout: allTimeouts,
-                                ban: allBans,
-                                toppoints: toppoints,
-                                toplines: toplines
-                            })
-                        })
-                    });
-                })
-            });
-        });
-    });
-});
-
-app.get('/history/:id', function(req, res) {
-    connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
-        var songInfo = result
-        if (result == undefined || result[0] == undefined) {
-            res.render("history.html", {
-                currSong: [{"title": "The songlist has finished"}],
-                songInfo: false,
-                listDate: req.params.id
-            });
-        } else {
-            connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id LIMIT 1', req.params.id, function(err, result) {
-                if (result == undefined || result[0] == undefined) {
-                    res.render('history.html', { 
-                        currSong: [{"title": "The songlist has finished"}],
-                        songInfo: songInfo,
-                        listDate: req.params.id
-                    });
-                } else {
-                    res.render('history.html', { 
-                        currSong: result,
-                        songInfo: songInfo,
-                        listDate: req.params.id
-                    });
-                }
-            })
-        };
-    });
-});
-
-app.get('/history', function(req, res) {
-    res.redirect('/history/'+ date);
-    res.render("history.html")
-});
-
-app.get('/poll', function(req, res) {
-    connection.query('select * from poll ORDER BY id DESC LIMIT 1', function(err, result) {
-        res.redirect('/poll/' + result[0].id)
-    });
-});
-
-app.get('/poll/:id', function(req, res) {
-    connection.query('select * from poll where id = ?', req.params.id, function(err, result) {
-        res.render('poll.html', {
-            data: result[0]
-        })
-    });
-});
-
-app.get('/admin', function(req, res) {
-    connection.query('select * from streaminfo', function(err, result) {
-        res.render('admin/home.html', {
-            info: result
-        })
-    });
-});
-
-app.get('/admin/songlist', function(req, res) {
-    connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
-        if (result == undefined || result[0] == undefined) {
-            res.render('admin/songlist.html', {songs: false})
-        }
-        else{
-            res.render('admin/songlist.html', {songs: true});
-        }
-    });
+  done(null, user);
 });
 
 io.on('connection', function (socket) {
-    socket.on('refreshData', function (data) {
-        connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
-            socket.emit('pushSonglist', result);
-        })
+  socket.on('refreshData', function (data) {
+    connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+      socket.emit('pushSonglist', result);
     })
-    socket.on('endSong', function (data) {
-        connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
-        socket.emit('nextSong');
+  })
+  socket.on('endSong', function (data) {
+    connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
+    socket.emit('nextSong');
+  })
+  socket.on('removeSong', function (data) {
+    connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
+      socket.emit('nextSong');
     })
-    socket.on('removeSong', function (data) {
-        connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
-            socket.emit('nextSong');
-        })
+  })
+  socket.on('prevSong', function (data) {
+    connection.query('select * from songrequest where playState = 1 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id DESC LIMIT 1', date, function(err,result){
+      if (result[0] != undefined) {
+      connection.query('update songrequest set playState = 0 where songid = ?', result[0].songid, function(err, result) {})
+      socket.emit('nextSong');
+    }})
+  })
+  socket.on('createPoll', function (data) {
+    connection.query('insert into poll set ?', data, function(err, result) {})
+  })
+  socket.on('getPoll', function (data) {
+    connection.query('select * from poll where id = ?', data, function(err, result) {
+      socket.emit('pollData', result[0].answers)
     })
-    socket.on('prevSong', function (data) {
-        connection.query('select * from songrequest where playState = 1 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id DESC LIMIT 1', date, function(err,result){
-            if (result[0] != undefined) {
-            connection.query('update songrequest set playState = 0 where songid = ?', result[0].songid, function(err, result) {})
-            socket.emit('nextSong');
-        }})
+  })
+  socket.on('removeComm', function (data) {
+    connection.query('delete from commands where commName = ?', data, function(err, result) {})
+  })
+  socket.on('addCom', function (data) {
+    connection.query('insert into commands set ?', data, function (err, result) {})
+  })
+  socket.on('updateComm', function(data) {
+    connection.query('update commands set commName = "' + data.commName + '", response = "' + data.response + '", level = "' + data.level + '",\
+    cdType = "' + data.cdType + '", cd = "' + data.cd + '" where commName = "' + data.commName + '"', function(err, result) {})
+  })
+  socket.on('disableModule', function(data) {
+    connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
+      socket.emit('reload')
+      console.log("Disabled module: " + data)
     })
-    socket.on('createPoll', function (data) {
-        connection.query('insert into poll set ?', data, function(err, result) {})
+  })
+  socket.on('enableModule', function(data) {
+    connection.query('update module set state = 1 where moduleName = ?', data, function(err, result) {
+      socket.emit('reload')
+      console.log("Enabled module: " + data)
     })
-    socket.on('getPoll', function (data) {
-        connection.query('select * from poll where id = ?', data, function(err, result) {
-            socket.emit('pollData', result[0].answers)
-        })
-    })
-    socket.on('addResult', function (data) {
-        connection.query('update poll set answers = ? where id = "' + data.id + '"', JSON.stringify(data.answers), function(err,result){})
-    })
-    socket.on('disableModule', function(data) {
-        connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
-            socket.emit('reload')
-            console.log("Disabled module: " + data)
-        })
-    })
-    socket.on('enableModule', function(data) {
-        connection.query('update module set state = 1 where moduleName = ?', data, function(err, result) {
-            socket.emit('reload')
-            console.log("Enabled module: " + data)
-        })
-    })
+  })
 })
 
-app.get('/admin/logs', function(req, res) {
-    connection.query('select * from adminlogs', function(err, result) {
-        if (result[0] == undefined) {
-            res.render("admin/adminlogs.html", {
-                log: false
-            });
+app.all('*', function(req, res, next) {
+  res.locals.website = options.identity.websiteUrl
+  res.locals.botName = options.identity.username
+  res.locals.streamer = options.channels[0]
+  if (req.user) {
+    connection.query('select * from user where name = ?', req.user, function(err, result) {
+      if (result == undefined || result[0] == undefined) {
+        return
+      } else {
+        if (result[0].isMod == 1) {
+          res.locals.login = true,
+          res.locals.mod = true,
+          res.locals.name = req.user
         } else {
-            res.render('admin/adminlogs.html', { 
-                log: result
-            });
-        };
+          res.locals.login = true,
+          res.locals.mod = false,
+          res.locals.name = req.user
+        }
+      };
     });
+  } else {
+    res.locals.login = false
+  }
+  next()
+});
+
+app.get('/', function(req, res) {
+  var info = {
+    url: 'https://api.twitch.tv/kraken/streams?channel=' + JSON.stringify(options.channels).slice(2, -2),
+    headers: {
+      'Client-ID': clientID
+    }
+  }
+  request(info, function (error, response, body) {
+    if (JSON.parse(body).streams[0] != undefined) {
+      var base = JSON.parse(body).streams[0]
+      var streamid = base._id
+      connection.query('select * from streaminfo where streamid = ?', streamid, function(err, result) {
+        if (result[0] != undefined) {
+          res.render('index.html', {
+            status: 1,
+            game: base.game,
+            viewers: base.viewers,
+            title: base.channel.status
+          })
+        } else {
+          res.render('index.html', {
+            status: 0
+          })
+        }
+      });
+    } else {
+      res.render('index.html', {
+        status: 0
+      })
+    }
+  });
+})
+
+app.get('/about', function(req, res) {
+  connection.query('select * from streaminfo', function(err, result) {res.render('about.html')});
+});
+
+app.get('/support', function(req, res) {
+  connection.query('select * from streaminfo', function(err, result) {res.render('support.html')});
+});
+
+app.get("/login", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
+  res.redirect('/user/' + req.user);
+});
+
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.locals.login = null
+  res.locals.mod = null
+  res.locals.name = null
+  res.redirect('/');
+});
+
+app.get('/user/:id', function(req, res) {
+  connection.query('select * from user where name = ?', req.params.id, function(err, result) {
+    if (result[0] == undefined) {
+      res.render("error404.html");
+    } else {
+      var info = {
+        url: 'https://api.twitch.tv/kraken/users/' + req.params.id,
+        headers: {
+          'Client-ID': clientID
+        }
+      }
+      request(info, function (error, response, body) {
+        var getAge = JSON.stringify(new Date(JSON.parse(body).created_at)).substring(1, 20)
+        var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
+        var days = Math.round(Math.abs((new Date(JSON.parse(body).created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
+        request("https://api.rtainc.co/twitch/channels/" + options.channels[0] + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
+          var fa = body
+          res.render('user.html', {
+            age: age,
+            days: days,
+            followAge: fa,
+            user: result[0].name,
+            points: result[0].points,
+            lines: result[0].num_lines
+          })
+        })
+      });
+    };
+  });
+});
+
+app.get('/user/:id/logs', function(req, res) {
+  connection.query('select * from chatlogs where name = ?', req.params.id, function(err, result) {
+    if (result[0] == undefined) {
+      res.render("error404.html");
+    } else {
+      res.render('logs.html', {
+      log: result,
+      name: result[0].name
+      });
+    };
+  });
+});
+
+app.get('/commands', function(req, res) {
+  connection.query('select * from commands ORDER BY level', function(err, result) {
+    res.render('commands.html', {
+      commands: result
+    })
+  });
+});
+
+app.get('/stats', function(req, res) {
+  connection.query('select * from streaminfo', function(err, result) {
+    request({
+      url: 'https://api.twitch.tv/kraken/clips/top?limit=5&channel=' + options.channels[0],
+      headers: {
+        "Accept": "application/vnd.twitchtv.v4+json",
+        "Client-ID": clientID
+      }
+    }, function(err, res, body) {
+      var info = JSON.parse(body)
+      io.emit('sendClips', body)
+    });
+    var streams = result.length
+    connection.query('select * from chatlogs', function(err, result) {
+      var numLines = result.length
+      connection.query('select * from user ORDER BY points DESC', function(err, result) {
+        var user = result.length
+        var toppoints = result
+        connection.query('select * from user ORDER BY num_lines DESC', function(err, result) {
+          var toplines = result
+          connection.query('select title from songrequest', function(err, result) {
+            var songrequest = result.length
+            connection.query('select type from adminlogs', function(err, result) {
+              var types = result.map(function(a) {return a.type;})
+              var timeouts = types.filter(function(b) {return b == "timeout"});
+              var bans = types.filter(function(b) {return b == "ban"});
+              var allTimeouts = timeouts.length;
+              var allBans = bans.length;
+              res.render('stats.html', {
+                lines: numLines,
+                user: user,
+                songrequest: songrequest,
+                stream: streams,
+                timeout: allTimeouts,
+                ban: allBans,
+                toppoints: toppoints,
+                toplines: toplines
+              })
+            })
+          });
+        })
+      });
+    });
+  });
+});
+
+app.get('/history/:id', function(req, res) {
+  connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
+    var songInfo = result
+    if (result == undefined || result[0] == undefined) {
+      res.render("history.html", {
+        currSong: [{"title": "The songlist has finished"}],
+        songInfo: false,
+        listDate: req.params.id
+      });
+    } else {
+      connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id LIMIT 1', req.params.id, function(err, result) {
+        if (result == undefined || result[0] == undefined) {
+          res.render('history.html', {
+            currSong: [{"title": "The songlist has finished"}],
+            songInfo: songInfo,
+            listDate: req.params.id
+          });
+        } else {
+          res.render('history.html', {
+            currSong: result,
+            songInfo: songInfo,
+            listDate: req.params.id
+          });
+        }
+      })
+    };
+  });
+});
+
+app.get('/history', function(req, res) {
+  res.redirect('/history/'+ date);
+});
+
+app.get('/admin', function(req, res) {
+  connection.query('select * from streaminfo', function(err, result) {
+    res.render('admin/home.html', {
+      info: result
+    })
+  });
+});
+
+app.get('/admin/songlist', function(req, res) {
+  connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+    if (result == undefined || result[0] == undefined) {
+      res.render('admin/songlist.html', {songs: false})
+    }
+    else{
+      res.render('admin/songlist.html', {songs: true});
+    }
+  });
+});
+
+app.get('/admin/logs', function(req, res) {
+  connection.query('select * from adminlogs', function(err, result) {
+    if (result[0] == undefined) {
+      res.render("admin/adminlogs.html", {
+        log: false
+      });
+    } else {
+      res.render('admin/adminlogs.html', {
+        log: result
+      });
+    };
+  });
 });
 
 app.get('/admin/logs/login', function(req, res) {
-    connection.query('select * from adminlogs where type = "login"', function(err, result) {
-        if (result[0] == undefined) {
-            res.render("admin/adminlogs.html", {
-                log: false
-            });
-        } else {
-            res.render('admin/adminlogs.html', { 
-                log: result
-            });
-        };
-    });
+  connection.query('select * from adminlogs where type = "login"', function(err, result) {
+    if (result[0] == undefined) {
+      res.render("admin/adminlogs.html", {
+        log: false
+      });
+    } else {
+      res.render('admin/adminlogs.html', {
+        log: result
+      });
+    };
+  });
 });
 
 app.get('/admin/logs/points', function(req, res) {
-    connection.query('select * from adminlogs where type = "points"', function(err, result) {
-        if (result[0] == undefined) {
-            res.render("admin/adminlogs.html", {
-                log: false
-            });
-        } else {
-            res.render('admin/adminlogs.html', { 
-                log: result
-            });
-        };
-    });
+  connection.query('select * from adminlogs where type = "points"', function(err, result) {
+    if (result[0] == undefined) {
+      res.render("admin/adminlogs.html", {
+        log: false
+      });
+    } else {
+      res.render('admin/adminlogs.html', {
+        log: result
+      });
+    };
+  });
 });
 
 app.get('/admin/logs/sub', function(req, res) {
-    connection.query('select * from adminlogs where type = "sub" OR type = "resub"', function(err, result) {
-        if (result[0] == undefined) {
-            res.render("admin/adminlogs.html", {
-                log: false
-            });
-        } else {
-            res.render('admin/adminlogs.html', { 
-                log: result
-            });
-        };
-    });
+  connection.query('select * from adminlogs where type = "sub" OR type = "resub"', function(err, result) {
+    if (result[0] == undefined) {
+      res.render("admin/adminlogs.html", {
+        log: false
+      });
+    } else {
+      res.render('admin/adminlogs.html', {
+        log: result
+      });
+    };
+  });
 });
 
 app.get('/admin/logs/timeout', function(req, res) {
-    connection.query('select * from adminlogs where type = "timeout" OR type = "ban"', function(err, result) {
-        if (result[0] == undefined) {
-            res.render("admin/adminlogs.html", {
-                log: false
-            });
-        } else {
-            res.render('admin/adminlogs.html', { 
-                log: result
-            });
-        };
-    });
+  connection.query('select * from adminlogs where type = "timeout" OR type = "ban"', function(err, result) {
+    if (result[0] == undefined) {
+      res.render("admin/adminlogs.html", {
+        log: false
+      });
+    } else {
+      res.render('admin/adminlogs.html', {
+        log: result
+      });
+    };
+  });
 });
 
 app.get('/admin/modules', function(req, res) {
-    connection.query('select * from module WHERE id != 15', function(err, result) {
-        res.render('admin/modules.html', { 
-            moduleList: result,
-            website: options.identity.websiteUrl
-        });
+  connection.query('select * from module WHERE id != 1', function(err, result) {
+    res.render('admin/modules.html', {
+      moduleList: result,
+      website: options.identity.websiteUrl
     });
+  });
 });
 
-app.get('/admin/poll', function(req, res) {
-    connection.query('select * from poll', function(err, result) {
-        res.render('admin/poll.html')
-    });
+app.get('/admin/commands', function(req, res) {
+  connection.query('select * from commands where response IS NOT NULL ORDER BY level', function(err, result) {
+    res.render('admin/commands.html', {
+      commands: result
+    })
+  });
 });
 
-app.get('/admin/poll/create', function(req, res) {
-    connection.query('select * from poll', function(err, result) {
-        res.render('admin/pollCreate.html')
-    });
+app.get('/admin/commands/create', function(req, res) {
+  connection.query('select * from commands', function(err, result) {res.render('admin/addCommand.html')});
+});
+
+app.get('/admin/commands/edit/:id', function(req, res) {
+  var id = req.params.id
+  connection.query('select * from commands where response IS NOT NULL AND commName = ?', id, function(err, result) {
+    res.render('admin/editCommand.html', {
+      commands: result
+    })
+  });
 });
 
 app.get('/403', function(req, res) {
-    connection.query('select * from streaminfo', function(err, result) {res.render('error403.html')});
+  connection.query('select * from streaminfo', function(err, result) {res.render('error403.html')});
 });
 
 app.all('*', function(req, res, next) {
-    connection.query('select * from streaminfo', function(err, result) {res.render('error404.html')});
+  connection.query('select * from streaminfo', function(err, result) {res.render('error404.html')});
 });
 
 console.log("Started website")
