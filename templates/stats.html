@@ -2,10 +2,9 @@
 <script>
 var socket = io.connect('<%= locals.website %>');
 var yucibot = angular.module('yucibot',[]).config(function($sceDelegateProvider) {$sceDelegateProvider.resourceUrlWhitelist(["https://clips.twitch.tv/**"])})
-yucibot.controller('clips', function($scope, $interval, $log, $timeout) { 
-	socket.on('sendClips', function (data) { 
+yucibot.controller('clips', function($scope, $interval, $log, $timeout) {
+	socket.on('sendClips', function (data) {
 		var iframe = JSON.parse(data).clips
-		$log.log(iframe)
 	    $timeout(function () {
 	        $scope.iframe = iframe
 	    }, 100);

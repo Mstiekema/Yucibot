@@ -1,11 +1,11 @@
-var tmi 		= require('tmi.js');
-var options 	= require('../config.js')
-var connect 	= require('../app.js')
-var bot 		= connect.bot
-var request 	= require("request");
-var connection 	= require("./connection.js")
-var CronJob 	= require('cron').CronJob;
-var clientID 	= options.identity.clientId
+var tmi = require('tmi.js');
+var options = require('../config.js')
+var connect = require('../app.js')
+var bot = connect.bot
+var request = require("request");
+var connection = require("./connection.js")
+var CronJob = require('cron').CronJob;
+var clientID = options.identity.clientId
 
 module.exports = {
 	fetchInfo: function() {
@@ -17,8 +17,8 @@ module.exports = {
 				}
 			}
 			request(info, function (error, response, body) {
-				var base = JSON.parse(body).streams[0]
-				if (base != undefined) {
+				if (JSON.parse(body).streams[0] != undefined) {
+					var base = JSON.parse(body).streams[0]
 					var streamid = base._id
 					connection.query('select * from streaminfo where streamid = ?', streamid, function(err, result) {
 						if (result[0] != undefined) {

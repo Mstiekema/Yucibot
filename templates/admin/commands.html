@@ -1,0 +1,21 @@
+<% include adminheader.ejs %>
+<div class="top"><h1>Manage commands</h1></div>
+<div class="search"><input id="searchBar" type="text"></div>
+<div class="main">
+<p><button class="create">Create command</button></p>
+<% commands.forEach(function(commands) { %>
+  <div class="commands"><p>
+    <b>Command:</b> <%= commands.commName %> <br>
+    <% if (commands.commDesc != null) { %> <b>Description:</b> <%= commands.commDesc %> <br> <% } %>
+    <% if (commands.response != null) { %><b>Response:</b> <%= commands.response %> <br> <% } %>
+    <% if (commands.commUse != null) { %> <b>Usage:</b><br> <%= commands.commUse %> <br> <% } %>
+    <b>Cooldown type:</b> <%= commands.cdType %> <br>
+    <b>Cooldown:</b> <%= commands.cd %> seconds <br>
+    <b>User level:</b> <%= commands.level %> <br>
+    <button class="remove" id=<%= commands.commName %>>Remove command</button> <button class="edit" id=<%= commands.commName %>>Edit command</button>
+  </p></div>
+<% }) %>
+</div>
+<script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/commands.js"></script>
+</body>

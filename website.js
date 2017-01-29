@@ -85,6 +85,9 @@ io.on('connection', function (socket) {
       socket.emit('pollData', result[0].answers)
     })
   })
+  socket.on('addResult', function (data) {		
+    connection.query('update poll set answers = ? where id = "' + data.id + '"', JSON.stringify(data.answers), function(err,result){})		
+  })
   socket.on('removeComm', function (data) {
     connection.query('delete from commands where commName = ?', data, function(err, result) {})
   })
