@@ -12,16 +12,16 @@ module.exports = {
 	updateProfile: function (channel, user, message, self) {
 		var channel = JSON.stringify(options.channels).slice(2, -2);
 		var info = {
-  			url: 'https://api.twitch.tv/kraken/streams?channel=' + channel.substring(1),
+  		url: 'https://api.twitch.tv/kraken/streams?channel=' + channel.substring(1),
  			headers: {
-  			  'Client-ID': clientID
-  			}
+  		  'Client-ID': clientID
   		}
+  	}
 		var job = new CronJob('*/5 * * * *', function() {
 			function callback(error, response, body) {
 				if (!error && response.statusCode == 200) {
 					var info = JSON.parse(body).streams[0];
-			    	if(info != undefined) {
+			    if(info != undefined) {
 						var chatURL = "https://tmi.twitch.tv/group/user/" + channel.substring(1) + "/chatters";
 						request(chatURL, function (error, response, body, channel) {
 							var chatters = JSON.parse(body)
@@ -36,10 +36,10 @@ module.exports = {
 									}
 								})
 							}
-						console.log("[DEBUG] Succesfully added points")
+							console.log("[DEBUG] Succesfully added points")
 						});
-			    	}
-			  	}
+			    }
+			  }
 			}
 			request(info, callback)
 		}, function () {}, true );
