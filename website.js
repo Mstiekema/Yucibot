@@ -307,6 +307,19 @@ io.on('connection', function (socket) {
             socket.emit('nextSong');
         }})
     })
+    socket.on('removeComm', function (data) {
+        connection.query('delete from commands where commName = ?', data, function(err, result) {})
+    })
+    socket.on('addCom', function (data) {
+        connection.query('insert into commands set ?', data, function (err, result) {
+          console.log(err)
+          console.log(result)
+        })
+    })
+    socket.on('updateComm', function(data) {
+        connection.query('update commands set commName = "' + data.commName + '", response = "' + data.response + '", level = "' + data.level + '",\
+        cdType = "' + data.cdType + '", cd = "' + data.cd + '" where commName = "' + data.commName + '"', function(err, result) {})
+    })
     socket.on('disableModule', function(data) {
         connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
             socket.emit('reload')
@@ -398,6 +411,27 @@ app.get('/admin/modules', function(req, res) {
             website: options.identity.websiteUrl
         });
     });
+});
+
+app.get('/admin/commands', function(req, res) {
+  connection.query('select * from commands where response IS NOT NULL ORDER BY level', function(err, result) {
+      res.render('admin/commands.html', {
+        commands: result
+      })
+  });
+});
+
+app.get('/admin/commands/create', function(req, res) {
+  connection.query('select * from commands', function(err, result) {res.render('admin/addCommand.html')});
+});
+
+app.get('/admin/commands/edit/:id', function(req, res) {
+  var id = req.params.id
+  connection.query('select * from commands where response IS NOT NULL AND commName = ?', id, function(err, result) {
+      res.render('admin/editCommand.html', {
+        commands: result
+      })
+  });
 });
 
 app.get('/403', function(req, res) {

@@ -3,7 +3,7 @@ $("#searchBar").keyup(function(ev) {
       var name = $("input").val();
       location.href = "/user/" + name;
    }
-}); 
+});
 
 function home() {
    window.location.href = '/';
@@ -35,6 +35,10 @@ function module() {
 
 function sub() {
    window.location.href = '/sub';
+}
+
+function commManager() {
+   window.location.href = '/admin/commands';
 }
 
 function history() {
