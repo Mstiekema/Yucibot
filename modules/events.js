@@ -41,9 +41,8 @@ module.exports = {
 		}, function () {}, true );
 	},
 	twitter: function () {
-		console.log("test")
 		var channel = JSON.stringify(options.channels).slice(2, -2);
-		new CronJob('* */20 * * *', function() {
+		new CronJob('*/20 * * * *', function() {
 			bot.say(channel, "Follow me on Twitter: https://twitter.com/" + options.identity.twitter)
 		}, function () {}, true );
 	}

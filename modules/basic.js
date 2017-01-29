@@ -4,37 +4,30 @@ var connect = require('../app.js')
 var bot = connect.bot
 var request = require("request");
 var cd = require("./cooldown.js")
+var connection = require("./connection.js")
 var clientID 	= options.identity.clientId
 
 module.exports = {
+	customCommands: function(channel, user, message, self) {
+		connection.query('select * from commands WHERE commDesc IS NULL', function(err, result) {
+			var comm = message.split(" ")[0]
+			var commands = result.map(function(a) {return a.commName;})
+			var check = new RegExp(commands.join("|")).test(comm)
+			if (check != false) {
+				var commInfo = result[commands.indexOf(comm)]
+				cd.command(channel, user, message, comm, commInfo.cdType, parseInt(commInfo.cd), commInfo.response)
+			}
+		})
+	},
 	basicCommands: function (channel, user, message, self) {
-		if (message.startsWith("!test")) {
-	    	function test() {
-	    		bot.say(channel, "This is a command xD")
-		   		console.log('Did the thing')
-		   	}
-		   	cd.cooldown("test", "global", user.username, 10, test)
-		}
-		else if (message.startsWith("!twitter")) {
-			function twitter() {bot.say(channel, channel.substring(1) + "'s Twitter is https://www.twitter.com/" + options.identity.twitter)}
-			cd.cooldown("twitter", "global", user.username, 10, twitter)
-		}
-		else if (message.startsWith("!repo") || message.startsWith("!github")) {
-			function repo() {bot.say(channel,"You can find the GitHub repo for the bot over at https://github.com/Mstiekema/Yucibot")}
-			cd.cooldown("repo", "global", user.username, 10, repo)
-		}
-		else if (message.startsWith("!slap")) {
-			function slap() {bot.say(channel, user.username + " slapped" + message.substring(message.indexOf(" ")) + " in the face")}
-			cd.cooldown("slap", "global", user.username, 10, slap)
-		}
-		else if (message.startsWith("!google")) {
+		if (message.startsWith("!google")) {
 			function google() {
 			var q = message.substring(message.indexOf(" ") + 1);
 			var question = q.split(' ').join('+');
 			var base = "https://www.google.nl/search?q=";
 			var link = base + question
 			bot.say(channel, user.username + " Google is je beste vriend! " + link)}
-			cd.cooldown("google", "global", user.username, 10, google)
+			cd.cooldown("google", "global", usewr.username, 10, google)
 		}
 		else if (message.startsWith("!lmgtfy")) {
 			function lmgtfy() {

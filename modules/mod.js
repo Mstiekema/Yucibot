@@ -64,5 +64,33 @@ module.exports = {
 		if(link != null) { if (user.mod == false) { if (user.username != channel.substring(1)) { if (user.subscriber != true) {
 			bot.timeout(channel, user.username, 20, "Non-subs are not allowed to post links")
 		}}}}
+	},
+	commandManagement: function(channel, user, message, self) {
+		if (user.mod || user.username == channel.substring(1)) {
+			if(message.startsWith("!addcommand")) {
+				var info = message.split(" ")
+				var commName = info[1]
+				info.splice(0, 2)
+				var commInfo = {
+					commName: commName,
+					response: info.join(" "),
+					cdType: "global",
+					cd: 10,
+				}
+				connection.query('insert into commands set ?', commInfo, function (err, result) {if (err) {return}})
+				bot.whisper(user.username, "Succesfully added the new command " + commName)
+			}
+			if(message.startsWith("!removecommand")) {
+				var info = message.split(" ")
+				var commName = info[1]
+				connection.query('delete from commands where commName = ?', commName, function (err, result) {
+					if (err) {
+						bot.whisper(user.username, "Couldn't find the command you were looking for")
+					} else {
+						bot.whisper(user.username, "Succesfully removed the following command: " + commName)
+					}
+				})
+			}
+		}
 	}
 }
