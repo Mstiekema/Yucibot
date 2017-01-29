@@ -6,8 +6,8 @@ connection.query(
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'name VARCHAR(30),' +
 	'points INT,' +
-	'num_lines INT,' + 
-	'level INT,' +  
+	'num_lines INT,' +
+	'level INT,' +
 	'isMod BOOL DEFAULT FALSE)',
 	function (err, result) {if (err) {return}}
 )
@@ -20,7 +20,7 @@ connection.query(
 	'game VARCHAR(100),' +
 	'vod VARCHAR(100),' +
 	'lowView INT,' +
-	'currView INT,' + 
+	'currView INT,' +
 	'highView INT)',
 	function (err, result) {if (err) {return}}
 )
@@ -31,7 +31,7 @@ connection.query(
 	'commName VARCHAR(50),' +
 	'response VARCHAR(500),' +
 	'commDesc VARCHAR(500),' +
-	'commUse VARCHAR(500),' +
+	'commUse TEXT,' +
 	'level INT DEFAULT 100,' +
 	'cdType VARCHAR(50),' +
 	'cd INT)',
@@ -94,34 +94,34 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-// connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-// if (options.identity.admin != options.channels[0]) {
-// 	connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-// 	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-// } else {
-// 	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-// }
+connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+if (options.identity.admin != options.channels[0]) {
+	connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+} else {
+	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+}
 
-// var sql = "insert into module (moduleName, moduleDescription, state) values ?";
-// var moduleSettings = [
-// 	["dungeonActive", "Dungeon", false],
-// 	['useTwitchAPI', "All the commands that use the Twitch API to fetch data", true],
-// 	['basicCommands', "Some of the bais commands to use", true],
-// 	['updateProfile', "Creates a profile for each user with points, lines, etc.", true],
-// 	['fetchProfile', "Fetches information from all users, such as points and lines", true],
-// 	['owCommands', "Used to fetch the rank of any OW player", true],
-// 	['roulette', "Point gambling mini-game", true],
-// 	['slot', "Point gambling mini-game", true],
-// 	['dungeon', "Point gambling mini-game with the entire chat", true],
-// 	['fourtwenty', "Timer that notifies chat it's 16:20", true],
-// 	['twitter', "Pushes the users Twitter each 20 minutes", true],
-// 	['getSongs', "Songrequest from chat (player still buggy)", true],
-// 	['mod', "Module that enables purge, timeout and ban words to be enabled", true],
-// 	['link', "Gives non-subs a 20 second timeout if they post a link in chat", true],
-// 	['sub', "Notifies chat if a user subs or resubs", true],
-// 	['timeout', "Saves a log if a user is timed out or banned", true],
-// ];
-// connection.query(sql, [moduleSettings], function (err, result) {if (err) {console.log(err)}})
+var sql = "insert into module (moduleName, moduleDescription, state) values ?";
+var moduleSettings = [
+	["dungeonActive", "Dungeon", false],
+	['useTwitchAPI', "All the commands that use the Twitch API to fetch data", true],
+	['basicCommands', "Some of the bais commands to use", true],
+	['updateProfile', "Creates a profile for each user with points, lines, etc.", true],
+	['fetchProfile', "Fetches information from all users, such as points and lines", true],
+	['owCommands', "Used to fetch the rank of any OW player", true],
+	['roulette', "Point gambling mini-game", true],
+	['slot', "Point gambling mini-game", true],
+	['dungeon', "Point gambling mini-game with the entire chat", true],
+	['fourtwenty', "Timer that notifies chat it's 16:20", true],
+	['twitter', "Pushes the users Twitter each 20 minutes", true],
+	['getSongs', "Songrequest from chat (player still buggy)", true],
+	['mod', "Module that enables purge, timeout and ban words to be enabled", true],
+	['link', "Gives non-subs a 20 second timeout if they post a link in chat", true],
+	['sub', "Notifies chat if a user subs or resubs", true],
+	['timeout', "Saves a log if a user is timed out or banned", true],
+];
+connection.query(sql, [moduleSettings], function (err, result) {if (err) {console.log(err)}})
 
 var sql2 = "insert into commands (commName, response, commDesc, cdType, cd, level, commUse) values ?"
 var standardCommands = [
@@ -141,7 +141,7 @@ var standardCommands = [
 	["!lines", null, "Returns the amount of lines the user has typed", "global", 20, 100, null],
 	["!totallines", null, "Returns the total recorded lines in chat", "global", 30, 100, null],
 	["!currentsong", null, "Returns the song that's currently playing", "global", 1, 100, null],
-	["!songrequest", null, "Allows subs to request songs in chat", "global", 10, 150, "!songrequest Enjoy the silence - Depeche Mode \n !songrequest https://www.youtube.com/watch?v=aGSKrC7dGcY \n !songrequest aGSKrC7dGcY"],
+	["!songrequest", null, "Allows subs to request songs in chat", "global", 10, 150, "!songrequest Enjoy the silence - Depeche Mode | !songrequest https://www.youtube.com/watch?v=aGSKrC7dGcY | !songrequest aGSKrC7dGcY"],
 	["!resetpoints", null, "Resets the points of the target", "global", 10, 300, "!resetpoints Mstiekema"],
 	["!addpoints", null, "Adds points to the target", "user", 1,300, "!addpoints kimodaptyl 12345"],
 	["!addcommand", null, "Adds a command to the bot", "user", 1, 300, "!addcommand !test This is a testing command :)"],

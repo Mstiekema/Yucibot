@@ -3,11 +3,11 @@
 var socket = io.connect('<%= website %>');
 function disableModule(name) {
   socket.emit('disableModule', name)
-  setTimeout(function() {window.location.reload(true)}, 100); 
+  setTimeout(function() {window.location.reload(true)}, 100);
 }
 function enableModule(name) {
   socket.emit('enableModule', name)
-  setTimeout(function() {window.location.reload(true)}, 100); 
+  setTimeout(function() {window.location.reload(true)}, 100);
 }
 </script>
 <div class="top"><h1>Modules</h1></div>
@@ -16,18 +16,18 @@ function enableModule(name) {
 
 <h2>Enable / disable modules</h2>
 <p>You can enable or disable all the modules here. <br> You'll have to restart the bot for the changes to take effect.</p>
-<table>
+<table class="moduleTable">
   <tr>
     <th>Module</th>
-    <th>State</th> 
-    <th>Description</th> 
+    <th>State</th>
+    <th>Description</th>
     <th>Change</th>
   </tr>
 <% moduleList.forEach(function(moduleList) { %>
   <tr>
     <td><%= moduleList.moduleName %></td>
-    <td><%= moduleList.state %></td> 
-    <td><%= moduleList.moduleDescription %></td> 
+    <td><%= moduleList.state %></td>
+    <td><%= moduleList.moduleDescription %></td>
     <td>
     <button onclick="disableModule('<%= moduleList.moduleName %>')">Disable</button>
     <button onclick="enableModule('<%= moduleList.moduleName %>')">Enable</button>

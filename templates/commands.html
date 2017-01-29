@@ -3,8 +3,39 @@
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main">
 
-<p>Commands test page</p>
-
+<% commands.forEach(function(commands) { %>
+  <% if (commands.level == 100) { %>
+  <div class="commands"><p>
+    <b>Command:</b> <%= commands.commName %> <br>
+    <% if (commands.commDesc != null) { %> <b>Description:</b> <%= commands.commDesc %> <br> <% } %>
+    <% if (commands.response != null) { %><b>Response:</b> <%= commands.response %> <br> <% } %>
+    <% if (commands.commUse != null) { %> <b>Usage:</b><br> <%= commands.commUse %> <br> <% } %>
+    <b>Cooldown type:</b> <%= commands.cdType %> <br>
+    <b>Cooldown:</b> <%= commands.cd %> seconds <br>
+    <b>User level:</b> Everyone
+  </p></div>
+  <% } else if (commands.level == 150) { %>
+    <div class="commands" id="subCommands"><p>
+      <b>Command:</b> <%= commands.commName %> <br>
+      <% if (commands.commDesc != null) { %> <b>Description:</b> <%= commands.commDesc %> <br> <% } %>
+      <% if (commands.response != null) { %><b>Response:</b> <%= commands.response %> <br> <% } %>
+      <% if (commands.commUse != null) { %> <b>Usage:</b> <br><%- commands.commUse.split("|").join("<br>") %> <br> <% } %>
+      <b>Cooldown type:</b> <%= commands.cdType %> <br>
+      <b>Cooldown:</b> <%= commands.cd %> seconds <br>
+      <b>User level:</b> Subscriber
+    </p></div>
+  <% } else { %>
+    <div class="commands" id="modCommands"><p>
+      <b>Command:</b> <%= commands.commName %> <br>
+      <% if (commands.commDesc != null) { %> <b>Description:</b> <%= commands.commDesc %> <br> <% } %>
+      <% if (commands.response != null) { %><b>Response:</b> <%= commands.response %> <br> <% } %>
+      <% if (commands.commUse != null) { %> <b>Usage:</b><br> <%= commands.commUse %> <br> <% } %>
+      <b>Cooldown type:</b> <%= commands.cdType %> <br>
+      <b>Cooldown:</b> <%= commands.cd %> seconds <br>
+      <b>User level:</b> Moderator
+    </p></div>
+  <% } %>
+<% }) %>
 </div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
 </body>

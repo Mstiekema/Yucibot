@@ -66,15 +66,15 @@ app.all('*', function(req, res, next) {
             } else {
                 if (result[0].isMod == 1) {
                     res.locals.login = true,
-                    res.locals.mod = true, 
+                    res.locals.mod = true,
                     res.locals.name = req.user
                 } else {
                     res.locals.login = true,
-                    res.locals.mod = false, 
+                    res.locals.mod = false,
                     res.locals.name = req.user
                 }
             };
-        });  
+        });
     } else {
         res.locals.login = false
     }
@@ -170,7 +170,7 @@ app.get('/user/:id/logs', function(req, res) {
         if (result[0] == undefined) {
             res.render("error404.html");
         } else {
-            res.render('logs.html', { 
+            res.render('logs.html', {
                 log: result,
                 name: result[0].name
             });
@@ -179,7 +179,11 @@ app.get('/user/:id/logs', function(req, res) {
 });
 
 app.get('/commands', function(req, res) {
-    connection.query('select * from commands', function(err, result) {res.render('commands.html')});
+    connection.query('select * from commands ORDER BY level', function(err, result) {
+        res.render('commands.html', {
+          commands: result
+        })
+    });
 });
 
 app.get('/stats', function(req, res) {
@@ -240,13 +244,13 @@ app.get('/history/:id', function(req, res) {
         } else {
             connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id LIMIT 1', req.params.id, function(err, result) {
                 if (result == undefined || result[0] == undefined) {
-                    res.render('history.html', { 
+                    res.render('history.html', {
                         currSong: [{"title": "The songlist has finished"}],
                         songInfo: songInfo,
                         listDate: req.params.id
                     });
                 } else {
-                    res.render('history.html', { 
+                    res.render('history.html', {
                         currSong: result,
                         songInfo: songInfo,
                         listDate: req.params.id
@@ -324,7 +328,7 @@ app.get('/admin/logs', function(req, res) {
                 log: false
             });
         } else {
-            res.render('admin/adminlogs.html', { 
+            res.render('admin/adminlogs.html', {
                 log: result
             });
         };
@@ -338,7 +342,7 @@ app.get('/admin/logs/login', function(req, res) {
                 log: false
             });
         } else {
-            res.render('admin/adminlogs.html', { 
+            res.render('admin/adminlogs.html', {
                 log: result
             });
         };
@@ -352,7 +356,7 @@ app.get('/admin/logs/points', function(req, res) {
                 log: false
             });
         } else {
-            res.render('admin/adminlogs.html', { 
+            res.render('admin/adminlogs.html', {
                 log: result
             });
         };
@@ -366,7 +370,7 @@ app.get('/admin/logs/sub', function(req, res) {
                 log: false
             });
         } else {
-            res.render('admin/adminlogs.html', { 
+            res.render('admin/adminlogs.html', {
                 log: result
             });
         };
@@ -380,7 +384,7 @@ app.get('/admin/logs/timeout', function(req, res) {
                 log: false
             });
         } else {
-            res.render('admin/adminlogs.html', { 
+            res.render('admin/adminlogs.html', {
                 log: result
             });
         };
@@ -389,7 +393,7 @@ app.get('/admin/logs/timeout', function(req, res) {
 
 app.get('/admin/modules', function(req, res) {
     connection.query('select * from module WHERE id != 1', function(err, result) {
-        res.render('admin/modules.html', { 
+        res.render('admin/modules.html', {
             moduleList: result,
             website: options.identity.websiteUrl
         });
