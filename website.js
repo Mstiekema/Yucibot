@@ -263,7 +263,6 @@ app.get('/history/:id', function(req, res) {
 
 app.get('/history', function(req, res) {
     res.redirect('/history/'+ date);
-    res.render("history.html")
 });
 
 app.get('/admin', function(req, res) {

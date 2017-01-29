@@ -301,6 +301,11 @@ th, td {
     padding: 5px;
 }
 
+.menu a, #menu a {
+  color: #d4dbdd;
+  text-decoration: none;
+}
+
 a {
     color: #4995c7;
 }

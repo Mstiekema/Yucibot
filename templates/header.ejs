@@ -4,13 +4,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script> 
-<% if (locals.login == true) { %>
-function userHome() {
-   window.location.href = '/user/' + '<%= locals.name %>';
-}
-<% } %>
-</script>
 <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
 <meta http-equiv="expires" content="Sat, 31 Oct 2014 00:00:00 GMT">
 <meta http-equiv="pragma" content="no-cache">
@@ -26,13 +19,12 @@ function userHome() {
 <% } %>
 </div>
 <div class="login">
-
 <% if (locals.login == true) { %>
-<u id='test'>Hello <%= locals.name %> </u>	
-<% if (locals.mod == true) { %> <p onclick='admin()'>• Admin home</p> <% } %>
-<p onclick='userHome()'>• User page</p>
-<p onclick='logout()'>Logout</p>
+<u id='test'>Hello <%= locals.name %> </u>
+<% if (locals.mod == true) { %> <p id="menu"><a href='/admin'>• Admin home</a></p> <% } %>
+<p id="menu"><a href='/user/<%= locals.name %>'>• User page</a></p>
+<p id="menu"><a href='/logout'>Logout</a></p>
 <% } else { %>
-<p onclick='login()'>Login</p>
+<p id="menu"><a href='/login'>Login</a></p>
 <% } %>
 </div>
