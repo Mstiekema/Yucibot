@@ -9,7 +9,6 @@ var connection = require("./connection.js")
 var exp = module.exports = {}
 
 exp.commands = function(channel, user, message, self) {
-	streaminfo.fetchInfo()
 	basic.customCommands(channel, user, message, self)
 	mod.commandManagement(channel, user, message, self)
 	connection.query('select * from module', function(err, result) {
@@ -50,6 +49,7 @@ exp.commands = function(channel, user, message, self) {
 };
 
 exp.events = function(channel, user, message, self) {
+	streaminfo.fetchInfo()
 	connection.query('select * from module', function(err, result) {
 		if (result[9].state == 1) {
 			events.fourtwenty();
