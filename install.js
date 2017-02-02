@@ -95,10 +95,26 @@ connection.query(
 )
 
 connection.query(
-	'CREATE TABLE poll (' +
+	'CREATE TABLE pollQuestions (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
-	'question VARCHAR(500),' +
-	'answers VARCHAR(5000))',
+	'question VARCHAR(500))',
+	function (err, result) {if (err) {return}}
+)
+
+connection.query(
+	'CREATE TABLE pollAnswers (' +
+	'id INT AUTO_INCREMENT PRIMARY KEY,' +
+	'pollId VARCHAR(500),' +
+	'answers VARCHAR(500))',
+	function (err, result) {if (err) {return}}
+)
+
+connection.query(
+	'CREATE TABLE pollVoted (' +
+	'id INT AUTO_INCREMENT PRIMARY KEY,' +
+	'ip VARCHAR(500),' +
+	'pollId VARCHAR(500),' +
+	'answerId VARCHAR(500))',
 	function (err, result) {if (err) {return}}
 )
 

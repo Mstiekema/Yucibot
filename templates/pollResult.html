@@ -1,0 +1,18 @@
+<% include header.ejs %>
+<div class="top"><h1>Polls</h1></div>
+<div class="search"><input id="searchBar" type="text"></div>
+<div class="main" ng-app="yucibot" ng-controller="showPoll">
+<% if (question != undefined) { %>
+<p>Question: <%= question %> </p>
+  <div id="answers" ng-repeat="x in answer">
+  	<p>[{{ $index + 1 }}] {{ x.answer }} with {{x.votes}} votes </p>
+  </div>
+  <% } else { %>
+  <p>Couldn't find a poll with this ID :/</p>
+  <% } %>
+
+
+</div>
+<script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/showPoll.js"></script>
+</body>

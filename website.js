@@ -78,15 +78,48 @@ io.on('connection', function (socket) {
     }})
   })
   socket.on('createPoll', function (data) {
-    connection.query('insert into poll set ?', data, function(err, result) {})
-  })
-  socket.on('getPoll', function (data) {
-    connection.query('select * from poll where id = ?', data, function(err, result) {
-      socket.emit('pollData', result[0].answers)
+    connection.query('insert into pollquestions set question = ?', data.question, function(err, result) {
+      var pollId = result.insertId
+      var answers = JSON.parse(data.answers)
+      for (x = 0; x < answers.length; x++) {
+        var pushTo = {
+          pollId: pollId,
+          answers: answers[x]
+        }
+        connection.query('insert into pollanswers set ?', pushTo, function(err, result) {})
+      }
     })
   })
-  socket.on('addResult', function (data) {		
-    connection.query('update poll set answers = ? where id = "' + data.id + '"', JSON.stringify(data.answers), function(err,result){})		
+  socket.on('getPoll', function (data) {
+    connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', data, function(err, result) {
+      socket.emit('pollData', {data: result})
+    })
+  })
+  socket.on('addResult', function (data) {
+    connection.query('insert into pollvoted set ?', data, function(err,result){})
+  })
+  socket.on('retPollRes', function (data) {
+    connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', data, function(err, result) {
+      var answers = result
+      connection.query('SELECT * FROM pollvoted where pollId = ?', data, function(err, result) {
+        var res = new Array;
+        for (x = 0; x < answers.length; x++) {
+          res.push({
+            answer: answers[x].answers,
+            id: answers[x].id,
+            votes: 0
+          })
+        }
+        var results = result.map(function(a) {return a.answerId;})
+        var ids = res.map(function(a) {return parseInt(a.id)})
+        for (x = 0; x < results.length; x++) {
+          a = parseInt(results[x])
+          b = ids.indexOf(a)
+          res[b].votes += 1
+        }
+        socket.emit('pollRes', {data: res})
+      });
+    });
   })
   socket.on('removeComm', function (data) {
     connection.query('delete from commands where commName = ?', data, function(err, result) {})
@@ -322,11 +355,64 @@ app.get('/history', function(req, res) {
   res.redirect('/history/'+ date);
 });
 
+app.get('/poll', function(req, res) {
+  connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
+    res.redirect('/poll/' + result[0].id)
+  });
+});
+
+app.get('/poll/result', function(req, res) {
+  connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
+    res.redirect('/poll/' + result[0].id + '/result')
+  });
+});
+
+app.get('/poll/:id', function(req, res) {
+  connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
+    res.render('poll.html', {
+      data: result
+    })
+  });
+});
+
+app.get('/poll/:id/result', function(req, res) {
+  connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
+    if(result[0] != undefined) {
+    var question = result[0].question
+    var answers = result.map(function(a) {return a.answers;})
+    connection.query('SELECT * FROM pollvoted where pollId = ?', req.params.id, function(err, result) {
+      var voteRes = result.map(function(a) {return a.answerId;})
+      res.render('pollResult.html', {
+        question: question,
+        answers: answers,
+        voted: voteRes
+      })
+    })
+  } else {
+    res.render('pollResult.html', {
+      question: undefined
+    })
+  }
+  });
+});
+
 app.get('/admin', function(req, res) {
   connection.query('select * from streaminfo', function(err, result) {
     res.render('admin/home.html', {
       info: result
     })
+  });
+});
+
+app.get('/admin/poll', function(req, res) {
+  connection.query('select * from poll', function(err, result) {
+    res.render('admin/poll.html')
+  })
+})
+
+app.get('/admin/poll/create', function(req, res) {
+  connection.query('select * from poll', function(err, result) {
+    res.render('admin/pollCreate.html')
   });
 });
 

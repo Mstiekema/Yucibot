@@ -1,41 +1,47 @@
 var socket = io.connect();
 var id = window.location.href.split('/').pop()
-socket.emit('getPoll', id)
-
-var answers;
-var results;
+var resIdb = window.location.href.split('/'); resIdb.pop();
+var resId = resIdb.pop()
 var fullObj;
+var voted;
+socket.emit('getPoll', id)
+socket.emit('retPollRes', resId)
 
 socket.on('pollData', function (data) {
-  answers = $.map(JSON.parse(data), function(value, index) {
-    return [index];
-  });
-  results = $.map(JSON.parse(data), function(value, index) {
-    return [value];
-  });
-  fullObj = JSON.parse(data)
+  fullObj = data.data
 })
 
-setTimeout(function() {
-  console.log(answers); 
-  console.log(results)
-}, 1000); 
+socket.on('pollRes', function (data) {
+  voted = data.data
+})
 
 var yucibot = angular.module('yucibot',[]);
-yucibot.controller('songQueue', function($scope, $http, $log, $interval) { 
+yucibot.controller('votePoll', function($scope, $http, $log, $interval) {
   $scope.getAnswers = function() {
     socket.emit('getPoll', id)
-    $scope.answer = answers
-    $scope.result = results
+    $scope.answer = fullObj
   }
   $scope.vote = function(x) {
-    fullObj[x] += 1
-    var sendData = {
-      id: id,
-      answers: fullObj
-    }
-    socket.emit('addResult', sendData)
+    ip = "xD";
+    $.get("http://ipinfo.io", function(response) {
+      var sendData = {
+        pollId: id,
+        answerId: x,
+        ip: response.ip
+      }
+      socket.emit('addResult', sendData)
+      window.location.href="/poll/" + id + "/result"
+    }, "jsonp");
   }
   $scope.getAnswers()
-  $interval($scope.getAnswers, 100);
+  $interval($scope.getAnswers, 500);
+})
+
+yucibot.controller('showPoll', function($scope, $http, $log, $interval) {
+  $scope.getAnswers = function() {
+    socket.emit('retPollRes', resId)
+    $scope.answer = voted
+  }
+  $scope.getAnswers()
+  $interval($scope.getAnswers, 500);
 })
