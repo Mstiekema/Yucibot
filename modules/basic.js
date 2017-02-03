@@ -94,6 +94,20 @@ module.exports = {
 			function title() {request(info, getTitle)}
 			cd.cooldown("title", "global", user.username, 10, title)
 		}
+		else if(message.startsWith("!uptime")) {
+			function getUptime(error, response, body) {
+				if (!error && response.statusCode == 200) {
+				  if(!body.includes("is not streaming")) {
+						bot.say(channel, channel.substring(1) + " has been live for " + body + "!")
+				  }
+				  else {
+				  	bot.say(channel, channel.substring(1) + " is offline")
+				  }
+				}
+			}
+			function uptime() {request("https://api.rtainc.co/twitch/uptime?channel=" + channel.substring(1), getUptime)}
+			cd.cooldown("uptime", "global", user.username, 10, uptime)
+		}
 	},
 	owCommands: function (channel, user, message, self) {
 		if(message.startsWith("!owrank")) {
