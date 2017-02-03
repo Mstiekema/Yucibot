@@ -45,3 +45,44 @@ yucibot.controller('showPoll', function($scope, $http, $log, $interval) {
   $scope.getAnswers()
   $interval($scope.getAnswers, 500);
 })
+
+// Draw pie chart
+function makeGraph() {
+  google.charts.load('current', {'packages':['corechart']});
+  setTimeout(function () {
+    google.charts.setOnLoadCallback(drawChart);
+  }, 300);
+
+  var arrChartTable = new Array;
+
+  setTimeout(function () {
+    arrChartTable.push(['Answer', 'Votes'])
+    for (x = 0; x < voted.length; x++) {
+      var answer = voted[x].answer
+      var votes = voted[x].votes
+      arrChartTable.push([answer, votes])
+    }
+  }, 100);
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(arrChartTable);
+    var options = {
+      is3D: true,
+      refreshInterval: 5,
+      backgroundColor: { fill:'transparent' },
+      color: '#d4dbdd',
+      fontName: "Trebuchet MS",
+      width: 600,
+      height: 500,
+      legend: {textStyle: { color: "#d4dbdd"}, alignment: 'center', position: 'left'}
+    };
+    var chart = new google.visualization.PieChart(document.getElementById('chart'));
+    chart.draw(data, options);
+  }
+}
+
+makeGraph()
+
+setInterval(function () {
+  makeGraph()
+}, 5000);

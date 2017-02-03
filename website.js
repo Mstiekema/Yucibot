@@ -357,23 +357,40 @@ app.get('/history', function(req, res) {
 
 app.get('/poll', function(req, res) {
   connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
-    res.redirect('/poll/' + result[0].id)
+    if(result[0].id != undefined) {
+      res.redirect('/poll/' + result[0].id)
+    } else {
+      res.render('error404.html')
+    }
   });
 });
 
 app.get('/poll/result', function(req, res) {
   connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
-    res.redirect('/poll/' + result[0].id + '/result')
+    if(result[0] != undefined) {
+      res.redirect('/poll/' + result[0].id + '/result')
+    } else {
+      res.render('error404.html')
+    }
   });
 });
 
 app.get('/poll/:id', function(req, res) {
   connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
-    res.render('poll.html', {
-      data: result
+    var data = result
+    connection.query('SELECT ip FROM pollvoted where pollId = ?', req.params.id, function(err, result) {
+      var ips = result.map(function(a) {return a.ip;})
+      request("http://ipinfo.io", function (error, response, body) {
+        localIp = JSON.parse(body).ip
+        res.render('poll.html', {
+          data: data,
+          voted: ips,
+          localIp: localIp
+        })
+      })
     })
-  });
-});
+  })
+})
 
 app.get('/poll/:id/result', function(req, res) {
   connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
