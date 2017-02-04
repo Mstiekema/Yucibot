@@ -4,6 +4,15 @@ $(document).ready(function(e) {
   var refresh = $('#refresh');
   refresh.val() == 'yes' ? location.reload(true) : refresh.val('yes');
 });
+
+window.onload=function(){
+  var btn = document.getElementById('results');
+  btn.addEventListener("click", function(){
+      var url = window.location.href
+      window.location.href = url + "/result"
+  });
+}
+
 </script>
 <input type="hidden" id="refresh" value="no">
 <div class="top"><h1>Polls</h1></div>
@@ -21,7 +30,7 @@ Answers:
 
 <% if (voted.includes(localIp) == true) { %><p><b>You have already voted on this poll</b></p><% } %>
 
-<button id="results"><a href="/poll/result">Results</a></button>
+<button id="results">Results</button>
 
 <% } else { %>
 <p>Couldn't find a poll with this ID :/</p>
