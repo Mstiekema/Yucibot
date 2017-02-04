@@ -57,7 +57,7 @@ function makeGraph() {
 
   setTimeout(function () {
     arrChartTable.push(['Answer', 'Votes'])
-    for (x = 0; x < voted.length; x++) {
+    for (var x = 0; x < voted.length; x++) {
       var answer = voted[x].answer
       var votes = voted[x].votes
       arrChartTable.push([answer, votes])

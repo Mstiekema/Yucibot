@@ -1,8 +1,8 @@
 <% include header.ejs %>
 <script>
 $(document).ready(function(e) {
-  var x = $('#refresh');
-  x.val() == 'yes' ? location.reload(true) : x.val('yes');
+  var refresh = $('#refresh');
+  refresh.val() == 'yes' ? location.reload(true) : refresh.val('yes');
 });
 </script>
 <input type="hidden" id="refresh" value="no">
