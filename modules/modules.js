@@ -21,9 +21,6 @@ exp.commands = function(channel, user, message, self) {
 		if (result[3].state == 1) {
 			basic.owCommands(channel, user, message, self)
 		}
-		if (result[4].state == 1) {
-			profile.updateProfile(channel, user, message, self);
-		}
 		if (result[5].state == 1) {
 			profile.fetchProfile(channel, user, message, self);
 		}
@@ -51,6 +48,9 @@ exp.commands = function(channel, user, message, self) {
 exp.events = function(channel, user, message, self) {
 	streaminfo.fetchInfo()
 	connection.query('select * from module', function(err, result) {
+		if (result[4].state == 1) {
+			profile.updateProfile(channel, user, message, self);
+		}
 		if (result[9].state == 1) {
 			events.fourtwenty();
 		}

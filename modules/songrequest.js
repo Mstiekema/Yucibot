@@ -67,7 +67,7 @@ module.exports = {
 						var result = allNames.length;
 						if (result <= 2) {
 							connection.query('insert into songrequest set ?', srInfo, function (err, result) {if (err) {return}})
-							bot.say(user.username, "Succesfully added " + base.snippet.title + ", requested by: " + user.username + " to the queue!")
+							bot.say(channel, "Succesfully added " + base.snippet.title + ", requested by: " + user.username + " to the queue!")
 						} else {
 							bot.whisper(user.username, "You have more than 3 songs in the queue, please wait a minute before you request more")
 						}
