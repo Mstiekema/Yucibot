@@ -18,7 +18,6 @@ var clientID        = options.identity.clientId
 var secret          = options.identity.clientSecret
 var redirect        = options.identity.redirectUrl
 var io              = require('socket.io')(server);
-var ip;
 
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -57,7 +56,6 @@ passport.deserializeUser(function(user, done) {
 });
 
 app.all('*', function(req, res, next) {
-  ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   res.locals.website = options.identity.websiteUrl
   res.locals.botName = options.identity.username
   res.locals.streamer = options.channels[0]
@@ -124,7 +122,7 @@ io.on('connection', function (socket) {
     })
   })
   socket.on('addResult', function (data) {
-    data.ip = ip
+    data.ip = socket.request.connection.remoteAddress;
     connection.query('insert into pollvoted set ?', data, function(err,result){})
   })
   socket.on('retPollRes', function (data) {
