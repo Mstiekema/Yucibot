@@ -93,7 +93,7 @@ function onPlayerStateChange(event) {
 }
 
 var yucibot = angular.module('yucibot',[]);
-yucibot.controller('songQueue', function($scope, $http, $log, $interval) { 
+yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 	$scope.getVideos = function() {
 		var vids = videos
 		var total = 0;
@@ -120,7 +120,6 @@ yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
 
 </script>
 <div class="top"><h1>Songlist</h1></div>
-<div class="search"><input id="searchBar" type="text"></div>
 <div class="main" ng-app="yucibot" ng-controller="songQueue">
 <div class="videoTitle"></div>
 <div id="player"></div>

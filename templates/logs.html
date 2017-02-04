@@ -1,10 +1,9 @@
 <% include header.ejs %>
 <div class="top"><h1>Logs | <%= name %></h1></div>
-<div class="search"><input id="searchBar" type="text"></div>
 <div class="main">
 <% log.forEach(function(log) { %>
 <tt>
-[<%= log.time.toLocaleDateString('nl-nl', {day: '2-digit', month: '2-digit', year: 'numeric'}) %> 
+[<%= log.time.toLocaleDateString('nl-nl', {day: '2-digit', month: '2-digit', year: 'numeric'}) %>
 <%= log.time.toLocaleTimeString('nl-nl', {hour12: false}); %>] <%= log.log %><br>
 </tt>
 <% }); %>

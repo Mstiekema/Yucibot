@@ -16,7 +16,7 @@ window.location.replace("/403")
 <title>Yucibot</title>
 </head>
 <body>
-<div class="logo"></div>
+<div class="search"><input id="searchBar" type="text" placeholder="Username"></div>
 <div>
 <% if (locals.mod == true) { %>
 <% include ../../static/html/adminmenu.htm %>
@@ -34,3 +34,4 @@ window.location.replace("/403")
 <p id="menu"><a href='/login'>Login</a></p>
 <% } %>
 </div>
+<div class="search"><input id="searchBar" type="text" placeholder="Username"></div>

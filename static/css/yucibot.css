@@ -1,4 +1,5 @@
 .footer {
+  text-align: center;
   font-size: 12px;
   color: #a2a8b7;
 }
@@ -43,7 +44,7 @@
 
 .login {
   position: absolute;
-  left: 20px;
+  left: 10px;
   width: 150px;
   bottom: 60px;
   border: 3px solid gray;
@@ -124,6 +125,8 @@
 }
 
 #searchBar {
+  box-shadow: 2px 2px 2px black;
+  z-index: 2;
   background: transparent;
   border: none;
   top: 30px;
@@ -136,9 +139,10 @@
 }
 
 .search {
+  z-index: 2;
   background-color: #4f5f64;
   position: absolute;
-  top: 30px;
+  top: 5px;
   right: 30px;
   width: 300px;
   height: 40px;
@@ -208,36 +212,34 @@
   bottom: 70px;
 }
 
-.logo {
-  position: absolute;
-  background-image:url('../img/yucibot_logo.png');
-  background-color: #22292b;
-  width:200px;
-	height:100px;
-	left: 0;
-	top: 0;
-}
-
 .top {
+  z-index: 1;
   position:absolute;
-  left:200px;
+  left: 0px;
   top: 0;
   right:0;
-  height: 200px;
-  padding-left: 20px;
+  line-height: 10px;
+  height: 50px;
+  padding-left: 50px;
   background-color: #22292b;
-  padding-top: 10px;
+  padding-top: 0px;
+  border-bottom-width: 1px;
+  border-bottom-color: gray;
+  border-bottom-style: solid;
 }
 .menu {
-  position:absolute;
-  left:0;
-  top:100px;
+  position: absolute;
+  left: 0;
+  top: 50px;
   bottom: 0px;
-  width: 200px;
+  width: 190px;
   background-color: #22292b;
-  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  /*text-align: center;*/
   box-sizing: border-box;
 }
+
 .main {
   position: absolute;
   left:200px;
@@ -275,10 +277,9 @@ div.menu h3 {
 }
 
 footer {
-  padding: 1em;
   text-align: center;
 	position: absolute;
-	bottom: 0;
+	bottom: 10px;
 }
 
 head {

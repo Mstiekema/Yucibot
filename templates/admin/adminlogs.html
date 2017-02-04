@@ -1,6 +1,5 @@
 <% include adminheader.ejs %>
 <div class="top"><h1>Admin logs</h1></div>
-<div class="search"><input id="searchBar" type="text"></div>
 <div class="main"><br>
 
 <div id="logMenu">
@@ -15,7 +14,7 @@
 <% if (log != false) { %>
 <% log.forEach(function(log) { %>
 <tt>
-[<%= log.time.toLocaleDateString('nl-nl', {day: '2-digit', month: '2-digit', year: 'numeric'}) %> 
+[<%= log.time.toLocaleDateString('nl-nl', {day: '2-digit', month: '2-digit', year: 'numeric'}) %>
 <%= log.time.toLocaleTimeString('nl-nl', {hour12: false}); %>] [<%= log.type %>] <%= log.log %><br>
 </tt>
 <% }); %>
