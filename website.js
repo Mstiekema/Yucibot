@@ -18,6 +18,7 @@ var clientID        = options.identity.clientId
 var secret          = options.identity.clientSecret
 var redirect        = options.identity.redirectUrl
 var io              = require('socket.io')(server);
+var ip;
 
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -53,6 +54,33 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(user, done) {
   done(null, user);
+});
+
+app.all('*', function(req, res, next) {
+  ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  res.locals.website = options.identity.websiteUrl
+  res.locals.botName = options.identity.username
+  res.locals.streamer = options.channels[0]
+  if (req.user) {
+    connection.query('select * from user where name = ?', req.user, function(err, result) {
+      if (result == undefined || result[0] == undefined) {
+        return
+      } else {
+        if (result[0].isMod == 1) {
+          res.locals.login = true,
+          res.locals.mod = true,
+          res.locals.name = req.user
+        } else {
+          res.locals.login = true,
+          res.locals.mod = false,
+          res.locals.name = req.user
+        }
+      };
+    });
+  } else {
+    res.locals.login = false
+  }
+  next()
 });
 
 io.on('connection', function (socket) {
@@ -96,6 +124,7 @@ io.on('connection', function (socket) {
     })
   })
   socket.on('addResult', function (data) {
+    data.ip = ip
     connection.query('insert into pollvoted set ?', data, function(err,result){})
   })
   socket.on('retPollRes', function (data) {
@@ -144,32 +173,6 @@ io.on('connection', function (socket) {
     })
   })
 })
-
-app.all('*', function(req, res, next) {
-  res.locals.website = options.identity.websiteUrl
-  res.locals.botName = options.identity.username
-  res.locals.streamer = options.channels[0]
-  if (req.user) {
-    connection.query('select * from user where name = ?', req.user, function(err, result) {
-      if (result == undefined || result[0] == undefined) {
-        return
-      } else {
-        if (result[0].isMod == 1) {
-          res.locals.login = true,
-          res.locals.mod = true,
-          res.locals.name = req.user
-        } else {
-          res.locals.login = true,
-          res.locals.mod = false,
-          res.locals.name = req.user
-        }
-      };
-    });
-  } else {
-    res.locals.login = false
-  }
-  next()
-});
 
 app.get('/', function(req, res) {
   var info = {

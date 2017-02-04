@@ -22,16 +22,12 @@ yucibot.controller('votePoll', function($scope, $http, $log, $interval) {
     $scope.answer = fullObj
   }
   $scope.vote = function(x) {
-    ip = "xD";
-    $.get("http://ipinfo.io", function(response) {
-      var sendData = {
-        pollId: id,
-        answerId: x,
-        ip: response.ip
-      }
-      socket.emit('addResult', sendData)
-      window.location.href="/poll/" + id + "/result"
-    }, "jsonp");
+    var sendData = {
+      pollId: id,
+      answerId: x,
+    }
+    socket.emit('addResult', sendData)
+    window.location.href="/poll/" + id + "/result"
   }
   $scope.getAnswers()
   $interval($scope.getAnswers, 500);
