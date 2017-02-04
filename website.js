@@ -129,29 +129,23 @@ app.all('*', function(req, res, next) {
 
 app.get('/', function(req, res) {
   var info = {
-    url: 'https://api.twitch.tv/kraken/streams?channel=' + JSON.stringify(options.channels).slice(2, -2),
+    url: 'https://api.twitch.tv/kraken/streams/' + JSON.stringify(options.channels).slice(2, -2),
     headers: {
       'Client-ID': clientID
     }
   }
   request(info, function (error, response, body) {
-    if (JSON.parse(body).streams[0] != undefined) {
-      var base = JSON.parse(body).streams[0]
+    console.log(JSON.parse(body).stream)
+    if (JSON.parse(body).stream != undefined) {
+      console.log("test")
+      var base = JSON.parse(body).stream
       var streamid = base._id
-      connection.query('select * from streaminfo where streamid = ?', streamid, function(err, result) {
-        if (result[0] != undefined) {
-          res.render('index.html', {
-            status: 1,
-            game: base.game,
-            viewers: base.viewers,
-            title: base.channel.status
-          })
-        } else {
-          res.render('index.html', {
-            status: 0
-          })
-        }
-      });
+      res.render('index.html', {
+        status: 1,
+        game: base.game,
+        viewers: base.viewers,
+        title: base.channel.status
+      })
     } else {
       res.render('index.html', {
         status: 0

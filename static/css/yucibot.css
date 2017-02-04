@@ -229,6 +229,7 @@
   border-bottom-color: gray;
   border-bottom-style: solid;
 }
+
 .menu {
   position: absolute;
   left: 0;
@@ -238,8 +239,11 @@
   background-color: #22292b;
   padding-left: 10px;
   padding-right: 10px;
-  /*text-align: center;*/
   box-sizing: border-box;
+}
+
+.menuItem:before {
+  content: '• ';
 }
 
 .main {
