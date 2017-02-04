@@ -323,8 +323,11 @@ body {
 }
 
 .moduleTable td, th {
-  border: 1px solid black;
   text-align: left;
+}
+
+.moduleTable tr:nth-child(even) {
+    background: #212b2d;
 }
 
 th, td {
