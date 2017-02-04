@@ -157,7 +157,7 @@
   width: 460px;
   background-color: #22292b;
   padding: 0px 20px 20px 20px;
-  overflow:auto;
+  overflow: auto;
 }
 
 .songQueueHistory {
@@ -170,7 +170,7 @@
   bottom: 20px;
   background-color: #22292b;
   padding: 0px 20px 20px 20px;
-  overflow:auto;
+  overflow-x: hidden;
 }
 
 #ytlink {
@@ -338,4 +338,17 @@ th, td {
 
 a {
   color: #4995c7;
+}
+
+button {
+  background-color: rgb(79, 89, 98);
+  padding: 10px;
+  border-radius: 5%;
+  transition-duration: 0.4s;
+  text-align: center;
+  color: #d4dbdd;
+}
+
+button:hover {
+  background-color: #2f3a3c;
 }

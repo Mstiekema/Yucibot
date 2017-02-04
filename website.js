@@ -135,9 +135,7 @@ app.get('/', function(req, res) {
     }
   }
   request(info, function (error, response, body) {
-    console.log(JSON.parse(body).stream)
     if (JSON.parse(body).stream != undefined) {
-      console.log("test")
       var base = JSON.parse(body).stream
       var streamid = base._id
       res.render('index.html', {
