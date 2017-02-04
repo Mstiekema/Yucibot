@@ -167,7 +167,7 @@
   top: 20px;
   left: 20px;
   right: 20px;
-  height: 800px;
+  bottom: 20px;
   background-color: #22292b;
   padding: 0px 20px 20px 20px;
   overflow:auto;
@@ -189,13 +189,15 @@
   border-style: solid;
   border-width: 1px;
   background-color: #2f3a3c;
+  margin-bottom: -33px;
 }
 
-#songItemInfoHistory p {
+.songItemInfoHistory {
   position: relative;
-  padding-left: 140px;
-  bottom: 75px;
-  margin-bottom: -46px
+  bottom: 30px;
+  float: inherit;
+  left: 140px;
+  text-align: left;
 }
 
 #songItem {
@@ -220,7 +222,7 @@
   right:0;
   line-height: 10px;
   height: 50px;
-  padding-left: 50px;
+  padding-left: 55px;
   background-color: #22292b;
   padding-top: 0px;
   border-bottom-width: 1px;
@@ -242,13 +244,17 @@
 
 .main {
   position: absolute;
-  left:200px;
-  top:100px;
+  left: 190px;
+  top: 50px;
   right:0;
   bottom:0;
   padding-left: 20px;
   background-color: #2f3a3c;
   overflow: auto;
+}
+
+.mainMenuClosed {
+  left: 0px;
 }
 
 #logMenu {
@@ -274,6 +280,25 @@ div.menu p, .login p {
 
 div.menu h3 {
   margin: 5px;
+}
+
+#menuIconClosed {
+  z-index: 3;
+  font-size: 40;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: -5px;
+}
+
+#menuIconOpen {
+  z-index: 3;
+  font-size: 70;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: -2px;
+  left: 15px;
 }
 
 footer {

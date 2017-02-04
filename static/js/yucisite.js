@@ -4,3 +4,24 @@ $("#searchBar").keyup(function(ev) {
     location.href = "/user/" + name;
   }
 });
+
+$("#menuIconOpen").hide();
+$("#menuIconClosed").click(function() {
+  $("#menuIconClosed").hide();
+  $(".menu").addClass('animated bounceOut');
+  $(".login").addClass('animated bounceOut');
+  $("#menuIconOpen").show();
+  setTimeout(function () { $(".main").addClass('mainMenuClosed'); }, 800); 
+});
+
+$("#menuIconOpen").click(function() {
+  $("#menuIconOpen").hide();
+  $(".main").removeClass('mainMenuClosed');
+  $(".menu").removeClass('animated bounceOut');
+  $(".login").removeClass('animated bounceOut');
+  $(".menu").addClass('animated bounceInLeft');
+  $(".login").addClass('animated bounceInLeft');
+  $(".menu").show();
+  $(".login").show();
+  $("#menuIconClosed").show();
+});
