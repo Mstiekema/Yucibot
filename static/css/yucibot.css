@@ -5,14 +5,15 @@
 }
 
 .commands {
-  background-color: rgb(45, 55, 64);
-  border: 1px solid gray;
+  border: 1px solid #2f3a3c;
+  top: 20px;
   padding-left: 20px;
   margin-right: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  position: relative;;
-  float: bottom;
+  position: relative;
+}
+
+.commands:nth-child(odd) {
+    background-color: #212b2d;
 }
 
 #subCommands {
@@ -341,6 +342,13 @@ th, td {
 
 a {
   color: #4995c7;
+}
+
+.commDetails {
+  float: right;
+  position: relative;
+  top: -10px;
+  left: -5px;
 }
 
 button {

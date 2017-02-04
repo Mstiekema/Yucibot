@@ -224,6 +224,15 @@ app.get('/commands', function(req, res) {
   });
 });
 
+app.get('/commands/:id', function(req, res) {
+  var comm = "!" + req.params.id
+  connection.query('select * from commands where commName = ?', comm, function(err, result) {
+    res.render('commandDetails.html', {
+      commands: result
+    })
+  });
+});
+
 app.get('/stats', function(req, res) {
   connection.query('select * from streaminfo', function(err, result) {
     request({
