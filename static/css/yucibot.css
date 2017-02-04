@@ -26,6 +26,7 @@
 
 .twitch {
   width: 1350px;
+  box-shadow: 5px 5px 5px black;
 }
 
 .allStreams {
