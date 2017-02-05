@@ -6,10 +6,18 @@
 
 .commands {
   border: 1px solid #2f3a3c;
+  padding-left: 20px;
+  margin-right: 20px;
+  position: relative;
+}
+
+.commandsDetails {
+  border: 1px solid #2f3a3c;
   top: 20px;
   padding-left: 20px;
   margin-right: 20px;
   position: relative;
+  background-color: #202629;
 }
 
 .commands:nth-child(odd) {
@@ -186,7 +194,7 @@
 .songItemHistory {
   border-style: solid;
   border-width: 1px;
-  background-color: #2f3a3c;
+  background-color: #253133;
   margin-bottom: -33px;
 }
 
@@ -417,6 +425,10 @@ a {
   left: -5px;
 }
 
+.commBtn {
+  margin-bottom: 20px;
+}
+
 button {
   background-color: rgb(79, 89, 98);
   padding: 10px;
@@ -424,6 +436,7 @@ button {
   transition-duration: 0.4s;
   text-align: center;
   color: #d4dbdd;
+  cursor: pointer
 }
 
 button:hover {
