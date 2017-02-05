@@ -130,6 +130,20 @@
   top: 100px;
 }
 
+#searchBarLogs {
+  box-shadow: 2px 2px 2px black;
+  z-index: 2;
+  background: #4f5f64;
+  border: none;
+  top: 30px;
+  right: 10px;
+  width: 300px;
+  height: 40px;
+  color: #d4dbdd;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 #searchBar {
   box-shadow: 2px 2px 2px black;
   z-index: 2;
@@ -342,6 +356,54 @@ div.menu h3 {
 .profLeft {
   float: right;
   padding-right: 10px;
+}
+
+#userPf {
+  float: left;
+  margin-right: 20px;
+}
+
+.pfBtn {
+  margin-left: 10px;
+}
+
+#userName {
+  font-size: 35px;
+}
+
+#allLogBtn {
+  float: right;
+  margin-right: 20px;
+}
+
+.logs {
+  position: relative;
+  height: 20px;
+  top: 0px;
+  padding-bottom: 20px;
+  border: 1px solid #2f3a3c;
+  padding-left: 20px;
+  margin-right: 20px;
+  position: relative;
+  line-height: 10px;
+}
+
+.logs:nth-child(even) {
+  background-color: #181b1b;
+}
+
+.logs:nth-child(odd) {
+  background-color: #212325;
+}
+
+.userinfo {
+  position: absolute;
+  padding: 20px;
+  top: 20px;
+  padding-top: 10px;
+  left: 20px;
+  right: 20px;
+  background-color: #141b1d;
 }
 
 .profile {

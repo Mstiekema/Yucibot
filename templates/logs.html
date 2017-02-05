@@ -1,13 +1,28 @@
 <% include header.ejs %>
-<div class="top"><h2>Logs | <%= name %></h2></div>
+<div class="top"><h2>Chat logs</h2></div>
 <div class="main">
+<% if(!type) { %>
+<div id="logTop"><h3>Showing logs from <%= date %> for <%= name %></h3> <button id="allLogBtn"><a href="/user/<%= name %>/logs">All logs</a></button>
+<% } else { %>
+<div id="logTop"><h3>Showing all logs for <%= name %></h3>
+<% } %>
+<p>Search logs: <input id="searchBarLogs" type="text" placeholder="Chat log">
+<div id="selectDate"><label>Select stream date</label> <input type="date" id="myDate" onchange="changeDate()" value="<%= date %>"></div>
+</div>
+<% if(log != undefined) { %>
+<div id="allLogs">
 <% log.forEach(function(log) { %>
-<tt>
+<div class="logs" id="<%= log.id %>"><p>
 [<%= log.time.toLocaleDateString('nl-nl', {day: '2-digit', month: '2-digit', year: 'numeric'}) %>
 <%= log.time.toLocaleTimeString('nl-nl', {hour12: false}); %>] <%= log.log %><br>
-</tt>
+</p></div>
 <% }); %>
+</div>
+<% } else { %>
+<p>Couldn't find logs from this date.</p>
+<% } %>
 </div>
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/logs.js"></script>
 </body>
