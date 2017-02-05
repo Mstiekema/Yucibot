@@ -34,3 +34,13 @@ $("#name").click(function() {
     $(".profile").addClass("hidden");
   }
 });
+
+$("#dark").click(function() {
+  localStorage.setItem("style", "dark")
+  window.location.reload()
+});
+
+$("#light").click(function() {
+  localStorage.setItem("style", "light")
+  window.location.reload()
+});

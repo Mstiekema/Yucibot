@@ -21,11 +21,11 @@
 }
 
 .commands:nth-child(odd) {
-    background-color: #212b2d;
+    background-color: #b5b5b5;
 }
 
 .commands:nth-child(even) {
-    background-color: #1a1f21;
+    background-color: #848c8c;
 }
 
 #subCommands {
@@ -53,7 +53,7 @@
   height: 416px;
   border: 3px solid #808080;
   width: 640px;
-  background-color: #384447;
+  background-color: #787878;
 }
 
 #selectDate {
@@ -81,13 +81,13 @@
   top: 20px;
   left: 20px;
   width: 1130px;
-  background-color: #1a2123;
+  background-color: #9ba4a7;
   padding: 10px 20px 20px 20px;
 }
 
 .queueLength {
   position: absolute;
-  background-color: #22292b;
+  background-color: #9a9a9a;
   width: 188px;
   height: 26px;
   top: 80px;
@@ -133,7 +133,7 @@
 #searchBarLogs {
   box-shadow: 2px 2px 2px black;
   z-index: 2;
-  background: #4f5f64;
+  background: #7c8a8f;
   border: none;
   top: 30px;
   right: 10px;
@@ -145,7 +145,7 @@
 }
 
 #searchBar {
-  box-shadow: 2px 2px 2px black;
+  box-shadow: 2px 2px 2px gray;
   z-index: 2;
   background: transparent;
   border: none;
@@ -153,14 +153,14 @@
   right: 10px;
   width: 300px;
   height: 40px;
-  color: #d4dbdd;
+  color: #242424;
   padding-left: 10px;
   padding-right: 10px;
 }
 
 .search {
   z-index: 2;
-  background-color: #4f5f64;
+  background-color: #7c8a8f;
   position: absolute;
   top: 5px;
   right: 30px;
@@ -175,7 +175,7 @@
   left: 20px;
   bottom: 20px;
   width: 460px;
-  background-color: #1a2123;
+  background-color: #9ba4a7;
   padding: 0px 20px 20px 20px;
   overflow: auto;
 }
@@ -188,7 +188,7 @@
   left: 20px;
   right: 20px;
   bottom: 20px;
-  background-color: #1a2123;
+  background-color: #9ba4a7;
   padding: 0px 20px 20px 20px;
   overflow-x: hidden;
 }
@@ -198,17 +198,17 @@
 }
 
 #played {
-  background-color: #3c2f33;
+  background-color: #8c626f;
 }
 
 #playing {
-  background-color: #303c2f;
+  background-color: #52804e;
 }
 
 .songItemHistory {
   border-style: solid;
   border-width: 1px;
-  background-color: #253133;
+  background-color: #777b7c;
   margin-bottom: -33px;
 }
 
@@ -223,7 +223,7 @@
 #songItem {
   border-style: solid;
   border-width: 1px;
-  background-color: #2f3a3c;
+  background-color: #777777;
   height: 90px;
   padding-right: 20px;
 }
@@ -243,12 +243,12 @@
   line-height: 10px;
   height: 50px;
   padding-left: 55px;
-  background-color: #141b1d;
+  background-color: #969696;
   padding-top: 0px;
   border-bottom-width: 1px;
   border-bottom-color: gray;
   border-bottom-style: solid;
-  box-shadow: 0px 5px 5px black;
+  box-shadow: 0px 5px 5px gray;
 }
 
 .menu {
@@ -258,11 +258,11 @@
   top: 51px;
   bottom: 0px;
   width: 190px;
-  background-color: #141b1d;
+  background-color: #969696;
   padding-left: 10px;
   padding-right: 10px;
   box-sizing: border-box;
-  box-shadow: 3px 5px 5px black;
+  box-shadow: 3px 5px 5px gray;
 }
 
 .menuItem:before {
@@ -276,7 +276,7 @@
   right:0;
   bottom:0;
   padding-left: 20px;
-  background-color: #292e2f;
+  background-color: #d4d4d4;
   overflow: auto;
 }
 
@@ -285,7 +285,7 @@
 }
 
 #logMenu {
-  background-color: #22292b;;
+  background-color: #73878c;
   position: absolute;
   right: 20px;
   border: 1px solid gray;
@@ -298,7 +298,7 @@
 }
 
 div.menu p:hover, div.login p:hover, div#logMenu p:hover {
-  background-color: #384447;
+  background-color: #777777;
   cursor: pointer;
 }
 
@@ -343,7 +343,7 @@ div.menu h3 {
 }
 
 #name:hover {
-  color: #9eabaf;
+  color: #d6d6d6;
   cursor: pointer;
 }
 
@@ -389,11 +389,11 @@ div.menu h3 {
 }
 
 .logs:nth-child(even) {
-  background-color: #181b1b;
+  background-color: #6b7373;
 }
 
 .logs:nth-child(odd) {
-  background-color: #212325;
+  background-color: #b5b5b5;
 }
 
 .userinfo {
@@ -403,7 +403,7 @@ div.menu h3 {
   padding-top: 10px;
   left: 20px;
   right: 20px;
-  background-color: #141b1d;
+  background-color: #687478;
 }
 
 .profile {
@@ -414,12 +414,12 @@ div.menu h3 {
   width: 300px;
   height: 90px;
   border: 3px solid #3c3e46;
-  background-color: #25262f;
+  background-color: #797979;
   padding-left: 20px;
 }
 
 #menu a:hover {
-  color: #5a6d73
+  color: #969696
 }
 
 .hidden {
@@ -428,14 +428,14 @@ div.menu h3 {
 
 #loginBtn {
   z-index: 3;
-  background-color: rgb(120, 55, 166);
+  background-color: #8554a8;
   position: absolute;
   right: 340px;
   top: 5px;
 }
 
 #loginBtn:hover {
-  background-color: rgb(87, 14, 138);
+  background-color: #6f5382;
 }
 
 footer {
@@ -454,8 +454,8 @@ head {
 
 body {
   font-family: "Trebuchet MS", Helvetica, sans-serif;
-  color: #d4dbdd;
-  background-color: #292e2f;
+  color: #242424;
+  background-color: #d4d4d4;
   overflow: hidden;
 }
 
@@ -464,11 +464,11 @@ body {
 }
 
 .moduleTable tr:nth-child(even) {
-    background: #212b2d;
+    background: #6b7373;
 }
 
 .moduleTable tr:nth-child(odd) {
-    background: #1a1f21;
+    background: #b5b5b5;
 }
 
 th, td {
@@ -476,7 +476,7 @@ th, td {
 }
 
 .menu a, #menu a, button a {
-  color: #d4dbdd;
+  color: #313131;
   text-decoration: none;
 }
 
@@ -496,7 +496,7 @@ a {
 }
 
 button {
-  background-color: rgb(79, 89, 98);
+  background-color: #676c70;
   padding: 10px;
   border-radius: 5%;
   transition-duration: 0.4s;
@@ -506,5 +506,5 @@ button {
 }
 
 button:hover {
-  background-color: #2f3a3c;
+  background-color: #839b9f;
 }
