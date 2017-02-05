@@ -3,6 +3,9 @@
 <div class="search"><input id="searchBar" type="text"></div>
 <div class="main">
 <p><button><a href = "/admin/poll/create">Create poll</a></button></p>
+  <% polls.forEach(function(polls) { %>
+    <p class="pollItem" id="<%= polls.id %>"><%= polls.question %> <button class="pollBtn goPoll">Poll result</button><button class="pollBtn remPoll">Remove poll</button></p>
+  <% }); %>
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>
 <script type="text/javascript" src="/../js/poll.js"></script>

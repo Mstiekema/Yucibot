@@ -30,3 +30,13 @@ var socket = io.connect();
 $(".addAnswer").click(function() {
 	$(".allAnswers").append('<input id="answer[]" type="text"><br>');
 });
+
+$(".goPoll").click(function() {
+	window.location.href = "/poll/" + this.closest("p").id + "/result"
+});
+
+$(".remPoll").click(function() {
+	socket.emit('remPoll', this.closest("p").id)
+	alert("Succesfully removed the poll with id " + this.closest("p").id)
+	setTimeout(function () { window.location.reload() }, 300);
+});

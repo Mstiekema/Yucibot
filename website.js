@@ -148,6 +148,9 @@ io.on('connection', function (socket) {
       });
     });
   })
+  socket.on('remPoll', function (data) {
+    connection.query('delete from pollquestions where id = ?', data, function(err, result) {})
+  })
   socket.on('removeComm', function (data) {
     connection.query('delete from commands where commName = ?', data, function(err, result) {})
   })
@@ -411,13 +414,15 @@ app.get('/admin', function(req, res) {
 });
 
 app.get('/admin/poll', function(req, res) {
-  connection.query('select * from poll', function(err, result) {
-    res.render('admin/poll.html')
+  connection.query('SELECT * FROM pollquestions', function(err, result) {
+    res.render('admin/poll.html', {
+      polls: result
+    })
   })
 })
 
 app.get('/admin/poll/create', function(req, res) {
-  connection.query('select * from poll', function(err, result) {
+  connection.query('select * from pollquestions', function(err, result) {
     res.render('admin/pollCreate.html')
   });
 });
