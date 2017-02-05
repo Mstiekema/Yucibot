@@ -19,14 +19,14 @@
       <b>Command:</b> <%= commands.commName %>:
       <% if (commands.commDesc != null) { %> <%= commands.commDesc %> <% } %>
       <% if (commands.response != null) { %> <%= commands.response %> <% } %>
-      <button class="commDetails">More details</button>
+      <button class="commDetails" id="<%= commands.commName %>">More details</button>
     </p></div>
   <% } else if (commands.level == 150) { %>
     <div class="commands subCommands"><p>
       <b>Command:</b> <%= commands.commName %>:
       <% if (commands.commDesc != null) { %> <%= commands.commDesc %> <% } %>
       <% if (commands.response != null) { %> <%= commands.response %> <% } %>
-      <button class="commDetails">More details</button>
+      <button class="commDetails" id="<%= commands.commName %>">More details</button>
     </p></div>
   <% } %>
 <% }) %>
