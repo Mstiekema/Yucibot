@@ -114,10 +114,16 @@ app.all('*', function(req, res, next) {
           res.locals.login = true,
           res.locals.mod = true,
           res.locals.name = req.user
+          res.locals.points = result[0].points
+          res.locals.num_lines = result[0].num_lines
+          res.locals.pf = result[0].pf
         } else {
           res.locals.login = true,
           res.locals.mod = false,
           res.locals.name = req.user
+          res.locals.points = result[0].points
+          res.locals.num_lines = result[0].num_lines
+          res.locals.pf = result[0].pf
         }
       };
     });
@@ -184,6 +190,9 @@ app.get('/user/:id', function(req, res) {
         }
       }
       request(info, function (error, response, body) {
+        var prePic = JSON.parse(body).logo
+        var profilePic = prePic.substring(0, prePic.length - 11) + "50x50.png"
+        connection.query('update user set pf = "' + profilePic + '" where name = ?', JSON.parse(body).name, function(err, result) {})
         var getAge = JSON.stringify(new Date(JSON.parse(body).created_at)).substring(1, 20)
         var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
         var days = Math.round(Math.abs((new Date(JSON.parse(body).created_at).getTime() - new Date().getTime())/(24*60*60*1000)));

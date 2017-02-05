@@ -16,6 +16,10 @@
     background-color: #212b2d;
 }
 
+.commands:nth-child(even) {
+    background-color: #1a1f21;
+}
+
 #subCommands {
   background-color: rgb(33, 57, 80);
 }
@@ -44,17 +48,6 @@
   background-color: #384447;
 }
 
-.login {
-  position: absolute;
-  left: 10px;
-  width: 150px;
-  bottom: 60px;
-  border: 3px solid gray;
-  padding: 5px;
-  text-align: center;
-  z-index:1;
-}
-
 #selectDate {
   position: absolute;
   right: 20px;
@@ -80,7 +73,7 @@
   top: 20px;
   left: 20px;
   width: 1130px;
-  background-color: #22292b;
+  background-color: #1a2123;
   padding: 10px 20px 20px 20px;
 }
 
@@ -105,12 +98,14 @@
   width: 150px;
   left: 20px;
   top: 80px;
+  cursor: pointer
 }
 
 #skip {
   position: absolute;
-  left: 404px;
-  top: -20px;
+  left: 396px;
+  top: 31px;
+  cursor: pointer
 }
 
 #skipVideo {
@@ -118,6 +113,7 @@
   left: 370px;
   width: 150px;
   top: 80px;
+  cursor: pointer
 }
 
 #player {
@@ -157,7 +153,7 @@
   left: 20px;
   bottom: 20px;
   width: 460px;
-  background-color: #22292b;
+  background-color: #1a2123;
   padding: 0px 20px 20px 20px;
   overflow: auto;
 }
@@ -170,7 +166,7 @@
   left: 20px;
   right: 20px;
   bottom: 20px;
-  background-color: #22292b;
+  background-color: #1a2123;
   padding: 0px 20px 20px 20px;
   overflow-x: hidden;
 }
@@ -225,23 +221,26 @@
   line-height: 10px;
   height: 50px;
   padding-left: 55px;
-  background-color: #22292b;
+  background-color: #141b1d;
   padding-top: 0px;
   border-bottom-width: 1px;
   border-bottom-color: gray;
   border-bottom-style: solid;
+  box-shadow: 0px 5px 5px black;
 }
 
 .menu {
+  z-index: 2;
   position: absolute;
   left: 0;
-  top: 50px;
+  top: 51px;
   bottom: 0px;
   width: 190px;
-  background-color: #22292b;
+  background-color: #141b1d;
   padding-left: 10px;
   padding-right: 10px;
   box-sizing: border-box;
+  box-shadow: 3px 5px 5px black;
 }
 
 .menuItem:before {
@@ -255,7 +254,7 @@
   right:0;
   bottom:0;
   padding-left: 20px;
-  background-color: #2f3a3c;
+  background-color: #292e2f;
   overflow: auto;
 }
 
@@ -278,6 +277,7 @@
 
 div.menu p:hover, div.login p:hover, div#logMenu p:hover {
   background-color: #384447;
+  cursor: pointer;
 }
 
 div.menu p, .login p {
@@ -295,6 +295,7 @@ div.menu h3 {
   width: 40px;
   height: 40px;
   top: -5px;
+  cursor: pointer;
 }
 
 #menuIconOpen {
@@ -305,6 +306,66 @@ div.menu h3 {
   height: 40px;
   top: -2px;
   left: 15px;
+  cursor: pointer;
+}
+
+#name, .login {
+  z-index: 3;
+  font-size: 20;
+  position: absolute;
+  right: 340px;
+  top: 5px;
+  line-height: 35px;
+  text-align: right;
+  -webkit-user-select: none;
+}
+
+#name:hover {
+  color: #9eabaf;
+  cursor: pointer;
+}
+
+#pf {
+  border: 3px solid black;
+  float: left;
+  margin-right: 10px;
+}
+
+.profLeft {
+  float: right;
+  padding-right: 10px;
+}
+
+.profile {
+  z-index: 5;
+  position: absolute;
+  right: 330px;
+  top: 40px;
+  width: 300px;
+  height: 90px;
+  border: 3px solid #3c3e46;
+  background-color: #25262f;
+  padding-left: 20px;
+}
+
+#menu a:hover {
+  color: #5a6d73
+}
+
+.hidden {
+  z-index: -1;
+}
+
+#loginBtn {
+  z-index: 3;
+  background-color: rgb(120, 55, 166);
+  position: absolute;
+  right: 340px;
+  top: 5px;
+}
+
+#loginBtn:hover {
+  background-color: rgb(87, 14, 138);
 }
 
 footer {
@@ -320,7 +381,7 @@ head {
 body {
   font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #d4dbdd;
-  background-color: #2f3a3c;
+  background-color: #292e2f;
   overflow: hidden;
 }
 
@@ -332,11 +393,15 @@ body {
     background: #212b2d;
 }
 
+.moduleTable tr:nth-child(odd) {
+    background: #1a1f21;
+}
+
 th, td {
   padding: 5px;
 }
 
-.menu a, #menu a {
+.menu a, #menu a, button a {
   color: #d4dbdd;
   text-decoration: none;
 }

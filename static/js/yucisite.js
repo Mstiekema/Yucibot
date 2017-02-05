@@ -11,7 +11,7 @@ $("#menuIconClosed").click(function() {
   $(".menu").addClass('animated bounceOut');
   $(".login").addClass('animated bounceOut');
   $("#menuIconOpen").show();
-  setTimeout(function () { $(".main").addClass('mainMenuClosed'); }, 800); 
+  setTimeout(function () { $(".main").addClass('mainMenuClosed'); }, 800);
 });
 
 $("#menuIconOpen").click(function() {
@@ -24,4 +24,13 @@ $("#menuIconOpen").click(function() {
   $(".menu").show();
   $(".login").show();
   $("#menuIconClosed").show();
+});
+
+$("#name").click(function() {
+  var classes = $(".profile").attr('class')
+  if (classes.includes("hidden")) {
+    $(".profile").removeClass("hidden");
+  } else {
+    $(".profile").addClass("hidden");
+  }
 });

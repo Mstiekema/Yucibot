@@ -12,6 +12,19 @@
 <title>Yucibot</title>
 </head>
 <body>
+<% if (locals.login == true) { %>
+<div id="name"><%= locals.name %> &#9660;</div>
+<div class="profile hidden">
+  <p id="menu">
+    <img src="<%= locals.pf %>" id="pf">
+    <u>Hey there <%= locals.name %>!</u><br>
+    <a href='/user/<%= locals.name %>'>User page</a> <span class="profLeft">Points: <%= locals.points %></span> <br>
+    <a href='/logout'>Logout</a> <span class="profLeft">Lines: <%= locals.num_lines %></span>
+  </p>
+</div>
+<% } else { %>
+<button id="loginBtn"><a href="/login">Login</a></button>
+<% } %>
 <div id="menuIconClosed">&#9776;</div>
 <div id="menuIconOpen">&#735;</div>
 <div class="search"><input id="searchBar" type="text" placeholder="Username"></div>
@@ -20,15 +33,5 @@
 <% include ../static/html/adminmenu.htm %>
 <% } else { %>
 <% include ../static/html/menu.htm %>
-<% } %>
-</div>
-<div class="login">
-<% if (locals.login == true) { %>
-<u id='test'>Hello <%= locals.name %> </u>
-<% if (locals.mod == true) { %> <p id="menu"><a href='/admin'>• Admin home</a></p> <% } %>
-<p id="menu"><a href='/user/<%= locals.name %>'>• User page</a></p>
-<p id="menu"><a href='/logout'>Logout</a></p>
-<% } else { %>
-<p id="menu"><a href='/login'>Login</a></p>
 <% } %>
 </div>
