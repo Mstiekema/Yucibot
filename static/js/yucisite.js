@@ -28,11 +28,7 @@ $("#menuIconOpen").click(function() {
 
 $("#name").click(function() {
   var classes = $(".profile").attr('class')
-  if (classes.includes("hidden")) {
-    $(".profile").removeClass("hidden");
-  } else {
-    $(".profile").addClass("hidden");
-  }
+  $(".profile").toggleClass("hidden")
 });
 
 $("#dark").click(function() {

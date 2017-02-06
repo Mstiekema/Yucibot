@@ -180,7 +180,6 @@ app.get('/logout', function(req, res) {
 
 app.get('/user/:id', function(req, res) {
   connection.query('select * from user where name = ?', req.params.id, function(err, result) {
-    console.log(result)
     if (result[0] == undefined) {
       res.render("error404.html");
     } else {
@@ -191,11 +190,12 @@ app.get('/user/:id', function(req, res) {
         }
       }
       request(info, function (error, response, body) {
-        var userPf = JSON.parse(body).logo
-        connection.query('update user set pf = "' + userPf + '" where name = ?', JSON.parse(body).name, function(err, result) {})
-        var getAge = JSON.stringify(new Date(JSON.parse(body).created_at)).substring(1, 20)
+        var reqBody = JSON.parse(body)
+        var userPf = reqBody.logo
+        connection.query('update user set pf = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
+        var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
         var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
-        var days = Math.round(Math.abs((new Date(JSON.parse(body).created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
+        var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
         request("https://api.rtainc.co/twitch/channels/" + options.channels[0] + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
           res.render('user.html', {
             age: age,
@@ -228,7 +228,6 @@ app.get('/user/:id/logs', function(req, res) {
 });
 
 app.get('/user/:id/logs/:page', function(req, res) {
-  console.log(req.params.page)
   connection.query('select * from chatlogs where DATE_FORMAT(time,"%Y-%m-%d") = "' + req.params.page + '" AND name = ?', req.params.id, function(err, result) {
     if (result[0] == undefined) {
       res.render("logs.html", {
