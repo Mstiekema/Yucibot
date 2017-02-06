@@ -55,52 +55,6 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-io.on('connection', function (socket) {
-  socket.on('refreshData', function (data) {
-    connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
-      socket.emit('pushSonglist', result);
-    })
-  })
-  socket.on('endSong', function (data) {
-    connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
-    socket.emit('nextSong');
-  })
-  socket.on('removeSong', function (data) {
-    connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
-      socket.emit('nextSong');
-    })
-  })
-  socket.on('prevSong', function (data) {
-    connection.query('select * from songrequest where playState = 1 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id DESC LIMIT 1', date, function(err,result){
-      if (result[0] != undefined) {
-      connection.query('update songrequest set playState = 0 where songid = ?', result[0].songid, function(err, result) {})
-      socket.emit('nextSong');
-    }})
-  })
-  socket.on('removeComm', function (data) {
-    connection.query('delete from commands where commName = ?', data, function(err, result) {})
-  })
-  socket.on('addCom', function (data) {
-    connection.query('insert into commands set ?', data, function (err, result) {})
-  })
-  socket.on('updateComm', function(data) {
-    connection.query('update commands set commName = "' + data.commName + '", response = "' + data.response + '", level = "' + data.level + '",\
-    cdType = "' + data.cdType + '", cd = "' + data.cd + '" where commName = "' + data.commName + '"', function(err, result) {})
-  })
-  socket.on('disableModule', function(data) {
-    connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
-      socket.emit('reload')
-      console.log("Disabled module: " + data)
-    })
-  })
-  socket.on('enableModule', function(data) {
-    connection.query('update module set state = 1 where moduleName = ?', data, function(err, result) {
-      socket.emit('reload')
-      console.log("Enabled module: " + data)
-    })
-  })
-})
-
 app.all('*', function(req, res, next) {
   res.locals.website = options.identity.websiteUrl
   res.locals.botName = options.identity.username
@@ -126,6 +80,100 @@ app.all('*', function(req, res, next) {
   }
   next()
 });
+
+io.on('connection', function (socket) {
+  socket.on('refreshData', function (data) {
+    connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+      socket.emit('pushSonglist', result);
+    })
+  })
+  socket.on('endSong', function (data) {
+    connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
+    socket.emit('nextSong');
+  })
+  socket.on('removeSong', function (data) {
+    connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
+      socket.emit('nextSong');
+    })
+  })
+  socket.on('prevSong', function (data) {
+    connection.query('select * from songrequest where playState = 1 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id DESC LIMIT 1', date, function(err,result){
+      if (result[0] != undefined) {
+      connection.query('update songrequest set playState = 0 where songid = ?', result[0].songid, function(err, result) {})
+      socket.emit('nextSong');
+    }})
+  })
+  socket.on('createPoll', function (data) {
+    connection.query('insert into pollquestions set question = ?', data.question, function(err, result) {
+      var pollId = result.insertId
+      var answers = JSON.parse(data.answers)
+      for (x = 0; x < answers.length; x++) {
+        var pushTo = {
+          pollId: pollId,
+          answers: answers[x]
+        }
+        connection.query('insert into pollanswers set ?', pushTo, function(err, result) {})
+      }
+    })
+  })
+  socket.on('getPoll', function (data) {
+    connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', data, function(err, result) {
+      socket.emit('pollData', {data: result})
+    })
+  })
+  socket.on('addResult', function (data) {
+    data.ip = socket.request.connection.remoteAddress;
+    connection.query('insert into pollvoted set ?', data, function(err,result){})
+  })
+  socket.on('retPollRes', function (data) {
+    connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', data, function(err, result) {
+      var answers = result
+      connection.query('SELECT * FROM pollvoted where pollId = ?', data, function(err, result) {
+        var res = new Array;
+        for (x = 0; x < answers.length; x++) {
+          res.push({
+            answer: answers[x].answers,
+            id: answers[x].id,
+            votes: 0
+          })
+        }
+        var results = result.map(function(a) {return a.answerId;})
+        var ids = res.map(function(a) {return parseInt(a.id)})
+        for (x = 0; x < results.length; x++) {
+          a = parseInt(results[x])
+          b = ids.indexOf(a)
+          res[b].votes += 1
+        }
+        socket.emit('pollRes', {data: res})
+      });
+    });
+  })
+  socket.on('remPoll', function (data) {
+    connection.query('delete from pollquestions where id = ?', data, function(err, result) {})
+  })
+  socket.on('removeComm', function (data) {
+    connection.query('delete from commands where commName = ?', data, function(err, result) {})
+  })
+  socket.on('addCom', function (data) {
+    connection.query('insert into commands set ?', data, function (err, result) {})
+  })
+  socket.on('updateComm', function(data) {
+    connection.query('update commands set commName = "' + data.commName + '", response = "' + data.response + '", level = "' + data.level + '",\
+    cdType = "' + data.cdType + '", cd = "' + data.cd + '" where commName = "' + data.commName + '"', function(err, result) {})
+  })
+  socket.on('disableModule', function(data) {
+    connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
+      socket.emit('reload')
+      console.log("Disabled module: " + data)
+    })
+  })
+  socket.on('enableModule', function(data) {
+    connection.query('update module set state = 1 where moduleName = ?', data, function(err, result) {
+      socket.emit('reload')
+      console.log("Enabled module: " + data)
+    })
+  })
+})
 
 app.get('/', function(req, res) {
   var info = {
@@ -311,11 +359,71 @@ app.get('/history', function(req, res) {
   res.redirect('/history/'+ date);
 });
 
+app.get('/poll', function(req, res) {
+  connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
+    if(result[0].id != undefined) {
+      res.redirect('/poll/' + result[0].id)
+    } else {
+      res.render('error404.html')
+    }
+  });
+});
+
+app.get('/poll/:id', function(req, res) {
+  connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
+    var data = result
+    connection.query('SELECT ip FROM pollvoted where pollId = ?', req.params.id, function(err, result) {
+      var ips = result.map(function(a) {return a.ip;})
+      var localIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+      res.render('poll.html', {
+        data: data,
+        voted: ips,
+        localIp: localIp
+      })
+    })
+  })
+})
+
+app.get('/poll/:id/result', function(req, res) {
+  connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
+    if(result[0] != undefined) {
+    var question = result[0].question
+    var answers = result.map(function(a) {return a.answers;})
+    connection.query('SELECT * FROM pollvoted where pollId = ?', req.params.id, function(err, result) {
+      var voteRes = result.map(function(a) {return a.answerId;})
+      res.render('pollResult.html', {
+        question: question,
+        answers: answers,
+        voted: voteRes
+      })
+    })
+  } else {
+    res.render('pollResult.html', {
+      question: undefined
+    })
+  }
+  });
+});
+
 app.get('/admin', function(req, res) {
   connection.query('select * from streaminfo', function(err, result) {
     res.render('admin/home.html', {
       info: result
     })
+  });
+});
+
+app.get('/admin/poll', function(req, res) {
+  connection.query('SELECT * FROM pollquestions', function(err, result) {
+    res.render('admin/poll.html', {
+      polls: result
+    })
+  })
+})
+
+app.get('/admin/poll/create', function(req, res) {
+  connection.query('select * from pollquestions', function(err, result) {
+    res.render('admin/pollCreate.html')
   });
 });
 

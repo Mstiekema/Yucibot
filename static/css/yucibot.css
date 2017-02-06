@@ -14,6 +14,17 @@
   float: bottom;
 }
 
+#answerRes {
+  width: 250px;
+}
+
+#chart {
+  float: right;
+  position: absolute;
+  top: -110px;
+  left: 250px;
+}
+
 #subCommands {
   background-color: rgb(33, 57, 80);
 }
@@ -24,6 +35,24 @@
 
 .twitch {
   width: 1350px;
+}
+
+.pollBtn {
+  position: relative;
+  float: right;
+}
+
+.pollItem {
+  position: relative;
+  top: 10px;
+  margin-right: 20px;
+  margin-bottom: -16px;
+  padding: 10px;
+  height: 40px;
+}
+
+.pollItem:nth-child(even) {
+    background-color: #212b2d;
 }
 
 .allStreams {
@@ -272,6 +301,11 @@ div.menu p, .login p {
 
 div.menu h3 {
   margin: 5px;
+}
+
+button a {
+    color: black;
+    text-decoration: none;
 }
 
 footer {
