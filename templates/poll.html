@@ -1,0 +1,41 @@
+<% include header.ejs %>
+<script>
+$(document).ready(function(e) {
+  var refresh = $('#refresh');
+  refresh.val() == 'yes' ? location.reload(true) : refresh.val('yes');
+});
+
+window.onload=function(){
+  var btn = document.getElementById('results');
+  btn.addEventListener("click", function(){
+      var url = window.location.href
+      window.location.href = url + "/result"
+  });
+}
+
+</script>
+<input type="hidden" id="refresh" value="no">
+<div class="top"><h1>Polls</h1></div>
+<div class="search"><input id="searchBar" type="text"></div>
+<div class="main" ng-app="yucibot" ng-controller="votePoll">
+<% if (data[0] != undefined) { %>
+<p>Question: <%= data[0].question %><br><br>
+
+Answers:
+<div id="answers" ng-repeat="x in answer">
+	<p>[{{ $index + 1 }}] {{ x.answers }}
+	<% if (!voted.includes(localIp)) { %><button ng-click="vote(x.id)" id="vote">Vote</button><% } %>
+	</p>
+</div>
+
+<% if (voted.includes(localIp) == true) { %><p><b>You have already voted on this poll</b></p><% } %>
+
+<button id="results">Results</button>
+
+<% } else { %>
+<p>Couldn't find a poll with this ID :/</p>
+<% } %>
+</div>
+<script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/showPoll.js"></script>
+</body>

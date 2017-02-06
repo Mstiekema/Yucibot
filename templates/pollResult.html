@@ -1,0 +1,20 @@
+<% include header.ejs %>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div class="top"><h1>Polls</h1></div>
+<div class="search"><input id="searchBar" type="text"></div>
+<div class="main" ng-app="yucibot" ng-controller="showPoll">
+<% if (question != undefined) { %>
+<h3>Question: <%= question %></h3>
+  <div id="answerRes" ng-repeat="x in answer">
+  	<p>[{{ $index + 1 }}] {{ x.answer }}<br><i><b>{{x.votes}}</b> votes</i></p>
+  </div>
+  <% } else { %>
+  <p>Couldn't find a poll with this ID :/</p>
+  <% } %>
+
+<div id="chart"></div>
+
+</div>
+<script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/showPoll.js"></script>
+</body>
