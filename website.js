@@ -116,14 +116,14 @@ app.all('*', function(req, res, next) {
           res.locals.name = req.user
           res.locals.points = result[0].points
           res.locals.num_lines = result[0].num_lines
-          res.locals.pf = result[0].pf
+          res.locals.profile_pic = result[0].profile_pic
         } else {
           res.locals.login = true,
           res.locals.mod = false,
           res.locals.name = req.user
           res.locals.points = result[0].points
           res.locals.num_lines = result[0].num_lines
-          res.locals.pf = result[0].pf
+          res.locals.profile_pic = result[0].profile_pic
         }
       };
     });
@@ -204,7 +204,7 @@ app.get('/user/:id', function(req, res) {
             user: result[0].name,
             points: result[0].points,
             lines: result[0].num_lines,
-            pf: userPf
+            profile_pic_page: userPf
           })
         })
       });
@@ -365,67 +365,33 @@ app.get('/admin/logs', function(req, res) {
   connection.query('select * from adminlogs', function(err, result) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
-        log: false
+        log: false,
+        date: date,
+        type: undefined
       });
     } else {
       res.render('admin/adminlogs.html', {
-        log: result
+        log: result,
+        date: date,
+        type: "all"
       });
     };
   });
 });
 
-app.get('/admin/logs/login', function(req, res) {
-  connection.query('select * from adminlogs where type = "login"', function(err, result) {
+app.get('/admin/logs/:page', function(req, res) {
+  connection.query('select * from adminlogs where type = ?', req.params.page, function(err, result) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
-        log: false
+        log: false,
+        date: date,
+        type: undefined
       });
     } else {
       res.render('admin/adminlogs.html', {
-        log: result
-      });
-    };
-  });
-});
-
-app.get('/admin/logs/points', function(req, res) {
-  connection.query('select * from adminlogs where type = "points"', function(err, result) {
-    if (result[0] == undefined) {
-      res.render("admin/adminlogs.html", {
-        log: false
-      });
-    } else {
-      res.render('admin/adminlogs.html', {
-        log: result
-      });
-    };
-  });
-});
-
-app.get('/admin/logs/sub', function(req, res) {
-  connection.query('select * from adminlogs where type = "sub" OR type = "resub"', function(err, result) {
-    if (result[0] == undefined) {
-      res.render("admin/adminlogs.html", {
-        log: false
-      });
-    } else {
-      res.render('admin/adminlogs.html', {
-        log: result
-      });
-    };
-  });
-});
-
-app.get('/admin/logs/timeout', function(req, res) {
-  connection.query('select * from adminlogs where type = "timeout" OR type = "ban"', function(err, result) {
-    if (result[0] == undefined) {
-      res.render("admin/adminlogs.html", {
-        log: false
-      });
-    } else {
-      res.render('admin/adminlogs.html', {
-        log: result
+        log: result,
+        date: date,
+        type: req.params.page
       });
     };
   });

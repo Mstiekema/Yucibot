@@ -1,27 +1,34 @@
 <% include adminheader.ejs %>
 <div class="top"><h2>Admin logs</h2></div>
-<div class="main"><br>
-
+<div class="main">
+<% if(!type) { %>
+<div id="logTop"><h3>Couldn't find a record of these logs</h3> <button id="allLogBtn"><a href="/user/<%= name %>/logs">All logs</a></button>
+<% } else if(type == "all") { %>
+<div id="logTop"><h3>Showing all admin logs</h3>
+<% } else { %>
+<div id="logTop"><h3>Showing <%= type %> logs</h3>
+<% } %>
+<p>Search logs: <input id="searchBarLogs" type="text" placeholder="Chat log">
+</div>
 <div id="logMenu">
 <u>Log menu</u>
-<p onclick="window.location.replace('/admin/logs')">All</p>
-<p onclick="window.location.replace('/admin/logs/points')">Points</p>
-<p onclick="window.location.replace('/admin/logs/timeout')">Timeout</p>
-<p onclick="window.location.replace('/admin/logs/sub')">Subs</p>
-<p onclick="window.location.replace('/admin/logs/login')">Login</p>
+<p><a href='/admin/logs'>All</a></p>
+<p><a href='/admin/logs/points'>Points</a></p>
+<p><a href='/admin/logs/timeout'>Timeout</a></p>
+<p><a href='/admin/logs/sub'>Subs</a></p>
+<p><a href='/admin/logs/login'>Login</a></p>
 </div>
 
 <% if (log != false) { %>
+<div id="allLogs">
 <% log.forEach(function(log) { %>
-<tt>
+<div class="logs" id="<%= log.id %>"><p>
 [<%= log.time.toLocaleDateString('nl-nl', {day: '2-digit', month: '2-digit', year: 'numeric'}) %>
 <%= log.time.toLocaleTimeString('nl-nl', {hour12: false}); %>] [<%= log.type %>] <%= log.log %><br>
-</tt>
-<% }); %>
-<% } else { %>
-There are no logs recorded
-<% } %>
+</p></div>
+<% });} %>
 
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/logs.js"></script>
 </body>

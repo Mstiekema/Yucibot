@@ -8,7 +8,7 @@ connection.query(
 	'points INT,' +
 	'num_lines INT,' +
 	'level INT,' +
-	'pf VARCHAR(200),' +
+	'profile_pic VARCHAR(200),' +
 	'isMod BOOL DEFAULT FALSE)',
 	function (err, result) {if (err) {return}}
 )

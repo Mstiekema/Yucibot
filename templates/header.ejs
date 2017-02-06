@@ -26,7 +26,7 @@ if(localStorage.style == undefined || localStorage.style == "undefined") {
 <div id="name"><%= locals.name %> &#9660;</div>
 <div class="profile hidden">
   <p id="menu">
-    <img src="<%= locals.pf %>" id="pf" width="50" height="50">
+    <img src="<%= locals.profile_pic %>" id="pf" width="50" height="50">
     <u>Hey there <%= locals.name %>!</u><br>
     <a href='/user/<%= locals.name %>'>User page</a> <span class="profLeft">Points: <%= locals.points %></span> <br>
     <a href='/logout'>Logout</a> <span class="profLeft">Lines: <%= locals.num_lines %></span>

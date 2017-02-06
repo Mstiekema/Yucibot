@@ -2,7 +2,7 @@
 <div class="top"><h2>User page | <%= user %></h2></div>
 <div class="main">
 <div class="userinfo">
-<p><img id="userPf" src="<%= pf %>" width="150" height="150">
+<p><img id="userPf" src="<%= profile_pic_page %>" width="150" height="150">
 <span id="userName"><%= user %></span><br><br>
 Points: <%= points %> <br>
 Lines: <%= lines %> <br>
@@ -12,7 +12,6 @@ Followage: <%= followAge %> <br>
 <button class="pfBtn"><a href="/user/<%= user %>/logs">Logs</a></button> <button class="pfBtn"><a href="https://www.twitch.tv/<%= user %>" target="_blank">Twitch</a></button>
 </p>
 </div>
-
 </div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
 </body>
