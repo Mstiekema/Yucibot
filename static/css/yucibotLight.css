@@ -4,6 +4,40 @@
   color: #a2a8b7;
 }
 
+#answerRes {
+  width: 250px;
+}
+
+#chart {
+  float: right;
+  position: absolute;
+  top: -110px;
+  left: 250px;
+  textStyle: {color: #242424};
+}
+
+.pollBtn {
+  position: relative;
+  float: right;
+}
+
+.pollItem {
+  position: relative;
+  top: 10px;
+  margin-right: 20px;
+  margin-bottom: -16px;
+  padding: 10px;
+  height: 40px;
+}
+
+.pollItem:nth-child(even) {
+    background-color: #848c8c;
+}
+
+.pollItem:nth-child(odd) {
+    background-color: #b5b5b5;
+}
+
 .commands {
   border: 1px solid #2f3a3c;
   padding-left: 20px;

@@ -66,11 +66,10 @@ function makeGraph() {
       is3D: true,
       refreshInterval: 5,
       backgroundColor: { fill:'transparent' },
-      color: '#d4dbdd',
-      fontName: "Trebuchet MS",
+      fontName: "Roboto",
       width: 600,
       height: 500,
-      legend: {textStyle: { color: "#d4dbdd"}, alignment: 'center', position: 'left'}
+      legend: {textStyle: { color: "#7b6bb8"}, alignment: 'center', position: 'left'}
     };
     var chart = new google.visualization.PieChart(document.getElementById('chart'));
     chart.draw(data, options);

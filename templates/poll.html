@@ -16,7 +16,6 @@ window.onload=function(){
 </script>
 <input type="hidden" id="refresh" value="no">
 <div class="top"><h1>Polls</h1></div>
-<div class="search"><input id="searchBar" type="text"></div>
 <div class="main" ng-app="yucibot" ng-controller="votePoll">
 <% if (data[0] != undefined) { %>
 <p>Question: <%= data[0].question %><br><br>
