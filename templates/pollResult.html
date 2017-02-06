@@ -4,8 +4,8 @@
 <div class="main" ng-app="yucibot" ng-controller="showPoll">
 <% if (question != undefined) { %>
 <h3>Question: <%= question %></h3>
-  <div id="answerRes" ng-repeat="x in answer">
-  	<p>[{{ $index + 1 }}] {{ x.answer }}<br><i><b>{{x.votes}}</b> votes</i></p>
+  <div class="answerRes" ng-repeat="x in answer">
+  	<p>{{ x.answer }}<br><i><b>{{x.votes}}</b> votes</i></p>
   </div>
   <% } else { %>
   <p>Couldn't find a poll with this ID :/</p>

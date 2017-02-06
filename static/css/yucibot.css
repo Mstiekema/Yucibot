@@ -4,8 +4,11 @@
   color: #a2a8b7;
 }
 
-#answerRes {
+.answerRes, #answers {
   width: 250px;
+  padding-left: 10px;
+  border-left: 6px solid #731195;
+  background-color: transparent;
 }
 
 #chart {
@@ -13,6 +16,16 @@
   position: absolute;
   top: -110px;
   left: 250px;
+}
+
+.vote {
+  height: 20px;
+  line-height: 0px;
+  background-color: #8849b9
+}
+
+.vote:hover {
+  background-color: #5c0b9a
 }
 
 .pollBtn {
@@ -35,6 +48,20 @@
 
 .pollItem:nth-child(odd) {
     background-color: #212b2d;
+}
+
+.pollInput {
+  box-shadow: 2px 2px 2px black;
+  z-index: 2;
+  background: #4f5f64;
+  border: 1px solid black;
+  color: #d4dbdd;
+  padding-left: 10px;
+  padding-right: 10px;
+  box-shadow: 2px 2px 2px black;
+  width: 300px;
+  height: 40px;
+  color: #d4dbdd;
 }
 
 .commands {

@@ -418,7 +418,7 @@ app.get('/history', function(req, res) {
 
 app.get('/poll', function(req, res) {
   connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
-    if(result[0].id != undefined) {
+    if(result[0] != undefined) {
       res.redirect('/poll/' + result[0].id)
     } else {
       res.render('error404.html')

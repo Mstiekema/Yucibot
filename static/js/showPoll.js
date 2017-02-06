@@ -16,7 +16,7 @@ socket.on('pollRes', function (data) {
 })
 
 var yucibot = angular.module('yucibot',[]);
-yucibot.controller('votePoll', function($scope, $http, $log, $interval) {
+yucibot.controller('votePoll', function($scope, $http, $log, $timeout) {
   $scope.getAnswers = function() {
     socket.emit('getPoll', id)
     $scope.answer = fullObj
@@ -29,8 +29,7 @@ yucibot.controller('votePoll', function($scope, $http, $log, $interval) {
     socket.emit('addResult', sendData)
     window.location.href="/poll/" + id + "/result"
   }
-  $scope.getAnswers()
-  $interval($scope.getAnswers, 500);
+  $timeout($scope.getAnswers, 500);
 })
 
 yucibot.controller('showPoll', function($scope, $http, $log, $interval) {
