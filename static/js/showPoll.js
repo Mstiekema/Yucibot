@@ -16,7 +16,7 @@ socket.on('pollRes', function (data) {
 })
 
 var yucibot = angular.module('yucibot',[]);
-yucibot.controller('votePoll', function($scope, $http, $log, $interval) {
+yucibot.controller('votePoll', function($scope, $http, $log, $timeout) {
   $scope.getAnswers = function() {
     socket.emit('getPoll', id)
     $scope.answer = fullObj
@@ -29,8 +29,7 @@ yucibot.controller('votePoll', function($scope, $http, $log, $interval) {
     socket.emit('addResult', sendData)
     window.location.href="/poll/" + id + "/result"
   }
-  $scope.getAnswers()
-  $interval($scope.getAnswers, 500);
+  $timeout($scope.getAnswers, 500);
 })
 
 yucibot.controller('showPoll', function($scope, $http, $log, $interval) {
@@ -66,11 +65,10 @@ function makeGraph() {
       is3D: true,
       refreshInterval: 5,
       backgroundColor: { fill:'transparent' },
-      color: '#d4dbdd',
-      fontName: "Trebuchet MS",
+      fontName: "Roboto",
       width: 600,
       height: 500,
-      legend: {textStyle: { color: "#d4dbdd"}, alignment: 'center', position: 'left'}
+      legend: {textStyle: { color: "#7b6bb8"}, alignment: 'center', position: 'left'}
     };
     var chart = new google.visualization.PieChart(document.getElementById('chart'));
     chart.draw(data, options);

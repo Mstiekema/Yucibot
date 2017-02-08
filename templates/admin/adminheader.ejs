@@ -1,8 +1,21 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="/../css/yucibot.css">
+<link rel="shortcut icon" href="/../img/favicon.ico" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/../css/yucibot.css" id="css">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
+<script>
+if(localStorage.style == undefined || localStorage.style == "undefined") {
+  localStorage.setItem("style", "dark")
+  $('#css').attr('href','/../css/yucibot.css');
+} else if (localStorage.style == "light") {
+  $('#css').attr('href','/../css/yucibotLight.css');
+} else {
+  $('#css').attr('href','/../css/yucibot.css');
+}
+</script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
 <% if (locals.mod != true) { %>
@@ -15,7 +28,22 @@ window.location.replace("/403")
 <title>Yucibot</title>
 </head>
 <body>
-<div class="logo"></div>
+<% if (locals.login == true) { %>
+<div id="name"><%= locals.name %> &#9660;</div>
+<div class="profile hidden">
+  <p id="menu">
+    <img src="<%= locals.profile_pic %>" id="pf" width="50" height="50">
+    <u>Hey there <%= locals.name %>!</u><br>
+    <a href='/user/<%= locals.name %>'>User page</a> <span class="profLeft">Points: <%= locals.prof_points %></span> <br>
+    <a href='/logout'>Logout</a> <span class="profLeft">Lines: <%= locals.num_lines %></span>
+  </p>
+</div>
+<% } else { %>
+<a href="/login"><button id="loginBtn">Login</button></a>
+<% } %>
+<div id="menuIconClosed">&#9776;</div>
+<div id="menuIconOpen">&#735;</div>
+<div class="search"><input id="searchBar" type="text" placeholder="Username"></div>
 <div>
 <% if (locals.mod == true) { %>
 <% include ../../static/html/adminmenu.htm %>
@@ -23,13 +51,4 @@ window.location.replace("/403")
 <% include ../../static/html/menu.htm %>
 <% } %>
 </div>
-<div class="login">
-<% if (locals.login == true) { %>
-<u id='test'>Hello <%= locals.name %> </u>
-<% if (locals.mod == true) { %> <p id="menu"><a href='/admin'>• Admin home</a></p> <% } %>
-<p id="menu"><a href='/user/<%= locals.name %>'>• User page</a></p>
-<p id="menu"><a href='/logout'>Logout</a></p>
-<% } else { %>
-<p id="menu"><a href='/login'>Login</a></p>
-<% } %>
-</div>
+<div class="search"><input id="searchBar" type="text" placeholder="Username"></div>

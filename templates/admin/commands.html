@@ -1,6 +1,5 @@
 <% include adminheader.ejs %>
-<div class="top"><h1>Manage commands</h1></div>
-<div class="search"><input id="searchBar" type="text"></div>
+<div class="top"><h2>Manage commands</h2></div>
 <div class="main">
 <p><button class="create">Create command</button></p>
 <% commands.forEach(function(commands) { %>
@@ -11,7 +10,7 @@
     <% if (commands.commUse != null) { %> <b>Usage:</b><br> <%= commands.commUse %> <br> <% } %>
     <b>Cooldown type:</b> <%= commands.cdType %> <br>
     <b>Cooldown:</b> <%= commands.cd %> seconds <br>
-    <b>User level:</b> <%= commands.level %> <br>
+    <b>User level:</b> <%= commands.level %> <br><br>
     <button class="remove" id=<%= commands.commName %>>Remove command</button> <button class="edit" id=<%= commands.commName %>>Edit command</button>
   </p></div>
 <% }) %>

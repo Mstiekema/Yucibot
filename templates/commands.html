@@ -1,41 +1,36 @@
 <% include header.ejs %>
-<div class="top"><h1>Commands</h1></div>
-<div class="search"><input id="searchBar" type="text"></div>
+<div class="top"><h2>Commands</h2></div>
 <div class="main">
+<br>
+<button class= "commBtn" id="switchPageE">Everyone</button>
+<button class= "commBtn" id="switchPageS">Sub</button>
+<button class= "commBtn "id="switchPageM">Mod</button>
 
 <% commands.forEach(function(commands) { %>
   <% if (commands.level == 100) { %>
-  <div class="commands"><p>
-    <b>Command:</b> <%= commands.commName %> <br>
-    <% if (commands.commDesc != null) { %> <b>Description:</b> <%= commands.commDesc %> <br> <% } %>
-    <% if (commands.response != null) { %><b>Response:</b> <%= commands.response %> <br> <% } %>
-    <% if (commands.commUse != null) { %> <b>Usage:</b><br> <%= commands.commUse %> <br> <% } %>
-    <b>Cooldown type:</b> <%= commands.cdType %> <br>
-    <b>Cooldown:</b> <%= commands.cd %> seconds <br>
-    <b>User level:</b> Everyone
+  <div class="commands allCommands"><p>
+    <b>Command:</b> <%= commands.commName %>:
+    <% if (commands.commDesc != null) { %> <%= commands.commDesc %> <% } %>
+    <% if (commands.response != null) { %> <%= commands.response %> <% } %>
+    <button class="commDetails" id="<%= commands.commName %>">More details</button>
   </p></div>
-  <% } else if (commands.level == 150) { %>
-    <div class="commands" id="subCommands"><p>
-      <b>Command:</b> <%= commands.commName %> <br>
-      <% if (commands.commDesc != null) { %> <b>Description:</b> <%= commands.commDesc %> <br> <% } %>
-      <% if (commands.response != null) { %><b>Response:</b> <%= commands.response %> <br> <% } %>
-      <% if (commands.commUse != null) { %> <b>Usage:</b> <br><%- commands.commUse.split("|").join("<br>") %> <br> <% } %>
-      <b>Cooldown type:</b> <%= commands.cdType %> <br>
-      <b>Cooldown:</b> <%= commands.cd %> seconds <br>
-      <b>User level:</b> Subscriber
+  <% } else if (commands.level == 300) { %>
+    <div class="commands modCommands"><p>
+      <b>Command:</b> <%= commands.commName %>:
+      <% if (commands.commDesc != null) { %> <%= commands.commDesc %> <% } %>
+      <% if (commands.response != null) { %> <%= commands.response %> <% } %>
+      <button class="commDetails" id="<%= commands.commName %>">More details</button>
     </p></div>
-  <% } else { %>
-    <div class="commands" id="modCommands"><p>
-      <b>Command:</b> <%= commands.commName %> <br>
-      <% if (commands.commDesc != null) { %> <b>Description:</b> <%= commands.commDesc %> <br> <% } %>
-      <% if (commands.response != null) { %><b>Response:</b> <%= commands.response %> <br> <% } %>
-      <% if (commands.commUse != null) { %> <b>Usage:</b><br> <%= commands.commUse %> <br> <% } %>
-      <b>Cooldown type:</b> <%= commands.cdType %> <br>
-      <b>Cooldown:</b> <%= commands.cd %> seconds <br>
-      <b>User level:</b> Moderator
+  <% } else if (commands.level == 150) { %>
+    <div class="commands subCommands"><p>
+      <b>Command:</b> <%= commands.commName %>:
+      <% if (commands.commDesc != null) { %> <%= commands.commDesc %> <% } %>
+      <% if (commands.response != null) { %> <%= commands.response %> <% } %>
+      <button class="commDetails" id="<%= commands.commName %>">More details</button>
     </p></div>
   <% } %>
 <% }) %>
 </div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
+<script type="text/javascript" src="../js/commandPage.js"></script>
 </body>

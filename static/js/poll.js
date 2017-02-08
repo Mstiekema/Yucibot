@@ -9,6 +9,7 @@ var socket = io.connect();
 		var answers = new Array;
 		$("input[id='answer[]']").each(function() {
 		    a = ($(this).val())
+				if (a == "") return
 		    answers.push(a)
 		});
 		var pushAnswers = JSON.stringify(answers)
@@ -16,8 +17,13 @@ var socket = io.connect();
 			question: q,
 			answers: pushAnswers
 		}
-		socket.emit('createPoll', newPoll)
-		window.location.href = "/poll"
+		var askPoll = confirm("Are you sure that you are finished creating your poll?");
+		if (askPoll) {
+			socket.emit('createPoll', newPoll)
+			window.location.href = "/poll"
+		} else {
+			return
+		}
 	}
 
 	if (!submit) return;
@@ -27,8 +33,16 @@ var socket = io.connect();
 	isAttached = true;
 })();
 
+$(document).ready(function () {
+	$(".main").keydown(function(ev) {
+  	if (ev.which === 9) {
+    	$(".allAnswers").append('<input class="pollInput" id="answer[]" type="text"><br>');
+  	}
+	});
+})
+
 $(".addAnswer").click(function() {
-	$(".allAnswers").append('<input id="answer[]" type="text"><br>');
+	$(".allAnswers").append('<input class="pollInput" id="answer[]" type="text"><br>');
 });
 
 $(".goPoll").click(function() {

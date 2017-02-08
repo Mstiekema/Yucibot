@@ -150,6 +150,8 @@ io.on('connection', function (socket) {
   })
   socket.on('remPoll', function (data) {
     connection.query('delete from pollquestions where id = ?', data, function(err, result) {})
+    connection.query('delete from pollanswers where pollId = ?', data, function(err, result) {})
+    connection.query('delete from pollvoted where pollId = ?', data, function(err, result) {})
   })
   socket.on('removeComm', function (data) {
     connection.query('delete from commands where commName = ?', data, function(err, result) {})
@@ -175,31 +177,55 @@ io.on('connection', function (socket) {
   })
 })
 
+app.all('*', function(req, res, next) {
+  res.locals.website = options.identity.websiteUrl
+  res.locals.botName = options.identity.username
+  res.locals.streamer = options.channels[0]
+  if (req.user) {
+    connection.query('select * from user where name = ?', req.user, function(err, result) {
+      if (result == undefined || result[0] == undefined) {
+        return
+      } else {
+        if (result[0].isMod == 1) {
+          res.locals.login = true,
+          res.locals.mod = true,
+          res.locals.name = req.user
+          res.locals.prof_points = result[0].points
+          res.locals.num_lines = result[0].num_lines
+          res.locals.profile_pic = result[0].profile_pic
+        } else {
+          res.locals.login = true,
+          res.locals.mod = false,
+          res.locals.name = req.user
+          res.locals.prof_points = result[0].points
+          res.locals.num_lines = result[0].num_lines
+          res.locals.profile_pic = result[0].profile_pic
+        }
+      };
+    });
+  } else {
+    res.locals.login = false
+  }
+  next()
+});
+
 app.get('/', function(req, res) {
   var info = {
-    url: 'https://api.twitch.tv/kraken/streams?channel=' + JSON.stringify(options.channels).slice(2, -2),
+    url: 'https://api.twitch.tv/kraken/streams/' + JSON.stringify(options.channels).slice(2, -2),
     headers: {
       'Client-ID': clientID
     }
   }
   request(info, function (error, response, body) {
-    if (JSON.parse(body).streams[0] != undefined) {
-      var base = JSON.parse(body).streams[0]
+    if (JSON.parse(body).stream != undefined) {
+      var base = JSON.parse(body).stream
       var streamid = base._id
-      connection.query('select * from streaminfo where streamid = ?', streamid, function(err, result) {
-        if (result[0] != undefined) {
-          res.render('index.html', {
-            status: 1,
-            game: base.game,
-            viewers: base.viewers,
-            title: base.channel.status
-          })
-        } else {
-          res.render('index.html', {
-            status: 0
-          })
-        }
-      });
+      res.render('index.html', {
+        status: 1,
+        game: base.game,
+        viewers: base.viewers,
+        title: base.channel.status
+      })
     } else {
       res.render('index.html', {
         status: 0
@@ -240,18 +266,21 @@ app.get('/user/:id', function(req, res) {
         }
       }
       request(info, function (error, response, body) {
-        var getAge = JSON.stringify(new Date(JSON.parse(body).created_at)).substring(1, 20)
+        var reqBody = JSON.parse(body)
+        var userPf = reqBody.logo
+        connection.query('update user set profile_pic = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
+        var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
         var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
-        var days = Math.round(Math.abs((new Date(JSON.parse(body).created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
+        var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
         request("https://api.rtainc.co/twitch/channels/" + options.channels[0] + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
-          var fa = body
           res.render('user.html', {
             age: age,
             days: days,
-            followAge: fa,
+            followAge: body,
             user: result[0].name,
             points: result[0].points,
-            lines: result[0].num_lines
+            lines: result[0].num_lines,
+            profile_pic_page: userPf
           })
         })
       });
@@ -265,8 +294,29 @@ app.get('/user/:id/logs', function(req, res) {
       res.render("error404.html");
     } else {
       res.render('logs.html', {
-      log: result,
-      name: result[0].name
+        log: result,
+        name: result[0].name,
+        date: date,
+        type: "all"
+      });
+    };
+  });
+});
+
+app.get('/user/:id/logs/:page', function(req, res) {
+  connection.query('select * from chatlogs where DATE_FORMAT(time,"%Y-%m-%d") = "' + req.params.page + '" AND name = ?', req.params.id, function(err, result) {
+    if (result[0] == undefined) {
+      res.render("logs.html", {
+        log: undefined,
+        date: req.params.page,
+        type: undefined
+      });
+    } else {
+      res.render('logs.html', {
+        log: result,
+        name: result[0].name,
+        date: req.params.page,
+        type: undefined
       });
     };
   });
@@ -275,6 +325,15 @@ app.get('/user/:id/logs', function(req, res) {
 app.get('/commands', function(req, res) {
   connection.query('select * from commands ORDER BY level', function(err, result) {
     res.render('commands.html', {
+      commands: result
+    })
+  });
+});
+
+app.get('/commands/:id', function(req, res) {
+  var comm = "!" + req.params.id
+  connection.query('select * from commands where commName = ?', comm, function(err, result) {
+    res.render('commandDetails.html', {
       commands: result
     })
   });
@@ -361,7 +420,7 @@ app.get('/history', function(req, res) {
 
 app.get('/poll', function(req, res) {
   connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
-    if(result[0].id != undefined) {
+    if(result[0] != undefined) {
       res.redirect('/poll/' + result[0].id)
     } else {
       res.render('error404.html')
@@ -442,67 +501,33 @@ app.get('/admin/logs', function(req, res) {
   connection.query('select * from adminlogs', function(err, result) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
-        log: false
+        log: false,
+        date: date,
+        type: undefined
       });
     } else {
       res.render('admin/adminlogs.html', {
-        log: result
+        log: result,
+        date: date,
+        type: "all"
       });
     };
   });
 });
 
-app.get('/admin/logs/login', function(req, res) {
-  connection.query('select * from adminlogs where type = "login"', function(err, result) {
+app.get('/admin/logs/:page', function(req, res) {
+  connection.query('select * from adminlogs where type = ?', req.params.page, function(err, result) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
-        log: false
+        log: false,
+        date: date,
+        type: undefined
       });
     } else {
       res.render('admin/adminlogs.html', {
-        log: result
-      });
-    };
-  });
-});
-
-app.get('/admin/logs/points', function(req, res) {
-  connection.query('select * from adminlogs where type = "points"', function(err, result) {
-    if (result[0] == undefined) {
-      res.render("admin/adminlogs.html", {
-        log: false
-      });
-    } else {
-      res.render('admin/adminlogs.html', {
-        log: result
-      });
-    };
-  });
-});
-
-app.get('/admin/logs/sub', function(req, res) {
-  connection.query('select * from adminlogs where type = "sub" OR type = "resub"', function(err, result) {
-    if (result[0] == undefined) {
-      res.render("admin/adminlogs.html", {
-        log: false
-      });
-    } else {
-      res.render('admin/adminlogs.html', {
-        log: result
-      });
-    };
-  });
-});
-
-app.get('/admin/logs/timeout', function(req, res) {
-  connection.query('select * from adminlogs where type = "timeout" OR type = "ban"', function(err, result) {
-    if (result[0] == undefined) {
-      res.render("admin/adminlogs.html", {
-        log: false
-      });
-    } else {
-      res.render('admin/adminlogs.html', {
-        log: result
+        log: result,
+        date: date,
+        type: req.params.page
       });
     };
   });
