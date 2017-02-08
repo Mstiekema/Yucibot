@@ -14,6 +14,12 @@ $("#menuIconClosed").click(function() {
   setTimeout(function () { $(".main").addClass('mainMenuClosed'); }, 800);
 });
 
+$("#menuIconClosed").hover(function() {
+  $("#menuIconClosed").html("˟").css("font-size", 70).css("left", "15px");
+}, function() {
+  $("#menuIconClosed").html("☰").css("font-size", 40).css("left", "10px")
+});
+
 $("#menuIconOpen").click(function() {
   $("#menuIconOpen").hide();
   $(".main").removeClass('mainMenuClosed');

@@ -370,24 +370,13 @@ div.menu h3 {
   margin: 5px;
 }
 
-#menuIconClosed {
+#menuIconClosed, #menuIconOpen {
   z-index: 3;
   font-size: 40;
   position: absolute;
   width: 40px;
   height: 40px;
   top: -5px;
-  cursor: pointer;
-}
-
-#menuIconOpen {
-  z-index: 3;
-  font-size: 70;
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  top: -2px;
-  left: 15px;
   cursor: pointer;
 }
 

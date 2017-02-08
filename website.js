@@ -150,6 +150,8 @@ io.on('connection', function (socket) {
   })
   socket.on('remPoll', function (data) {
     connection.query('delete from pollquestions where id = ?', data, function(err, result) {})
+    connection.query('delete from pollanswers where pollId = ?', data, function(err, result) {})
+    connection.query('delete from pollvoted where pollId = ?', data, function(err, result) {})
   })
   socket.on('removeComm', function (data) {
     connection.query('delete from commands where commName = ?', data, function(err, result) {})
@@ -188,14 +190,14 @@ app.all('*', function(req, res, next) {
           res.locals.login = true,
           res.locals.mod = true,
           res.locals.name = req.user
-          res.locals.points = result[0].points
+          res.locals.prof_points = result[0].points
           res.locals.num_lines = result[0].num_lines
           res.locals.profile_pic = result[0].profile_pic
         } else {
           res.locals.login = true,
           res.locals.mod = false,
           res.locals.name = req.user
-          res.locals.points = result[0].points
+          res.locals.prof_points = result[0].points
           res.locals.num_lines = result[0].num_lines
           res.locals.profile_pic = result[0].profile_pic
         }
@@ -266,7 +268,7 @@ app.get('/user/:id', function(req, res) {
       request(info, function (error, response, body) {
         var reqBody = JSON.parse(body)
         var userPf = reqBody.logo
-        connection.query('update user set pf = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
+        connection.query('update user set profile_pic = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
         var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
         var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
         var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));

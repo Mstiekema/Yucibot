@@ -29,7 +29,7 @@ if(localStorage.style == undefined || localStorage.style == "undefined") {
   <p id="menu">
     <img src="<%= locals.profile_pic %>" id="pf" width="50" height="50">
     <u>Hey there <%= locals.name %>!</u><br>
-    <a href='/user/<%= locals.name %>'>User page</a> <span class="profLeft">Points: <%= locals.points %></span> <br>
+    <a href='/user/<%= locals.name %>'>User page</a> <span class="profLeft">Points: <%= locals.prof_points %></span> <br>
     <a href='/logout'>Logout</a> <span class="profLeft">Lines: <%= locals.num_lines %></span>
   </p>
 </div>
@@ -37,7 +37,7 @@ if(localStorage.style == undefined || localStorage.style == "undefined") {
 <a href="/login"><button id="loginBtn">Login</button></a>
 <% } %>
 <div id="menuIconClosed">&#9776;</div>
-<div id="menuIconOpen">&#735;</div>
+<div id="menuIconOpen">&#9776;</div>
 <div class="search"><input id="searchBar" type="text" placeholder="Username"></div>
 <div>
 <% if (locals.mod == true) { %>
