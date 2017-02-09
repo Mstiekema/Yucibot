@@ -21,6 +21,9 @@ exp.commands = function(channel, user, message, self) {
 		if (result[3].state == 1) {
 			basic.owCommands(channel, user, message, self)
 		}
+		if (result[4].state == 1) {
+			profile.updateLines(channel, user, message, self);
+		}
 		if (result[5].state == 1) {
 			profile.fetchProfile(channel, user, message, self);
 		}

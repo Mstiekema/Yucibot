@@ -10,7 +10,7 @@ var functions = require("./functions.js")
 var clientID = options.identity.clientId
 
 module.exports = {
-	updateProfile: function (channel, user, message, self) {
+	updateProfile: function () {
 		var channel = JSON.stringify(options.channels).slice(2, -2);
 		var info = {
   		url: 'https://api.twitch.tv/kraken/streams?channel=' + channel.substring(1),
@@ -36,6 +36,8 @@ module.exports = {
 			}
 			request(info, callback)
 		}, function () {}, true );
+	},
+	updateLines: function(channel, user, message, self) {
 		connection.query('select * from user where name = ?', user.username, function(err, result) {
 			if (result[0] == undefined) {
 				var userInfo = {
