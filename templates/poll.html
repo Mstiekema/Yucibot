@@ -22,12 +22,12 @@ window.onload=function(){
 
 Answers:
 <div id="answers" ng-repeat="x in answer">
-	<p><% if (!voted.includes(localIp)) { %><button ng-click="vote(x.id)" class="vote">Vote</button><% } %>
+	<p><% if (voted.indexOf(localIp) == -1) { %><button ng-click="vote(x.id)" class="vote">Vote</button><% } %>
   {{ x.answers }}
 	</p>
 </div>
 
-<% if (voted.includes(localIp) == true) { %><p><b>You have already voted on this poll</b></p><% } %>
+<% if (voted.indexOf(localIp) != -1) { %><p><b>You have already voted on this poll</b></p><% } %>
 
 <br><button id="results">Results</button>
 

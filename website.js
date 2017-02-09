@@ -122,7 +122,7 @@ io.on('connection', function (socket) {
     })
   })
   socket.on('addResult', function (data) {
-    data.ip = socket.request.connection.remoteAddress;
+    data.ip = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
     connection.query('insert into pollvoted set ?', data, function(err,result){})
   })
   socket.on('retPollRes', function (data) {
@@ -420,7 +420,7 @@ app.get('/history', function(req, res) {
 
 app.get('/poll', function(req, res) {
   connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
-    if(result != undefined) {
+    if(result[0] != undefined) {
       res.redirect('/poll/' + result[0].id)
     } else {
       res.render('error404.html')
