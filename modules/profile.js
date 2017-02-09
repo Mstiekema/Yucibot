@@ -6,6 +6,7 @@ var CronJob = require('cron').CronJob;
 var request = require("request");
 var connection = require("./connection.js")
 var cd = require("./cooldown.js")
+var functions = require("./functions.js")
 var clientID = options.identity.clientId
 
 module.exports = {
@@ -17,29 +18,21 @@ module.exports = {
   		  'Client-ID': clientID
   		}
   	}
-		var job = new CronJob('*/5 * * * *', function() {
+		new CronJob('*/5 * * * *', function() {
 			function callback(error, response, body) {
-				if (!error && response.statusCode == 200) {
-					var info = JSON.parse(body).streams[0];
-			    if(info != undefined) {
-						var chatURL = "https://tmi.twitch.tv/group/user/" + channel.substring(1) + "/chatters";
-						request(chatURL, function (error, response, body, channel) {
-							var chatters = JSON.parse(body)
-							var normViewers = chatters.chatters.viewers
-							var moderators = chatters.chatters.moderators
-							var viewers = normViewers.concat(moderators);
-							for (var i = 0; i < viewers.length; i++) {
-								var usern = viewers[i]
-								connection.query('update user set points = points + 5 where name = ?', usern, function (err, result) {
-									if (err) {
-										return
-									}
-								})
-							}
-							console.log("[DEBUG] Succesfully added points")
-						});
-			    }
-			  }
+				if(JSON.parse(body).streams[0] != undefined) {
+					request("https://tmi.twitch.tv/group/user/" + channel.substring(1) + "/chatters", function (error, response, body, channel) {
+						var chatters = JSON.parse(body)
+						var normViewers = chatters.chatters.viewers
+						var moderators = chatters.chatters.moderators
+						var viewers = normViewers.concat(moderators);
+						for (var i = 0; i < viewers.length; i++) {
+							var userName = viewers[i]
+							functions.addPoints(userName, 5)
+						}
+						console.log("[DEBUG] Succesfully added points")
+					});
+				}
 			}
 			request(info, callback)
 		}, function () {}, true );
