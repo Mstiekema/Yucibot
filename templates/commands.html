@@ -3,17 +3,26 @@
 <div class="main">
 <br>
 <button class= "commBtn" id="switchPageE">Everyone</button>
+<button class= "commBtn "id="switchPageP">Points</button>
 <button class= "commBtn" id="switchPageS">Sub</button>
 <button class= "commBtn "id="switchPageM">Mod</button>
 
 <% commands.forEach(function(commands) { %>
-  <% if (commands.level == 100) { %>
-  <div class="commands allCommands"><p>
-    <b>Command:</b> <%= commands.commName %>:
-    <% if (commands.commDesc != null) { %> <%= commands.commDesc %> <% } %>
-    <% if (commands.response != null) { %> <%= commands.response %> <% } %>
-    <button class="commDetails" id="<%= commands.commName %>">More details</button>
-  </p></div>
+  <% if (commands.points != 0) { %>
+    <div class="commands pointCommands"><p>
+      <b>Command:</b> <%= commands.commName %>:
+      <% if (commands.commDesc != null) { %> <%= commands.commDesc %> <% } %>
+      <% if (commands.response != null) { %> <%= commands.response %> <% } %> | 
+      <b>Cost:</b> <%= commands.points %> points
+      <button class="commDetails" id="<%= commands.commName %>">More details</button>
+    </p></div>
+  <% } else if (commands.level == 100) { %>
+    <div class="commands allCommands"><p>
+      <b>Command:</b> <%= commands.commName %>:
+      <% if (commands.commDesc != null) { %> <%= commands.commDesc %> <% } %>
+      <% if (commands.response != null) { %> <%= commands.response %> <% } %>
+      <button class="commDetails" id="<%= commands.commName %>">More details</button>
+    </p></div>
   <% } else if (commands.level == 300) { %>
     <div class="commands modCommands"><p>
       <b>Command:</b> <%= commands.commName %>:

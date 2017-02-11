@@ -20,6 +20,8 @@ var clientID        = options.identity.clientId
 var secret          = options.identity.clientSecret
 var redirect        = options.identity.redirectUrl
 var io              = require('socket.io')(server);
+var connect         = require('./app.js')
+var bot             = connect.bot
 
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -84,6 +86,11 @@ app.all('*', function(req, res, next) {
 });
 
 io.on('connection', function (socket) {
+  socket.on('restartBot', function (data) {
+    bot.say(JSON.stringify(options.channels).slice(2, -2), "Restarting bot MrDestructoid");
+    bot.disconnect();
+    process.exit(1);
+  })
   socket.on('refreshData', function (data) {
     func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
       socket.emit('pushSonglist', result);

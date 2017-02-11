@@ -88,14 +88,6 @@
     background-color: #1a1f21;
 }
 
-#subCommands {
-  background-color: rgb(33, 57, 80);
-}
-
-#modCommands {
-  background-color: rgb(31, 45, 59);
-}
-
 .twitch {
   width: 1350px;
   box-shadow: 5px 5px 5px black;

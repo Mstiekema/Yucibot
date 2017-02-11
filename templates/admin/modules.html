@@ -9,11 +9,15 @@ function enableModule(name) {
   socket.emit('enableModule', name)
   setTimeout(function() {window.location.reload(true)}, 100);
 }
+function restartBot() {
+  socket.emit('restartBot')
+}
 </script>
 <div class="top"><h2>Modules</h2></div>
 <div class="main">
 <h2>Enable / disable modules</h2>
-<p>You can enable or disable all the modules here. <br> You'll have to restart the bot for the changes to take effect.</p>
+<p>You can enable or disable all the modules here. <br>
+Doesn't the module start working after activating? <button onclick="restartBot()">Restart bot</button> </p>
 <table class="moduleTable">
   <tr>
     <th>Module</th>

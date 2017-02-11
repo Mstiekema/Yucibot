@@ -12,7 +12,6 @@ var exp = module.exports = {}
 exp.commands = function(channel, user, message, self) {
 	basic.customCommands(channel, user, message, self)
 	mod.commandManagement(channel, user, message, self)
-	clr.clrComm(channel, user, message, self)
 	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
 			basic.useTwitchAPI(channel, user, message, self)
@@ -46,6 +45,9 @@ exp.commands = function(channel, user, message, self) {
 		}
 		if (result[13].state == 1) {
 			mod.link(channel, user, message, self);
+		}
+		if (result[14].state == 1) {
+			clr.clrComm(channel, user, message, self)
 		}
 	})
 };

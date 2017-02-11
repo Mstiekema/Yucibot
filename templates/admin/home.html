@@ -1,8 +1,14 @@
 <% include adminheader.ejs %>
+<script>
+var socket = io.connect('<%= website %>');
+function restartBot() {
+  socket.emit('restartBot')
+}
+</script>
 <div class="top"><h2>Admin home</h2></div>
 <div class="main">
 
-<h3> Welcome <%= locals.name %></h3>
+<p>Having problems with the bot or want to restart it? Click here: <button onclick="restartBot()">Restart bot</button></p>
 
 <p>Previous stream details</p>
 <% info.forEach(function(info) { %>
