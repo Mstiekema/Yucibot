@@ -5,7 +5,7 @@ var songrequest	= require('./songrequest.js')
 var mod = require('./mod.js')
 var events = require('./events.js')
 var streaminfo = require('./streaminfo.js')
-var connection = require("./connection.js")
+var func = require("./functions.js")
 var clr = require("./clrCommands.js")
 var exp = module.exports = {}
 
@@ -13,7 +13,7 @@ exp.commands = function(channel, user, message, self) {
 	basic.customCommands(channel, user, message, self)
 	mod.commandManagement(channel, user, message, self)
 	clr.clrComm(channel, user, message, self)
-	connection.query('select * from module', function(err, result) {
+	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
 			basic.useTwitchAPI(channel, user, message, self)
 		}
@@ -52,7 +52,7 @@ exp.commands = function(channel, user, message, self) {
 
 exp.events = function(channel, user, message, self) {
 	streaminfo.fetchInfo()
-	connection.query('select * from module', function(err, result) {
+	func.connection.query('select * from module', function(err, result) {
 		if (result[4].state == 1) {
 			profile.updateProfile(channel, user, message, self);
 		}

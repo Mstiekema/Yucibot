@@ -4,7 +4,7 @@ var connect = require('../app.js')
 var bot = connect.bot
 var ytApiKey = options.identity.ytApiKey
 var request = require("request");
-var connection = require("./connection.js")
+var func = require("./functions.js")
 
 module.exports = {
 	getSongs: function (channel, user, message, self) {
@@ -59,14 +59,14 @@ module.exports = {
 					songid: id
 				}
 				var getTime = new Date();
-				connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = DATE_FORMAT(NOW(),"%Y-%m-%d") AND playState = 0', function(err, result) {
+				func.connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = DATE_FORMAT(NOW(),"%Y-%m-%d") AND playState = 0', function(err, result) {
 					var songNames = result.map(function(a) {return a.title;})
 					if (songNames.indexOf(title) == -1) {
 						var users = result.map(function(a) {return a.name;})
 						var allNames = users.filter(function(b) {return b == user.username;});
 						var result = allNames.length;
 						if (result <= 2) {
-							connection.query('insert into songrequest set ?', srInfo, function (err, result) {if (err) {return}})
+							func.connection.query('insert into songrequest set ?', srInfo, function (err, result) {if (err) {return}})
 							bot.say(channel, "Succesfully added " + base.snippet.title + ", requested by: " + user.username + " to the queue!")
 						} else {
 							bot.whisper(user.username, "You have more than 3 songs in the queue, please wait a minute before you request more")
@@ -78,7 +78,7 @@ module.exports = {
 			}
 		)}
 		if (message.startsWith("!currentsong")) {
-			connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
+			func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
 				if(result[0] == undefined) {
 					bot.say(channel, "There's no song currently playing :/")
 				} else {

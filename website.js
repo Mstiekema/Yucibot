@@ -1,3 +1,5 @@
+module.exports = {
+connect: function() {
 var express         = require('express');
 var app             = express();
 var path            = require('path');
@@ -11,7 +13,7 @@ var cookieSession   = require("cookie-session");
 var passport        = require("passport");
 var session         = require('express-session')
 var twitchStrategy  = require("passport-twitch").Strategy;
-var connection      = require("./modules/connection.js")
+var func            = require("./modules/functions.js")
 var date            = new Date().toISOString().substr(0, 10)
 var options         = require('./config.js')
 var clientID        = options.identity.clientId
@@ -42,7 +44,7 @@ passport.use(new twitchStrategy({
     var acc = accessToken
     console.log("[DEBUG] " + profile.username + " logged into the website")
     var newLog = {type: "login", log: profile.username + " just logged into the website"}
-    connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
+    func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
     return done(null, profile.username);
   }
 ));
@@ -60,7 +62,7 @@ app.all('*', function(req, res, next) {
   res.locals.botName = options.identity.username
   res.locals.streamer = options.channels[0]
   if (req.user) {
-    connection.query('select * from user where name = ?', req.user, function(err, result) {
+    func.connection.query('select * from user where name = ?', req.user, function(err, result) {
       if (result == undefined || result[0] == undefined) {
         return
       } else {
@@ -83,28 +85,28 @@ app.all('*', function(req, res, next) {
 
 io.on('connection', function (socket) {
   socket.on('refreshData', function (data) {
-    connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+    func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
       socket.emit('pushSonglist', result);
     })
   })
   socket.on('endSong', function (data) {
-    connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
+    func.connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
     socket.emit('nextSong');
   })
   socket.on('removeSong', function (data) {
-    connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
+    func.connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
       socket.emit('nextSong');
     })
   })
   socket.on('prevSong', function (data) {
-    connection.query('select * from songrequest where playState = 1 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id DESC LIMIT 1', date, function(err,result){
+    func.connection.query('select * from songrequest where playState = 1 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id DESC LIMIT 1', date, function(err,result){
       if (result[0] != undefined) {
-      connection.query('update songrequest set playState = 0 where songid = ?', result[0].songid, function(err, result) {})
+      func.connection.query('update songrequest set playState = 0 where songid = ?', result[0].songid, function(err, result) {})
       socket.emit('nextSong');
     }})
   })
   socket.on('createPoll', function (data) {
-    connection.query('insert into pollquestions set question = ?', data.question, function(err, result) {
+    func.connection.query('insert into pollquestions set question = ?', data.question, function(err, result) {
       var pollId = result.insertId
       var answers = JSON.parse(data.answers)
       for (x = 0; x < answers.length; x++) {
@@ -112,23 +114,23 @@ io.on('connection', function (socket) {
           pollId: pollId,
           answers: answers[x]
         }
-        connection.query('insert into pollanswers set ?', pushTo, function(err, result) {})
+        func.connection.query('insert into pollanswers set ?', pushTo, function(err, result) {})
       }
     })
   })
   socket.on('getPoll', function (data) {
-    connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', data, function(err, result) {
+    func.connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', data, function(err, result) {
       socket.emit('pollData', {data: result})
     })
   })
   socket.on('addResult', function (data) {
     data.ip = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
-    connection.query('insert into pollvoted set ?', data, function(err,result){})
+    func.connection.query('insert into pollvoted set ?', data, function(err,result){})
   })
   socket.on('retPollRes', function (data) {
-    connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', data, function(err, result) {
+    func.connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', data, function(err, result) {
       var answers = result
-      connection.query('SELECT * FROM pollvoted where pollId = ?', data, function(err, result) {
+      func.connection.query('SELECT * FROM pollvoted where pollId = ?', data, function(err, result) {
         var res = new Array;
         for (x = 0; x < answers.length; x++) {
           res.push({
@@ -149,28 +151,28 @@ io.on('connection', function (socket) {
     });
   })
   socket.on('remPoll', function (data) {
-    connection.query('delete from pollquestions where id = ?', data, function(err, result) {})
-    connection.query('delete from pollanswers where pollId = ?', data, function(err, result) {})
-    connection.query('delete from pollvoted where pollId = ?', data, function(err, result) {})
+    func.connection.query('delete from pollquestions where id = ?', data, function(err, result) {})
+    func.connection.query('delete from pollanswers where pollId = ?', data, function(err, result) {})
+    func.connection.query('delete from pollvoted where pollId = ?', data, function(err, result) {})
   })
   socket.on('removeComm', function (data) {
-    connection.query('delete from commands where commName = ?', data, function(err, result) {})
+    func.connection.query('delete from commands where commName = ?', data, function(err, result) {})
   })
   socket.on('addCom', function (data) {
-    connection.query('insert into commands set ?', data, function (err, result) {})
+    func.connection.query('insert into commands set ?', data, function (err, result) {})
   })
   socket.on('updateComm', function(data) {
-    connection.query('update commands set commName = "' + data.commName + '", response = "' + data.response + '", level = "' + data.level + '",\
+    func.connection.query('update commands set commName = "' + data.commName + '", response = "' + data.response + '", level = "' + data.level + '",\
     cdType = "' + data.cdType + '", cd = "' + data.cd + '" where commName = "' + data.commName + '"', function(err, result) {})
   })
   socket.on('disableModule', function(data) {
-    connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
+    func.connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
       socket.emit('reload')
       console.log("Disabled module: " + data)
     })
   })
   socket.on('enableModule', function(data) {
-    connection.query('update module set state = 1 where moduleName = ?', data, function(err, result) {
+    func.connection.query('update module set state = 1 where moduleName = ?', data, function(err, result) {
       socket.emit('reload')
       console.log("Enabled module: " + data)
     })
@@ -182,7 +184,7 @@ app.all('*', function(req, res, next) {
   res.locals.botName = options.identity.username
   res.locals.streamer = options.channels[0]
   if (req.user) {
-    connection.query('select * from user where name = ?', req.user, function(err, result) {
+    func.connection.query('select * from user where name = ?', req.user, function(err, result) {
       if (result == undefined || result[0] == undefined) {
         return
       } else {
@@ -235,7 +237,7 @@ app.get('/', function(req, res) {
 })
 
 app.get('/about', function(req, res) {
-  connection.query('select * from streaminfo', function(err, result) {res.render('about.html')});
+  func.connection.query('select * from streaminfo', function(err, result) {res.render('about.html')});
 });
 
 app.get('/clr', function(req, res) {
@@ -243,7 +245,7 @@ app.get('/clr', function(req, res) {
 });
 
 app.get('/support', function(req, res) {
-  connection.query('select * from streaminfo', function(err, result) {res.render('support.html')});
+  func.connection.query('select * from streaminfo', function(err, result) {res.render('support.html')});
 });
 
 app.get("/login", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
@@ -259,7 +261,7 @@ app.get('/logout', function(req, res) {
 });
 
 app.get('/user/:id', function(req, res) {
-  connection.query('select * from user where name = ?', req.params.id, function(err, result) {
+  func.connection.query('select * from user where name = ?', req.params.id, function(err, result) {
     if (result[0] == undefined) {
       res.render("error404.html");
     } else {
@@ -272,7 +274,7 @@ app.get('/user/:id', function(req, res) {
       request(info, function (error, response, body) {
         var reqBody = JSON.parse(body)
         var userPf = reqBody.logo
-        connection.query('update user set profile_pic = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
+        func.connection.query('update user set profile_pic = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
         var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
         var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
         var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
@@ -293,7 +295,7 @@ app.get('/user/:id', function(req, res) {
 });
 
 app.get('/user/:id/logs', function(req, res) {
-  connection.query('select * from chatlogs where name = ?', req.params.id, function(err, result) {
+  func.connection.query('select * from chatlogs where name = ?', req.params.id, function(err, result) {
     if (result[0] == undefined) {
       res.render("error404.html");
     } else {
@@ -308,7 +310,7 @@ app.get('/user/:id/logs', function(req, res) {
 });
 
 app.get('/user/:id/logs/:page', function(req, res) {
-  connection.query('select * from chatlogs where DATE_FORMAT(time,"%Y-%m-%d") = "' + req.params.page + '" AND name = ?', req.params.id, function(err, result) {
+  func.connection.query('select * from chatlogs where DATE_FORMAT(time,"%Y-%m-%d") = "' + req.params.page + '" AND name = ?', req.params.id, function(err, result) {
     if (result[0] == undefined) {
       res.render("logs.html", {
         log: undefined,
@@ -327,7 +329,7 @@ app.get('/user/:id/logs/:page', function(req, res) {
 });
 
 app.get('/commands', function(req, res) {
-  connection.query('select * from commands ORDER BY level', function(err, result) {
+  func.connection.query('select * from commands ORDER BY level', function(err, result) {
     res.render('commands.html', {
       commands: result
     })
@@ -336,7 +338,7 @@ app.get('/commands', function(req, res) {
 
 app.get('/commands/:id', function(req, res) {
   var comm = "!" + req.params.id
-  connection.query('select * from commands where commName = ?', comm, function(err, result) {
+  func.connection.query('select * from commands where commName = ?', comm, function(err, result) {
     res.render('commandDetails.html', {
       commands: result
     })
@@ -344,7 +346,7 @@ app.get('/commands/:id', function(req, res) {
 });
 
 app.get('/stats', function(req, res) {
-  connection.query('select * from streaminfo', function(err, result) {
+  func.connection.query('select * from streaminfo', function(err, result) {
     request({
       url: 'https://api.twitch.tv/kraken/clips/top?limit=5&channel=' + options.channels[0],
       headers: {
@@ -356,16 +358,16 @@ app.get('/stats', function(req, res) {
       io.emit('sendClips', body)
     });
     var streams = result.length
-    connection.query('select * from chatlogs', function(err, result) {
+    func.connection.query('select * from chatlogs', function(err, result) {
       var numLines = result.length
-      connection.query('select * from user ORDER BY points DESC', function(err, result) {
+      func.connection.query('select * from user ORDER BY points DESC', function(err, result) {
         var user = result.length
         var toppoints = result
-        connection.query('select * from user ORDER BY num_lines DESC', function(err, result) {
+        func.connection.query('select * from user ORDER BY num_lines DESC', function(err, result) {
           var toplines = result
-          connection.query('select title from songrequest', function(err, result) {
+          func.connection.query('select title from songrequest', function(err, result) {
             var songrequest = result.length
-            connection.query('select type from adminlogs', function(err, result) {
+            func.connection.query('select type from adminlogs', function(err, result) {
               var types = result.map(function(a) {return a.type;})
               var timeouts = types.filter(function(b) {return b == "timeout"});
               var bans = types.filter(function(b) {return b == "ban"});
@@ -390,7 +392,7 @@ app.get('/stats', function(req, res) {
 });
 
 app.get('/history/:id', function(req, res) {
-  connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
+  func.connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
     var songInfo = result
     if (result == undefined || result[0] == undefined) {
       res.render("history.html", {
@@ -399,7 +401,7 @@ app.get('/history/:id', function(req, res) {
         listDate: req.params.id
       });
     } else {
-      connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id LIMIT 1', req.params.id, function(err, result) {
+      func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id LIMIT 1', req.params.id, function(err, result) {
         if (result == undefined || result[0] == undefined) {
           res.render('history.html', {
             currSong: [{"title": "The songlist has finished"}],
@@ -423,7 +425,7 @@ app.get('/history', function(req, res) {
 });
 
 app.get('/poll', function(req, res) {
-  connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
+  func.connection.query('select * from pollquestions ORDER BY id DESC LIMIT 1', function(err, result) {
     if(result[0] != undefined) {
       res.redirect('/poll/' + result[0].id)
     } else {
@@ -433,9 +435,9 @@ app.get('/poll', function(req, res) {
 });
 
 app.get('/poll/:id', function(req, res) {
-  connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
+  func.connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
     var data = result
-    connection.query('SELECT ip FROM pollvoted where pollId = ?', req.params.id, function(err, result) {
+    func.connection.query('SELECT ip FROM pollvoted where pollId = ?', req.params.id, function(err, result) {
       var ips = result.map(function(a) {return a.ip;})
       var localIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress
       res.render('poll.html', {
@@ -448,11 +450,11 @@ app.get('/poll/:id', function(req, res) {
 })
 
 app.get('/poll/:id/result', function(req, res) {
-  connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
+  func.connection.query('SELECT * FROM pollquestions INNER JOIN pollanswers ON pollquestions.id = pollanswers.pollId where pollquestions.id = ?', req.params.id, function(err, result) {
     if(result[0] != undefined) {
     var question = result[0].question
     var answers = result.map(function(a) {return a.answers;})
-    connection.query('SELECT * FROM pollvoted where pollId = ?', req.params.id, function(err, result) {
+    func.connection.query('SELECT * FROM pollvoted where pollId = ?', req.params.id, function(err, result) {
       var voteRes = result.map(function(a) {return a.answerId;})
       res.render('pollResult.html', {
         question: question,
@@ -469,7 +471,7 @@ app.get('/poll/:id/result', function(req, res) {
 });
 
 app.get('/admin', function(req, res) {
-  connection.query('select * from streaminfo', function(err, result) {
+  func.connection.query('select * from streaminfo', function(err, result) {
     res.render('admin/home.html', {
       info: result
     })
@@ -477,7 +479,7 @@ app.get('/admin', function(req, res) {
 });
 
 app.get('/admin/poll', function(req, res) {
-  connection.query('SELECT * FROM pollquestions', function(err, result) {
+  func.connection.query('SELECT * FROM pollquestions', function(err, result) {
     res.render('admin/poll.html', {
       polls: result
     })
@@ -485,13 +487,13 @@ app.get('/admin/poll', function(req, res) {
 })
 
 app.get('/admin/poll/create', function(req, res) {
-  connection.query('select * from pollquestions', function(err, result) {
+  func.connection.query('select * from pollquestions', function(err, result) {
     res.render('admin/pollCreate.html')
   });
 });
 
 app.get('/admin/songlist', function(req, res) {
-  connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+  func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
     if (result == undefined || result[0] == undefined) {
       res.render('admin/songlist.html', {songs: false})
     }
@@ -502,7 +504,7 @@ app.get('/admin/songlist', function(req, res) {
 });
 
 app.get('/admin/logs', function(req, res) {
-  connection.query('select * from adminlogs', function(err, result) {
+  func.connection.query('select * from adminlogs', function(err, result) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
         log: false,
@@ -520,7 +522,7 @@ app.get('/admin/logs', function(req, res) {
 });
 
 app.get('/admin/logs/:page', function(req, res) {
-  connection.query('select * from adminlogs where type = ?', req.params.page, function(err, result) {
+  func.connection.query('select * from adminlogs where type = ?', req.params.page, function(err, result) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
         log: false,
@@ -538,7 +540,7 @@ app.get('/admin/logs/:page', function(req, res) {
 });
 
 app.get('/admin/modules', function(req, res) {
-  connection.query('select * from module WHERE id != 1', function(err, result) {
+  func.connection.query('select * from module WHERE id != 1', function(err, result) {
     res.render('admin/modules.html', {
       moduleList: result,
       website: options.identity.websiteUrl
@@ -547,7 +549,7 @@ app.get('/admin/modules', function(req, res) {
 });
 
 app.get('/admin/commands', function(req, res) {
-  connection.query('select * from commands where response IS NOT NULL ORDER BY level', function(err, result) {
+  func.connection.query('select * from commands where response IS NOT NULL ORDER BY level', function(err, result) {
     res.render('admin/commands.html', {
       commands: result
     })
@@ -555,12 +557,12 @@ app.get('/admin/commands', function(req, res) {
 });
 
 app.get('/admin/commands/create', function(req, res) {
-  connection.query('select * from commands', function(err, result) {res.render('admin/addCommand.html')});
+  func.connection.query('select * from commands', function(err, result) {res.render('admin/addCommand.html')});
 });
 
 app.get('/admin/commands/edit/:id', function(req, res) {
   var id = req.params.id
-  connection.query('select * from commands where response IS NOT NULL AND commName = ?', id, function(err, result) {
+  func.connection.query('select * from commands where response IS NOT NULL AND commName = ?', id, function(err, result) {
     res.render('admin/editCommand.html', {
       commands: result
     })
@@ -568,13 +570,15 @@ app.get('/admin/commands/edit/:id', function(req, res) {
 });
 
 app.get('/403', function(req, res) {
-  connection.query('select * from streaminfo', function(err, result) {res.render('error403.html')});
+  func.connection.query('select * from streaminfo', function(err, result) {res.render('error403.html')});
 });
 
 app.all('*', function(req, res, next) {
-  connection.query('select * from streaminfo', function(err, result) {res.render('error404.html')});
+  func.connection.query('select * from streaminfo', function(err, result) {res.render('error404.html')});
 });
 
-console.log("Started website")
+console.log("[DEBUG] Started website")
 
 server.listen(3000);
+
+}}

@@ -1,14 +1,15 @@
 var options = require('../config.js')
 var request = require("request");
 var clientID = options.identity.clientId
-var connection = require("./connection.js")
 var connect = require('../app.js')
+var mysql = require("mysql");
 var bot = connect.bot
 var cooldowns = [];
+var connection;
 
 module.exports = {
   addPoints: function (user, points) {
-	  connection.query('update user set points = points + "' + points + '" where name = ?', user, function (err, result) {
+	  module.exports.connection.query('update user set points = points + "' + points + '" where name = ?', user, function (err, result) {
       if (result.changedRows == 0) {
 		    var userInfo = {
 			    name: user,
@@ -16,18 +17,18 @@ module.exports = {
           num_lines: 0,
 				  level: 100
 			  }
-			  connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
+			  module.exports.connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
       }
     })
   },
   remPoints: function (user, remPoints, func, funcName) {
-    connection.query('select * from user where name = ?', user, function (err, result) {
+    module.exports.connection.query('select * from user where name = ?', user, function (err, result) {
       if (result[0] != undefined) {
         if(result[0].points > remPoints) {
           func()
-          connection.query('update user set points = points - "' + remPoints + '" where name = ?', user, function (err, result) {})
+          module.exports.connection.query('update user set points = points - "' + remPoints + '" where name = ?', user, function (err, result) {})
           var newLog = {type: "points", log: user + " used " + remPoints + " for the " + funcName + " command."}
-          connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
+          module.exports.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
         } else {
           bot.whisper(user, "You do not have enough points to use this command.")
         }
@@ -145,5 +146,35 @@ module.exports = {
         }
       }
     }
+  },
+  mysqlConn: function() {
+    if (!connection) {
+      connection = mysql.createConnection({
+        host: 'localhost',
+        user: options.mysql.user,
+        password: options.mysql.password,
+        database: options.mysql.database,
+        port: 3306
+      });
+      connection.connect(function(err) {
+        if(err) {
+          console.log('Database connection error: ', err);
+          process.exit(1)
+        }
+      });
+      connection.on('error', function(err) {
+        console.log('Database error: ', err);
+        if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+          process.exit(1)
+        } else {
+          process.exit(1)
+          throw err;
+        }
+      });
+    }
+    return connection;
   }
 }
+
+module.exports.mysqlConn()
+module.exports.connection = connection

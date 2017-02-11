@@ -4,12 +4,11 @@ var connect = require('../app.js')
 var bot = connect.bot
 var request = require("request");
 var func = require("./functions.js")
-var connection = require("./connection.js")
 var clientID 	= options.identity.clientId
 
 module.exports = {
 	customCommands: function(channel, user, message, self) {
-		connection.query('select * from commands WHERE commDesc IS NULL', function(err, result) {
+		func.connection.query('select * from commands WHERE commDesc IS NULL', function(err, result) {
 			var comm = message.split(" ")[0]
 			var commands = result.map(function(a) {return a.commName;})
 			var check = new RegExp(commands.join("|")).test(comm)
@@ -27,7 +26,7 @@ module.exports = {
 			var base = "https://www.google.nl/search?q=";
 			var link = base + question
 			bot.say(channel, user.username + " Google is je beste vriend! " + link)}
-			func.cooldown("google", "global", usewr.username, 10, google)
+			func.cooldown("google", "global", user.username, 10, google)
 		}
 		else if (message.startsWith("!lmgtfy")) {
 			function lmgtfy() {

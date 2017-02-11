@@ -1,8 +1,8 @@
-var connection 	= require("./modules/connection.js")
+var func 	= require("./modules/functions.js")
 var options 	= require("./config.js")
 var request = require("request");
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE user (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'name VARCHAR(30),' +
@@ -14,7 +14,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE streaminfo (' +
 	'streamid VARCHAR(20) PRIMARY KEY,' +
 	'date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
@@ -27,7 +27,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE commands (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'commName VARCHAR(50),' +
@@ -40,7 +40,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE chatlogs (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
@@ -49,7 +49,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE adminlogs (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
@@ -58,7 +58,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE songrequest (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
@@ -71,7 +71,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE timeout (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'word VARCHAR(30),' +
@@ -79,7 +79,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE dungeon (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'user VARCHAR(30),' +
@@ -87,7 +87,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE module (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'moduleName VARCHAR(30),' +
@@ -96,14 +96,14 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE pollQuestions (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'question VARCHAR(500))',
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE pollAnswers (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'pollId VARCHAR(500),' +
@@ -111,7 +111,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE pollVoted (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'ip VARCHAR(500),' +
@@ -120,7 +120,7 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
-connection.query(
+func.connection.query(
 	'CREATE TABLE emotes (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'name VARCHAR(50),' +
@@ -131,13 +131,19 @@ connection.query(
 
 console.log("[DEBUG] Added all tables")
 
-connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-if (options.identity.admin != options.channels[0]) {
-	connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-} else {
-	connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-}
+func.connection.query('select * from user', function (err, result) {
+	if (result[0] == undefined) {
+		func.connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+		if (options.identity.admin != options.channels[0]) {
+			func.connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+			func.connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+		} else {
+			func.connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+		}
+	} else {
+		console.log("[DEBUG] Didn't add users, already in table")
+	}
+})
 
 var sql = "insert into module (moduleName, moduleDescription, state) values ?";
 var moduleSettings = [
@@ -158,7 +164,13 @@ var moduleSettings = [
 	['sub', "Notifies chat if a user subs or resubs", true],
 	['timeout', "Saves a log if a user is timed out or banned", true],
 ];
-connection.query(sql, [moduleSettings], function (err, result) {if (err) {console.log("[DEBUG] Added all modules")})
+func.connection.query('select * from module', function (err, result) {
+	if (result[0] == undefined) {
+		func.connection.query(sql, [moduleSettings], function (err, result) {console.log("[DEBUG] Added all modules")})
+	} else {
+		console.log("[DEBUG] Didn't add modules, already in table")
+	}
+})
 
 var sql2 = "insert into commands (commName, response, commDesc, cdType, cd, level, commUse) values ?"
 var standardCommands = [
@@ -188,7 +200,14 @@ var standardCommands = [
 	["!addban", null, "Adds a ban word to the banlist", "user", 1, 300, "!addtimeout fuck"],
 	["1quit", null, "Makes the bot quit", "user", 1, 300, null]
 ]
-connection.query(sql2, [standardCommands], function (err, result) {console.log("[DEBUG] Added all commands")})
+
+func.connection.query('select * from module', function (err, result) {
+	if (result[0] == undefined) {
+		func.connection.query(sql2, [standardCommands], function (err, result) {console.log("[DEBUG] Added all commands")})
+	} else {
+		console.log("[DEBUG] Didn't add commands, already in table")
+	}
+})
 
 var sql3 = "insert into emotes (name, type, url) values ?"
 var emotes = new Array;
@@ -253,8 +272,13 @@ request('https://api.frankerfacez.com/v1/set/global', function (error, response,
 	}
 });
 setTimeout(function () {
-	connection.query(sql3, [emotes], function (err, result) {if (err) console.log(err)})
-	console.log("[DEBUG] Added all emotes")
+	func.connection.query('select * from emotes', function (err, result) {
+		if (result[0] == undefined) {
+			func.connection.query(sql3, [emotes], function (err, result) {console.log("[DEBUG] Added all emotes")})
+		} else {
+			console.log("[DEBUG] Didn't add emotes, already in table")
+		}
+	})
 }, 7000);
 
 setTimeout(function () {
