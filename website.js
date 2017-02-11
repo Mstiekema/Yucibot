@@ -238,6 +238,10 @@ app.get('/about', function(req, res) {
   connection.query('select * from streaminfo', function(err, result) {res.render('about.html')});
 });
 
+app.get('/clr', function(req, res) {
+  res.render('clr.html');
+});
+
 app.get('/support', function(req, res) {
   connection.query('select * from streaminfo', function(err, result) {res.render('support.html')});
 });

@@ -3,7 +3,7 @@ var options = require('../config.js')
 var connect = require('../app.js')
 var bot = connect.bot
 var request = require("request");
-var cd = require("./cooldown.js")
+var func = require("./functions.js")
 var connection = require("./connection.js")
 var clientID 	= options.identity.clientId
 
@@ -15,7 +15,7 @@ module.exports = {
 			var check = new RegExp(commands.join("|")).test(comm)
 			if (check != false) {
 				var commInfo = result[commands.indexOf(comm)]
-				cd.command(channel, user, message, comm, commInfo.cdType, parseInt(commInfo.cd), commInfo.response)
+				func.command(channel, user, message, comm, commInfo.cdType, parseInt(commInfo.cd), commInfo.response)
 			}
 		})
 	},
@@ -27,7 +27,7 @@ module.exports = {
 			var base = "https://www.google.nl/search?q=";
 			var link = base + question
 			bot.say(channel, user.username + " Google is je beste vriend! " + link)}
-			cd.cooldown("google", "global", usewr.username, 10, google)
+			func.cooldown("google", "global", usewr.username, 10, google)
 		}
 		else if (message.startsWith("!lmgtfy")) {
 			function lmgtfy() {
@@ -36,7 +36,7 @@ module.exports = {
 			var base = "https://lmgtfy.com/?q=";
 			var link = base + question
 			bot.say(channel, user.username + " Google is je beste vriend! " + link)}
-			cd.cooldown("lmgtfy", "global", user.username, 10, lmgtfy)
+			func.cooldown("lmgtfy", "global", user.username, 10, lmgtfy)
 		}
 		else if (message.includes("Alliance") || message.includes("alliance")) {
 			bot.say(channel, "LOK'TAR OGAR, FOR THE HORDE SMOrc")
@@ -62,7 +62,7 @@ module.exports = {
 			  }
 			}
 			function viewers() {request(info, getViewers)}
-			cd.cooldown("viewers", "global", user.username, 10, viewers)
+			func.cooldown("viewers", "global", user.username, 10, viewers)
 		}
 		else if(message.startsWith("!game")) {
 			function getGame(error, response, body) {
@@ -77,7 +77,7 @@ module.exports = {
 			  }
 			}
 			function game() {request(info, getGame)}
-			cd.cooldown("game", "global", user.username, 10, game)
+			func.cooldown("game", "global", user.username, 10, game)
 		}
 		else if(message.startsWith("!title")) {
 			function getTitle(error, response, body) {
@@ -92,7 +92,7 @@ module.exports = {
 			  }
 			}
 			function title() {request(info, getTitle)}
-			cd.cooldown("title", "global", user.username, 10, title)
+			func.cooldown("title", "global", user.username, 10, title)
 		}
 		else if(message.startsWith("!uptime")) {
 			function getUptime(error, response, body) {
@@ -106,7 +106,7 @@ module.exports = {
 				}
 			}
 			function uptime() {request("https://api.rtainc.co/twitch/uptime?channel=" + channel.substring(1), getUptime)}
-			cd.cooldown("uptime", "global", user.username, 10, uptime)
+			func.cooldown("uptime", "global", user.username, 10, uptime)
 		}
 	},
 	owCommands: function (channel, user, message, self) {
@@ -123,7 +123,7 @@ module.exports = {
 					var rank = JSON.parse(body);
 					bot.say(channel, userOW[1] + " is op het moment rank " + rank.data.competitive.rank + " in Overwatch! PogChamp")});
 			}}
-			cd.cooldown("owrank", "global", user.username, 10, owrank)
+			func.cooldown("owrank", "global", user.username, 10, owrank)
 		};
 	}
 }

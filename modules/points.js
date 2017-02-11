@@ -1,7 +1,7 @@
 var tmi = require('tmi.js');
 var options	= require('../config.js')
 var connection = require("./connection.js")
-var cd = require("./cooldown.js")
+var func = require("./functions.js")
 var connect = require('../app.js')
 var bot = connect.bot
 var request = require("request");
@@ -18,7 +18,7 @@ module.exports = {
 				if(!isNaN(bet)) {
 					if(oldPoints >= bet) {
 						var x = Math.random() * 100
-						if (x > 50) {									
+						if (x > 50) {
 							var r = parseInt(bet)
 							connection.query('update user set points = points + ' + r + ' where name = ?', user.username, function (err, result) {if (err) {return}})
 							bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points!")
@@ -31,7 +31,7 @@ module.exports = {
 							bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points!")
 							var newLog = {type: "points", log: user.username + " lost " + bet + " in roulette"}
 							connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
-						}								
+						}
 					}
 					else {
 						bot.say(channel, user.username + ", You can't do roulette's with more points than you have")
@@ -39,7 +39,7 @@ module.exports = {
 				}
 				else if(bet === "all" || bet === "allin") {
 					var x = Math.random() * 100
-					if (x > 50) {									
+					if (x > 50) {
 						connection.query('update user set points = points + points where name = ?', user.username, function (err, result) {if (err) {return}})
 						bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points!")
 						var newLog = {type: "points", log: user.username + " won " + bet + " in roulette"}
@@ -50,13 +50,13 @@ module.exports = {
 						bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points!")
 						var newLog = {type: "points", log: user.username + " lost " + bet + " in roulette"}
 						connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
-					}	
+					}
 				}
 				else {
 					bot.say(channel, "I'm sorry, but that's not a valid roulette command " + user.username)
 				}
 			})}
-			cd.cooldown("roulette", "user", user.username, 300, roulette)
+			func.cooldown("roulette", "user", user.username, 300, roulette)
 		}
 	},
 	slot: function (channel, user, message, self) {
@@ -96,9 +96,9 @@ module.exports = {
 				var newLog = {type: "points", log: user.username + " lost 100 points with the slot machine"}
 				connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 			}}
-			cd.cooldown("slot", "user", user.username, 300, slot)
+			func.cooldown("slot", "user", user.username, 300, slot)
 		}
-	}, 
+	},
 	dungeon: function (channel, user, message, self) {
 		if (message.startsWith("!startdungeon") && (user.username === channel.substring(1) || user.mod === true)) {
 			connection.query('update module set state = 1 where moduleName = "dungeonActive"', function (err, result) {if (err) {console.log(err)}})

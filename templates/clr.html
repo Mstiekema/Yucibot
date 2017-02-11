@@ -1,0 +1,57 @@
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
+<script>
+  var chat = io.connect('http://localhost:2345/')
+  chat.on('message', function (data) {
+    var id = "id" + (String(Math.floor(Math.random() * 1000000)))
+    $("body").append("<p id="+id+">" + data.user + ": " + data.message + " </p><br>")
+    $("#" + id).hide()
+    $("#" + id).fadeIn(1000)
+    document.getElementById(id).style.position = "absolute"
+    document.getElementById(id).style.left = 100
+    document.getElementById(id).style.top = 100
+    setTimeout(function () { $("#" + id).fadeOut(1000); }, 5000);
+    setTimeout(function () { document.getElementById(id).remove() }, 6000);
+  });
+  chat.on('emote', function (data) {
+    var id = "id" + (String(Math.floor(Math.random() * 1000000)))
+    function getX() { return Math.floor(Math.random() * ($(window).width() - 300)) }
+    function getY() { return Math.floor(Math.random() * $(window).height()) }
+    $("body").append("<img id="+id+" src="+data.url+"><br>")
+    $("#" + id).hide()
+    $("#" + id).fadeIn(1000)
+    document.getElementById(id).style.position = "absolute"
+    document.getElementById(id).style.left = getX()
+    document.getElementById(id).style.top = getY()
+    setTimeout(function () { $("#" + id).fadeOut(1000); }, 5000);
+    setTimeout(function () { document.getElementById(id).remove() }, 6000);
+  });
+  chat.on('sound', function (data) {
+    var sounds = {
+      "echo": 'https://puu.sh/tNZm7/6fd06f6b2f.mp3',
+      "datboi": 'https://puu.sh/rk6dH/5ba8a259f8.mp3',
+      "fuckyou": 'https://puu.sh/pMG2z/eeda3235c9.mp3',
+      "lielielie": 'https://puu.sh/mlMzM/af31153a57.mp3',
+      "bottle": 'http://puu.sh/tX9R5/4ce2a001f0.mp3',
+      "beer": 'http://puu.sh/tXc6X/d75fb7a875.mp3'
+    }
+    var sound = new Audio(sounds[data.sound]);
+    sound.play();
+  });
+</script>
+<style>
+body {
+  overflow: hidden;
+}
+
+p {
+  color: lightgray;
+  text-shadow: 2px 2px 2px black;
+  font-size: 40;
+  font-family: 'Roboto', sans-serif;
+}
+</style>
+<body>
+
+</body>

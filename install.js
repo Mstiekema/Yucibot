@@ -1,5 +1,6 @@
 var connection 	= require("./modules/connection.js")
 var options 	= require("./config.js")
+var request = require("request");
 
 connection.query(
 	'CREATE TABLE user (' +
@@ -119,6 +120,17 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
+connection.query(
+	'CREATE TABLE emotes (' +
+	'id INT AUTO_INCREMENT PRIMARY KEY,' +
+	'name VARCHAR(50),' +
+	'type VARCHAR(10),' +
+	'url VARCHAR(500))',
+	function (err, result) {if (err) {return}}
+)
+
+console.log("[DEBUG] Added all tables")
+
 connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
 if (options.identity.admin != options.channels[0]) {
 	connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
@@ -146,7 +158,7 @@ var moduleSettings = [
 	['sub', "Notifies chat if a user subs or resubs", true],
 	['timeout', "Saves a log if a user is timed out or banned", true],
 ];
-connection.query(sql, [moduleSettings], function (err, result) {if (err) {console.log(err)}})
+connection.query(sql, [moduleSettings], function (err, result) {if (err) {console.log("[DEBUG] Added all modules")})
 
 var sql2 = "insert into commands (commName, response, commDesc, cdType, cd, level, commUse) values ?"
 var standardCommands = [
@@ -176,6 +188,76 @@ var standardCommands = [
 	["!addban", null, "Adds a ban word to the banlist", "user", 1, 300, "!addtimeout fuck"],
 	["1quit", null, "Makes the bot quit", "user", 1, 300, null]
 ]
-connection.query(sql2, [standardCommands], function (err, result) {if (err) console.log(err)})
+connection.query(sql2, [standardCommands], function (err, result) {console.log("[DEBUG] Added all commands")})
 
-connection.end();
+var sql3 = "insert into emotes (name, type, url) values ?"
+var emotes = new Array;
+var chnl = JSON.stringify(options.channels).slice(2, -2);
+
+// Twitch emotes
+request('https://twitchemotes.com/api_cache/v2/global.json', function (error, response, body) {
+	var emoteBase = JSON.parse(body).emotes
+	for(var key in emoteBase) {
+		var emote = key
+		var type = 'twitch'
+		var imgId = emoteBase[key].image_id
+		var url = 'https://static-cdn.jtvnw.net/emoticons/v1/' + imgId + '/3.0'
+		emotes.push([emote, type, url])
+	}
+});
+// BTTV emotes channel
+request('https://api.betterttv.net/2/channels/' + chnl, function (error, response, body) {
+	var emoteBase = JSON.parse(body).emotes
+	for(var key in emoteBase) {
+		var emote = emoteBase[key].code
+		var type = 'bttv'
+		var imgId = emoteBase[key].id
+		var url = 'https://cdn.betterttv.net/emote/' + imgId + '/3x'
+		emotes.push([emote, type, url])
+	}
+});
+// FFZ emotes channel
+request('http://api.frankerfacez.com/v1/room/' + chnl, function (error, response, body) {
+	var base = JSON.parse(body)
+	if (!base["room"]) return
+	var roomid = base["room"]["_id"]
+	var emoteBase = base["sets"][roomid].emoticons
+	for(var key in emoteBase) {
+		var emote = emoteBase[key].name
+		var type = 'ffz'
+		var imgId = emoteBase[key].id
+		var url = 'https://cdn.frankerfacez.com/emoticon/' + imgId + '/4'
+		emotes.push([emote, type, url])
+	}
+});
+// BTTV emotes global
+request('https://api.betterttv.net/2/emotes', function (error, response, body) {
+	var emoteBase = JSON.parse(body).emotes
+	for(var key in emoteBase) {
+		var emote = emoteBase[key].code
+		var type = 'bttv'
+		var imgId = emoteBase[key].id
+		var url = 'https://cdn.betterttv.net/emote/' + imgId + '/3x'
+		emotes.push([emote, type, url])
+	}
+});
+// FFZ emotes global
+request('https://api.frankerfacez.com/v1/set/global', function (error, response, body) {
+	var emoteBase = JSON.parse(body).sets['3'].emoticons
+	for(var key in emoteBase) {
+		var emote = emoteBase[key].name
+		var type = 'ffz'
+		var imgId = emoteBase[key].id
+		var url = 'https://cdn.frankerfacez.com/emoticon/' + imgId + '/4'
+		emotes.push([emote, type, url])
+	}
+});
+setTimeout(function () {
+	connection.query(sql3, [emotes], function (err, result) {if (err) console.log(err)})
+	console.log("[DEBUG] Added all emotes")
+}, 7000);
+
+setTimeout(function () {
+	connection.end();
+	console.log("[DEBUG] Finished installing")
+}, 12000);
