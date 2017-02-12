@@ -14,7 +14,7 @@ module.exports = {
 			var check = new RegExp(commands.join("|")).test(comm)
 			if (check != false) {
 				var commInfo = result[commands.indexOf(comm)]
-				func.command(channel, user, message, comm, commInfo.cdType, parseInt(commInfo.cd), commInfo.response)
+				func.command(channel, user, message, comm, commInfo.cdType, parseInt(commInfo.cd), commInfo.response, commInfo.points)
 			}
 		})
 	},

@@ -88,6 +88,22 @@
     background-color: #1a1f21;
 }
 
+.testSounds tr:nth-child(even) {
+    background-color: #212b2d;
+}
+
+.testSounds tr:nth-child(odd) {
+    background-color: #1a1f21;
+}
+
+.testGifs tr:nth-child(even) {
+    background-color: #212b2d;
+}
+
+.testGifs tr:nth-child(odd) {
+    background-color: #1a1f21;
+}
+
 .twitch {
   width: 1350px;
   box-shadow: 5px 5px 5px black;
@@ -468,6 +484,39 @@ div.menu h3 {
 
 .hidden {
   z-index: -1;
+  display: "none";
+}
+
+#showBox {
+  display: none;
+  z-index: 100;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: rgba(0,0,0,0.7);
+}
+
+#showStuff {
+  width: 700px;
+  height: 400px;
+  background-color: #32434c;
+  margin: 0 auto;
+  margin-top: 100px;
+}
+
+#gifSpot {
+  margin: 0 auto;
+  width: 300px;
+  height: 300px;
+}
+
+#showText {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 100px;
 }
 
 #loginBtn {

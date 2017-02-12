@@ -96,6 +96,28 @@ io.on('connection', function (socket) {
       socket.emit('pushSonglist', result);
     })
   })
+  socket.on('buyCLR', function (data) {
+    func.connection.query('select * from user where name = "'+data.user+'"', function(err,result){
+      console.log("test")
+      var points = result[0].points
+      if (points >= 1000) {
+        if (data.type == "sound") {
+          function clr() {io.emit('sound', { "sound": data.item }); bot.whisper(data.user, "Succesfully played your sound " + data.item);}
+          func.pointCd("CLR_Sound_Web", global, data.user, 10, clr, 1000)
+          socket.emit("success")
+        }
+        else if (data.type == "gif") {
+          function clr() {io.emit('gif', { "gif": data.item }); bot.whisper(data.user, "Succesfully showed your gif " + data.item);}
+          func.pointCd("CLR_GIF_Web", global, data.user, 10, clr, 1000)
+          socket.emit("success")
+        } else {
+          socket.emit("failure")
+        }
+      } else {
+        socket.emit("failure")
+      }
+    })
+  })
   socket.on('endSong', function (data) {
     func.connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
     socket.emit('nextSong');
@@ -170,7 +192,7 @@ io.on('connection', function (socket) {
   })
   socket.on('updateComm', function(data) {
     func.connection.query('update commands set commName = "' + data.commName + '", response = "' + data.response + '", level = "' + data.level + '",\
-    cdType = "' + data.cdType + '", cd = "' + data.cd + '" where commName = "' + data.commName + '"', function(err, result) {})
+    cdType = "' + data.cdType + '", cd = "' + data.cd + '", points = "' + data.points + '" where commName = "' + data.commName + '"', function(err, result) {})
   })
   socket.on('disableModule', function(data) {
     func.connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
@@ -248,7 +270,9 @@ app.get('/about', function(req, res) {
 });
 
 app.get('/clr', function(req, res) {
-  res.render('clr.html');
+  func.connection.query('select * from commands where commName = ?', "!clr", function(err, result) {
+    res.render('clr.html')
+  });
 });
 
 app.get('/support', function(req, res) {
@@ -340,6 +364,12 @@ app.get('/commands', function(req, res) {
     res.render('commands.html', {
       commands: result
     })
+  });
+});
+
+app.get('/commands/clr', function(req, res) {
+  func.connection.query('select * from commands where commName = ?', "!clr", function(err, result) {
+    res.render('clrInfo.html')
   });
 });
 

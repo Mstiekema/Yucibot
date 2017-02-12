@@ -1,0 +1,57 @@
+<% include header.ejs %>
+<div class="top"><h2>CLR Information</h2></div>
+<div class="main">
+
+<p>
+  CLR commands are a fun way to interact with the stream. Each of the CLR commands cost <b>1000 points</b>.<br>
+  You have to buy the clr command each time you want to play or show something on stream. It's not a one time purchase.
+</p>
+
+<p><b>!clr msg [message]</b><br>
+  Shows your message after the command call. Displays it on a random spot on the screen.
+</p>
+
+<p><b>!clr emote [emote]</b><br>
+  Shows the emote you send in. Currently only works with: Twitch global emotes, BTTV channel and global emotes, FFZ channel and global emotes.
+</p>
+
+<p><b>!clr sound [sound]</b><br>
+  Plays one of the sounds listed below. <br><br>
+  <table class="testSounds">
+    <tr><th>Beer </th><th><button class="sound" id="beer">Play</button></th></tr>
+    <tr><th>Bottle </th><th><button class="sound" id="bottle">Play</button></th></tr>
+    <tr><th>Lie lie lie </th><th><button class="sound" id="lielielie">Play</button></th></tr>
+    <tr><th>Echo </th><th><button class="sound" id="echo">Play</button></th></tr>
+    <tr><th>Dat boi </th><th><button class="sound" id="datboi">Play</button></th></tr>
+    <tr><th>Fuck You </th><th><button class="sound" id="fuckyou">Play</button></th></tr>
+  </table>
+  <br>
+</p>
+
+<p><b>!clr gif [gif]</b><br>
+  Plays one of the following GIFs listed below. <br><br>
+  <table class="testGifs">
+    <tr><th>Pepe </th><th><button class="gif" id="pepe">Play</button></th></tr>
+    <tr><th>Billy </th><th><button class="gif" id="billy">Play</button></th></tr>
+    <tr><th>Kappa </th><th><button class="gif" id="kappa">Play</button></th></tr>
+  </table>
+  <br>
+</p>
+
+</div>
+<div id="showBox">
+  <div id="showStuff">
+    <div id="gifSpot"></div>
+    <div id="showText">
+      <% if (locals.login == true) { %>
+        Click the button to buy the CLR command online! &nbsp;
+        <button id="buyThing">Buy</button>
+      <% } else { %>
+        Login and buy this CLR command online!
+      <% } %>
+  </div>
+  </div>
+</div>
+<script type="text/javascript" src="../js/yucisite.js"></script>
+<script type="text/javascript" src="../js/clr.js"></script>
+</body>

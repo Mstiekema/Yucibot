@@ -85,6 +85,22 @@
     background-color: #848c8c;
 }
 
+.testSounds tr:nth-child(even) {
+    background-color: #848c8c;
+}
+
+.testSounds tr:nth-child(odd) {
+    background-color: #b5b5b5;
+}
+
+.testGifs tr:nth-child(even) {
+    background-color: #848c8c;
+}
+
+.testGifs tr:nth-child(odd) {
+    background-color: #b5b5b5;
+}
+
 .twitch {
   width: 1350px;
   box-shadow: 5px 5px 5px black;
@@ -465,6 +481,7 @@ div.menu h3 {
 
 .hidden {
   z-index: -1;
+  display: "none";
 }
 
 #loginBtn {

@@ -1,9 +1,26 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="../js/clr.js"></script>
 <script>
-  var chat = io.connect('http://localhost:2345/')
+  var webPurch = io.connect('<%= locals.website %>');
+  var chat = io.connect('http://localhost:2345');
+  webPurch.on('sound', function(data) {
+    console.log("Played sound: " + data.sound)
+    var sound = new Audio(sounds[data.sound]);
+    sound.play();
+  })
+  webPurch.on('gif', function(data) {
+    console.log("Played gif: " + data.gif)
+    var id = "id" + (String(Math.floor(Math.random() * 1000000)))
+    $(".gif").append("<img style='width='300'; height='300';' id="+id+" src="+gifs[data.gif]+" align='middle'><br>")
+    $("#" + id).hide()
+    $("#" + id).fadeIn(1000)
+    setTimeout(function () { $("#" + id).fadeOut(1000); }, 7000);
+    setTimeout(function () { document.getElementById(id).remove() }, 8000);
+  })
   chat.on('message', function (data) {
+    console.log("Showed message: " + data.message)
     var id = "id" + (String(Math.floor(Math.random() * 1000000)))
     $("body").append("<p id="+id+">" + data.user + ": " + data.message + " </p><br>")
     $("#" + id).hide()
@@ -15,6 +32,7 @@
     setTimeout(function () { document.getElementById(id).remove() }, 6000);
   });
   chat.on('emote', function (data) {
+    console.log("Showed emote: " + data.emote)
     var id = "id" + (String(Math.floor(Math.random() * 1000000)))
     function getX() { return Math.floor(Math.random() * ($(window).width() - 300)) }
     function getY() { return Math.floor(Math.random() * $(window).height()) }
@@ -28,16 +46,18 @@
     setTimeout(function () { document.getElementById(id).remove() }, 6000);
   });
   chat.on('sound', function (data) {
-    var sounds = {
-      "echo": 'https://puu.sh/tNZm7/6fd06f6b2f.mp3',
-      "datboi": 'https://puu.sh/rk6dH/5ba8a259f8.mp3',
-      "fuckyou": 'https://puu.sh/pMG2z/eeda3235c9.mp3',
-      "lielielie": 'https://puu.sh/mlMzM/af31153a57.mp3',
-      "bottle": 'http://puu.sh/tX9R5/4ce2a001f0.mp3',
-      "beer": 'http://puu.sh/tXc6X/d75fb7a875.mp3'
-    }
+    console.log("Played sound: " + data.sound)
     var sound = new Audio(sounds[data.sound]);
     sound.play();
+  });
+  chat.on('gif', function (data) {
+    console.log("Played gif: " + data.gif)
+    var id = "id" + (String(Math.floor(Math.random() * 1000000)))
+    $(".gif").append("<img style='width='300'; height='300';' id="+id+" src="+gifs[data.gif]+" align='middle'><br>")
+    $("#" + id).hide()
+    $("#" + id).fadeIn(1000)
+    setTimeout(function () { $("#" + id).fadeOut(1000); }, 7000);
+    setTimeout(function () { document.getElementById(id).remove() }, 8000);
   });
 </script>
 <style>
@@ -51,7 +71,16 @@ p {
   font-size: 40;
   font-family: 'Roboto', sans-serif;
 }
+
+.gif {
+  position: absolute;
+  width: 300px;
+  height: 200px;
+  top: 25%;
+  left: 50%;
+  margin: -100px 0 0 -150px;
+}
 </style>
 <body>
-
+<div class="gif"></div>
 </body>

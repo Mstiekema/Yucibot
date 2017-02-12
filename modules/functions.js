@@ -51,11 +51,11 @@ module.exports = {
           cooldowns.push(command)
           setTimeout(function() {
             var index = cooldowns.indexOf(toCD);
-              cooldowns.splice(index, 1);
+            cooldowns.splice(index, 1);
           }, cd);
           setTimeout(function() {
             var index = cooldowns.indexOf(command);
-              cooldowns.splice(index, 1);
+            cooldowns.splice(index, 1);
           }, 10000);
           exc()
         }
@@ -67,7 +67,7 @@ module.exports = {
         cooldowns.push(command)
         setTimeout(function() {
           var index = cooldowns.indexOf(command);
-            cooldowns.splice(index, 1);
+          cooldowns.splice(index, 1);
         }, cd);
         exc()
       }
@@ -87,11 +87,11 @@ module.exports = {
           cooldowns.push(command)
           setTimeout(function() {
             var index = cooldowns.indexOf(toCD);
-              cooldowns.splice(index, 1);
+            cooldowns.splice(index, 1);
           }, cd);
           setTimeout(function() {
             var index = cooldowns.indexOf(command);
-              cooldowns.splice(index, 1);
+            cooldowns.splice(index, 1);
           }, 10000);
           module.exports.remPoints(user, points, exc, command)
         }
@@ -103,13 +103,13 @@ module.exports = {
         cooldowns.push(command)
         setTimeout(function() {
           var index = cooldowns.indexOf(command);
-            cooldowns.splice(index, 1);
+          cooldowns.splice(index, 1);
         }, cd);
         module.exports.remPoints(user, points, exc, command)
       }
     }
   },
-  command: function(channel, user, message, command, cdtype, cooldown, botSay) {
+  command: function(channel, user, message, command, cdtype, cooldown, botSay, remPoints) {
     if (message.startsWith(command)) {
       var toCD = user.username + command
       var cd = cooldown * 1000
@@ -120,29 +120,88 @@ module.exports = {
           if (cooldowns.indexOf(toCD) != -1) {
             return
           } else {
-            cooldowns.push(toCD)
-            cooldowns.push(command)
-            setTimeout(function() {
-              var index = cooldowns.indexOf(toCD);
+            if(remPoints == 0) {
+              cooldowns.push(toCD)
+              cooldowns.push(command)
+              setTimeout(function() {
+                var index = cooldowns.indexOf(toCD);
                 cooldowns.splice(index, 1);
-            }, cd);
-            setTimeout(function() {
-              var index = cooldowns.indexOf(command);
+              }, cd);
+              setTimeout(function() {
+                var index = cooldowns.indexOf(command);
                 cooldowns.splice(index, 1);
-            }, 10000);
-            bot.say(channel, botSay)
+              }, 10000);
+              bot.say(channel, botSay)
+            } else {
+              module.exports.connection.query('select * from user where name = ?', user.username, function (err, result) {
+                if (result[0] != undefined) {
+                  if(result[0].points > remPoints) {
+                    cooldowns.push(toCD)
+                    cooldowns.push(command)
+                    setTimeout(function() {
+                      var index = cooldowns.indexOf(toCD);
+                      cooldowns.splice(index, 1);
+                    }, cd);
+                    setTimeout(function() {
+                      var index = cooldowns.indexOf(command);
+                      cooldowns.splice(index, 1);
+                    }, 10000);
+                    bot.say(channel, botSay)
+                    module.exports.connection.query('update user set points = points - "' + remPoints + '" where name = ?', user.username, function (err, result) {if (err) {console.log(err)}})
+                    var newLog = {type: "points", log: user.username + " used " + remPoints + " for the " + command + " command."}
+                    module.exports.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
+                  } else {
+                    bot.whisper(user.username, "You do not have enough points to use this command.")
+                  }
+                } else {
+                  return false
+                }
+              })
+            }
           }
         }
       } else {
         if (cooldowns.indexOf(command) != -1) {
           return
         } else {
-          cooldowns.push(command)
-          setTimeout(function() {
-            var index = cooldowns.indexOf(command);
+          if(remPoints == 0) {
+            cooldowns.push(toCD)
+            cooldowns.push(command)
+            setTimeout(function() {
+              var index = cooldowns.indexOf(toCD);
               cooldowns.splice(index, 1);
-          }, cd);
-          bot.say(channel, botSay)
+            }, cd);
+            setTimeout(function() {
+              var index = cooldowns.indexOf(command);
+              cooldowns.splice(index, 1);
+            }, 10000);
+            bot.say(channel, botSay)
+          } else {
+            module.exports.connection.query('select * from user where name = ?', user.username, function (err, result) {
+              if (result[0] != undefined) {
+                if(result[0].points > remPoints) {
+                  cooldowns.push(toCD)
+                  cooldowns.push(command)
+                  setTimeout(function() {
+                    var index = cooldowns.indexOf(toCD);
+                    cooldowns.splice(index, 1);
+                  }, cd);
+                  setTimeout(function() {
+                    var index = cooldowns.indexOf(command);
+                    cooldowns.splice(index, 1);
+                  }, 10000);
+                  bot.say(channel, botSay)
+                  module.exports.connection.query('update user set points = points - "' + remPoints + '" where name = ?', user.username, function (err, result) {if (err) {console.log(err)}})
+                  var newLog = {type: "points", log: user.username + " used " + remPoints + " for the " + command + " command."}
+                  module.exports.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
+                } else {
+                  bot.whisper(user.username, "You do not have enough points to use this command.")
+                }
+              } else {
+                return false
+              }
+            })
+          }
         }
       }
     }

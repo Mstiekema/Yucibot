@@ -33,7 +33,8 @@ if (update) {
       response: document.getElementById('response').value,
       level: document.getElementById('level').value,
       cdType: document.getElementById('cdType').value,
-      cd: document.getElementById('cd').value
+      cd: document.getElementById('cd').value,
+      points: document.getElementById('points').value
     }
     socket.emit('updateComm', updatedComm)
     window.location.href = "/admin/commands"
@@ -47,7 +48,8 @@ if (add) {
       response: document.getElementById('response').value,
       level: document.getElementById('level').value,
       cdType: document.getElementById('cdType').value,
-      cd: document.getElementById('cd').value
+      cd: document.getElementById('cd').value,
+      points: document.getElementById('points').value
     }
     socket.emit('addCom', newComm)
     window.location.href = "/admin/commands"
