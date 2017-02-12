@@ -9,7 +9,8 @@ var sounds = {
   "fuckyou": 'https://puu.sh/pMG2z/eeda3235c9.mp3',
   "lielielie": 'https://puu.sh/mlMzM/af31153a57.mp3',
   "bottle": 'http://puu.sh/tX9R5/4ce2a001f0.mp3',
-  "beer": 'http://puu.sh/tXc6X/d75fb7a875.mp3'
+  "beer": 'http://puu.sh/tXc6X/d75fb7a875.mp3',
+  "zelda": 'http://puu.sh/u0pld/34c6c39a2d.mp3'
 }
 var gifs = {
   "pepe": 'https://media.giphy.com/media/FHCHRtwAZgGFq/giphy.gif',

@@ -25,7 +25,7 @@ module.exports = {
       })
     }
     if (msg[1] == "sound") {
-      var sounds = ["echo", "datboi", "fuckyou", "lielielie", "bottle", "beer"]
+      var sounds = ["echo", "datboi", "fuckyou", "lielielie", "bottle", "beer", "zelda"]
       if (sounds.indexOf(msg[2]) == -1) return bot.whisper(user.username, "This is not a valid sound. Please try again.");
       function clr() {io.emit('sound', { "sound": msg[2] }); bot.whisper(user.username, "Succesfully played your sound " + msg[2]);}
       func.pointCd("CLR_Sound", global, user.username, 10, clr, 1000)
