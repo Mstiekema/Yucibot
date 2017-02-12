@@ -24,7 +24,7 @@ module.exports = {
   remPoints: function (user, remPoints, func, funcName) {
     module.exports.connection.query('select * from user where name = ?', user, function (err, result) {
       if (result[0] != undefined) {
-        if(result[0].points > remPoints) {
+        if(result[0].points >= remPoints) {
           func()
           module.exports.connection.query('update user set points = points - "' + remPoints + '" where name = ?', user, function (err, result) {})
           var newLog = {type: "points", log: user + " used " + remPoints + " for the " + funcName + " command."}

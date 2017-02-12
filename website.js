@@ -98,7 +98,6 @@ io.on('connection', function (socket) {
   })
   socket.on('buyCLR', function (data) {
     func.connection.query('select * from user where name = "'+data.user+'"', function(err,result){
-      console.log("test")
       var points = result[0].points
       if (points >= 1000) {
         if (data.type == "sound") {

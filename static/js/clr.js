@@ -22,6 +22,7 @@ window.onclick = function(event) {
   if (event.target == popup) {
     popup.style.display = "none";
     $("#gifSpot").removeClass()
+    window.location.reload()
   }
 }
 
@@ -34,16 +35,17 @@ if (buy) {
 }
 
 socket.on("success", function() {
-  alert("Succesfully bought your CLR command!")
+  $("#showText").html("Succesfully bought your CLR command!").css("color", "green")
 })
 
 socket.on("failure", function() {
-  alert("Something went wrong with your CLR purchase. Please try again later. \n (Did you have enough points?)")
+  $("#showText").html("Something went wrong. Please try again later. (Do you have enough points?)").css("color", "red")
 })
 
 if (button) {
   for (var x = 0; x < button.length; x++) {
     button[x].addEventListener('click', function() {
+      if(this.id == "loginBtn") return
       popup.style.display = "block";
       var type = $(this).attr("class")
       if (type == "gif") {
