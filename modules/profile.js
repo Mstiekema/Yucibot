@@ -36,6 +36,19 @@ module.exports = {
 		}, function () {}, true );
 	},
 	updateLines: function(channel, user, message, self) {
+		function getID(user) {
+			var info = {
+				url: 'https://api.twitch.tv/kraken/users?login=' + user,
+				headers: {
+					'Accept': 'application/vnd.twitchtv.v5+json',
+					'Client-ID': clientID
+				}
+			}
+			request(info, function (error, response, body) {
+				var id = JSON.parse(body).users[0]._id
+				func.connection.query('update user set userId = "' + id + '" where name = ?', user, function (err, result) {if (err) {return}})
+			})
+		}
 		func.connection.query('select * from user where name = ?', user.username, function(err, result) {
 			if (result[0] == undefined) {
 				var userInfo = {
@@ -44,7 +57,11 @@ module.exports = {
 					num_lines: 1,
 					level: 100,
 				}
+				getID(user.username)
 				func.connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
+			} else if (result[0].userId == null) {
+				getID(user.username)
+				func.connection.query('update user set num_lines = num_lines + 1 where name = ?', user.username, function (err, result) {if (err) {return}})
 			} else {
 				func.connection.query('update user set num_lines = num_lines + 1 where name = ?', user.username, function (err, result) {if (err) {return}})
 			}

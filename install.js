@@ -14,6 +14,7 @@ connection.query(
 	'CREATE TABLE user (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'name VARCHAR(30),' +
+	'userId INT,' +
 	'points INT,' +
 	'num_lines INT,' +
 	'level INT,' +
