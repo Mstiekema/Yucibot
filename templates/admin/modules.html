@@ -1,18 +1,4 @@
 <% include adminheader.ejs %>
-<script>
-var socket = io.connect('<%= website %>');
-function disableModule(name) {
-  socket.emit('disableModule', name)
-  setTimeout(function() {window.location.reload(true)}, 100);
-}
-function enableModule(name) {
-  socket.emit('enableModule', name)
-  setTimeout(function() {window.location.reload(true)}, 100);
-}
-function restartBot() {
-  socket.emit('restartBot')
-}
-</script>
 <div class="top"><h2>Modules</h2></div>
 <div class="main">
 <h2>Enable / disable modules</h2>
@@ -33,6 +19,7 @@ Doesn't the module start working after activating? <button onclick="restartBot()
     <td>
     <button onclick="disableModule('<%= moduleList.moduleName %>')">Disable</button>
     <button onclick="enableModule('<%= moduleList.moduleName %>')">Enable</button>
+    <a href="/admin/modules/<%= moduleList.moduleName %>"><button>Settings</button></a>
     </td>
   </tr>
 <% }); %>

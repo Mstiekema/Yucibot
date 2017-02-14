@@ -584,6 +584,14 @@ app.get('/admin/modules', function(req, res) {
   });
 });
 
+app.get('/admin/modules/:page', function(req, res) {
+  func.connection.query('select * from module WHERE moduleName = ?', req.params.page, function(err, result) {
+    res.render('admin/moduleSettings.html', {
+      moduleInfo: result
+    });
+  });
+});
+
 app.get('/admin/commands', function(req, res) {
   func.connection.query('select * from commands where response IS NOT NULL ORDER BY level', function(err, result) {
     res.render('admin/commands.html', {
