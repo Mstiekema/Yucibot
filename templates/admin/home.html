@@ -1,7 +1,7 @@
 <% include ../header.ejs %>
 <div class="top"><h2>Admin home</h2></div>
 <div class="main" style="overflow-y: hidden;">
-<p style="background-color: #292e2f; z-index: 1000">Having problems with the bot or want to restart it? Click here: <button id="restart">Restart bot</button></p>
+<p style="z-index: 1000">Having problems with the bot or want to restart it? Click here: <button id="restart">Restart bot</button></p>
 <iframe id="twitchChat" src="https://www.twitch.tv/<%= streamer %>/chat?popout=" frameborder="0" scrolling="no" align="left"></iframe>
 <div id="streamInfo">
   <b>Stream title</b> <br> <input class="adminPanel" id="title" value="<%= title %>" type="text"><br><br>

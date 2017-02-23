@@ -12,7 +12,6 @@ $(document).ready(function() {
     'width': '360px',
     'top': '300px',
     'padding': '20px',
-    'background-color': '#282828',
     'left': '440px'
   })
   donations.css({
@@ -21,7 +20,6 @@ $(document).ready(function() {
     'top': '70px',
     'bottom': '20px',
     'padding': '20px',
-    'background-color': '#282828',
     'left': '1270px'
   })
   followers.css({
@@ -30,7 +28,6 @@ $(document).ready(function() {
     'top': '430px',
     'bottom': '20px',
     'padding': '20px',
-    'background-color': '#282828',
     'left': '440px'
   })
   twitter.css({
@@ -39,7 +36,6 @@ $(document).ready(function() {
     'top': '70px',
     'bottom': '20px',
     'padding': '20px',
-    'background-color': '#282828',
     'left': '855px'
   })
 })

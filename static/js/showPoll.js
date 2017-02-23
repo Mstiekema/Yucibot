@@ -46,7 +46,7 @@ function makeGraph() {
   google.charts.load('current', {'packages':['corechart']});
   setTimeout(function () {
     google.charts.setOnLoadCallback(drawChart);
-  }, 300);
+  }, 1000);
 
   var arrChartTable = new Array;
 

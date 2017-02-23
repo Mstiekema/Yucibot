@@ -9,8 +9,47 @@
   width: 400px;
 }
 
-.tweet {
+#twitchInfo, #donations, #followers, #twitter {
+  background-color: #969696;
+}
 
+.tweet {
+  border: 3px solid #292e2f;
+  background-color: #7b8d90;
+}
+
+.follower {
+  border-top: 1px solid #455867;
+  border-bottom: 1px solid #455867;
+  padding: 2% 0 2% 0
+}
+
+#twitter, #followers {
+  overflow-y: auto;
+}
+
+#twitter h3, #donations h3, #followers h3 {
+  margin-top: -5px;
+  margin-bottom: 5px;
+}
+
+#streamInfo {
+  position: absolute;
+  width: 360px;
+  top: 70px;
+  padding: 20px;
+  background-color: #969696;
+  left: 440px;
+}
+
+.adminPanel {
+  width: 360px;
+  background-color: #969696;
+  border: hidden;
+  color: #d4dbdd;
+  height: 30px;
+  padding-left: 10px;
+  box-shadow: 1px 1px gray;
 }
 
 .answerRes, #answers {
