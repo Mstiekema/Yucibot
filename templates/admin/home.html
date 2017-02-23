@@ -1,27 +1,39 @@
-<% include adminheader.ejs %>
-<script>
-var socket = io.connect('<%= website %>');
-function restartBot() {
-  socket.emit('restartBot')
-}
-</script>
+<% include ../header.ejs %>
 <div class="top"><h2>Admin home</h2></div>
-<div class="main">
-
-<p>Having problems with the bot or want to restart it? Click here: <button onclick="restartBot()">Restart bot</button></p>
-
-<p>Previous stream details</p>
-<% info.forEach(function(info) { %>
-<div class="allStreams">
-<b>Stream start:</b> <%= info.date %><br>
-<b>Title:</b> <%= info.title %><br>
-<b>Games:</b> <%= info.game %><br>
-<b>VOD:</b> <a href="<%= info.vod %>"  target="_blank"><%= info.vod %></a><br>
-<b>Lowest viewer count:</b> <%= info.lowView %><br>
-<b>Highest viewer count:</b> <%= info.highView %><br>
+<div class="main" style="overflow-y: hidden;">
+<p style="background-color: #292e2f; z-index: 1000">Having problems with the bot or want to restart it? Click here: <button id="restart">Restart bot</button></p>
+<iframe id="twitchChat" src="https://www.twitch.tv/<%= streamer %>/chat?popout=" frameborder="0" scrolling="no" align="left"></iframe>
+<div id="streamInfo">
+  <b>Stream title</b> <br> <input class="adminPanel" id="title" value="<%= title %>" type="text"><br><br>
+  <b>Game</b> <br> <input class="adminPanel" id="game" value="<%= game %>" type="text"><br><br>
+  <button id="update">Update info </button><br>
 </div>
-<% }); %>
+<div id="twitchInfo">
+  The stream is <span style="color:green;"><%= status %></span><br>
+  <b style="color:red;"><%= viewers %> </b> Live viewers <br>
+  <b><%= followers %> </b> Followers <br>
+  <b><%= views %> </b> Views <br>
+</div>
+<div id="followers"> <h3>New followers</h3>
+  <% newFollowers.forEach(function(f) { %>
+    <div class="follower">
+      <span style="color:#7358a3;"><%= f.user %></span> at <%= f.time %>
+    </div>
+  <% }) %>
+</div>
+<div id="twitter"> <h3>Twitter mentions</h3>
+  <% tweets.forEach(function(tweet) { %>
+    <div class="tweet">
+      <span style="color:lightblue;">@<%= tweet.user %></span><br> <%= tweet.tweet %>
+    </div>
+  <% }) %>
+</div>
+<div id="donations"> <h3>Donations</h3>
+<p style="z-index:4;">Can't see the donations? Wait a few seconds OR head over to the G4G website to login and come back when you've done so.</p>
+<iframe src="https://www.gamingforgood.net/d/alerts/feed" style="position: relative; top: -80px; height: 97%; width: 100%; z-index:5;" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
+</div>
 
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/adminHome.js"></script>
 </body>

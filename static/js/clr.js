@@ -7,10 +7,11 @@ var sounds = {
   "echo": 'https://puu.sh/tNZm7/6fd06f6b2f.mp3',
   "datboi": 'https://puu.sh/rk6dH/5ba8a259f8.mp3',
   "fuckyou": 'https://puu.sh/pMG2z/eeda3235c9.mp3',
-  "lielielie": 'https://puu.sh/mlMzM/af31153a57.mp3',
   "bottle": 'http://puu.sh/tX9R5/4ce2a001f0.mp3',
   "beer": 'http://puu.sh/tXc6X/d75fb7a875.mp3',
-  "zelda": 'http://puu.sh/u0pld/34c6c39a2d.mp3'
+  "zelda": 'http://puu.sh/u0pld/34c6c39a2d.mp3',
+  "harro": 'https://puu.sh/uf3iH/5fbf1d4b4f.mp3',
+  "bedankt": 'https://puu.sh/ufdBg/b25699a14e.mp3'
 }
 var gifs = {
   "pepe": 'https://media.giphy.com/media/FHCHRtwAZgGFq/giphy.gif',

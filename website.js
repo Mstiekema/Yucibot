@@ -22,6 +22,9 @@ var redirect        = options.identity.redirectUrl
 var io              = require('socket.io')(server);
 var connect         = require('./app.js')
 var bot             = connect.bot
+var cio             = require('socket.io-client');
+var clr             = cio.connect('http://localhost:2345');
+var Twitter         = require('twitter');
 
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,10 +43,12 @@ passport.use(new twitchStrategy({
   scope: [
     "user_read",
     "channel_subscriptions",
-    "user_subscriptions"
+    "user_subscriptions",
+    "channel_editor"
   ]},
   function(accessToken, refreshToken, profile, done) {
     var acc = accessToken
+    func.connection.query('update user set accToken = ? where name = "'+profile.username+'"', acc, function (err, result) {if (err) {console.log(err)}})
     console.log("[DEBUG] " + profile.username + " logged into the website")
     var newLog = {type: "login", log: profile.username + " just logged into the website"}
     func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
@@ -85,6 +90,19 @@ app.all('*', function(req, res, next) {
   next()
 });
 
+clr.on("message", function(data) {
+  io.emit('message', { "message": data.message, "user": data.user })
+})
+clr.on("emote", function(data) {
+  io.emit('emote', { "url": data.url, "emote": data.emote })
+})
+clr.on("sound", function(data) {
+  io.emit('sound', { "sound": data.sound })
+})
+clr.on("gif", function(data) {
+  io.emit('gif', { "gif": data.gif })
+})
+
 io.on('connection', function (socket) {
   socket.on('restartBot', function (data) {
     bot.say(JSON.stringify(options.channels).slice(2, -2), "Restarting bot MrDestructoid");
@@ -101,13 +119,13 @@ io.on('connection', function (socket) {
       var points = result[0].points
       if (points >= 1000) {
         if (data.type == "sound") {
-          function clr() {io.emit('sound', { "sound": data.item }); bot.whisper(data.user, "Succesfully played your sound " + data.item);}
-          func.pointCd("CLR_Sound_Web", global, data.user, 10, clr, 1000)
+          function clrS() {io.emit('sound', { "sound": data.item }); bot.whisper(data.user, "Succesfully played your sound " + data.item);}
+          func.pointCd("CLR_Sound_Web", global, data.user, 10, clrS, 1000)
           socket.emit("success")
         }
         else if (data.type == "gif") {
-          function clr() {io.emit('gif', { "gif": data.item }); bot.whisper(data.user, "Succesfully showed your gif " + data.item);}
-          func.pointCd("CLR_GIF_Web", global, data.user, 10, clr, 1000)
+          function clrG() {io.emit('gif', { "gif": data.item }); bot.whisper(data.user, "Succesfully showed your gif " + data.item);}
+          func.pointCd("CLR_GIF_Web", global, data.user, 10, clrG, 1000)
           socket.emit("success")
         } else {
           socket.emit("failure")
@@ -205,12 +223,31 @@ io.on('connection', function (socket) {
       console.log("Enabled module: " + data)
     })
   })
+  socket.on('updateStatus', function(data) {
+    func.connection.query('select * from user where name = ?', JSON.stringify(options.channels).slice(3, -2), function(err, result) {
+      request({
+        url: 'https://api.twitch.tv/kraken/channels/' + result[0].userId,
+        headers: {
+          'Client-ID': clientID,
+          'Accept': 'application/vnd.twitchtv.v5+json',
+          'Authorization': 'OAuth ' + result[0].accToken
+        },
+        method: 'PUT',
+        json: {
+          "channel": {
+            "status": data.title,
+            "game": data.game
+          }
+        }
+      })
+    })
+  })
 })
 
 app.all('*', function(req, res, next) {
   res.locals.website = options.identity.websiteUrl
   res.locals.botName = options.identity.username
-  res.locals.streamer = options.channels[0]
+  res.locals.streamer = options.channels[0].substring(1)
   if (req.user) {
     func.connection.query('select * from user where name = ?', req.user, function(err, result) {
       if (result == undefined || result[0] == undefined) {
@@ -308,7 +345,7 @@ app.get('/user/:id', function(req, res) {
         var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
         var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
         var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
-        request("https://api.rtainc.co/twitch/channels/" + options.channels[0] + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
+        request("https://api.rtainc.co/twitch/channels/" + options.channels[0].substring(1) + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
           res.render('user.html', {
             age: age,
             days: days,
@@ -384,7 +421,7 @@ app.get('/commands/:id', function(req, res) {
 app.get('/stats', function(req, res) {
   func.connection.query('select * from streaminfo', function(err, result) {
     request({
-      url: 'https://api.twitch.tv/kraken/clips/top?limit=5&channel=' + options.channels[0],
+      url: 'https://api.twitch.tv/kraken/clips/top?limit=5&channel=' + options.channels[0].substring(1),
       headers: {
         "Accept": "application/vnd.twitchtv.v4+json",
         "Client-ID": clientID
@@ -507,10 +544,90 @@ app.get('/poll/:id/result', function(req, res) {
 });
 
 app.get('/admin', function(req, res) {
-  func.connection.query('select * from streaminfo', function(err, result) {
-    res.render('admin/home.html', {
-      info: result
-    })
+  var tweetArr = new Array;
+  var followArr = new Array;
+  function getFollowers() {
+
+  }
+  function getMentions() {
+    var client = new Twitter({
+      consumer_key: 'MT5mVF0itSoOw8cOnvH3iLxRD',
+      consumer_secret: 'bVHgy7JfEYDwrB5ijFmqNjLrI3NixTo7qgnGvWk3SA2QYjNBT6',
+      access_token_key: '367305627-1fVQhAvyO2fo73kiRCwq2PkdFV1fsyolcGPEym2f',
+      access_token_secret: '2WzsoxLjJA15A12ElesKM4NzVRQtjIAisRKkBgCBJPsd9'
+    });
+    client.get('statuses/mentions_timeline', {count: 20}, function(error, tweets, response) {
+      for(key in tweets) {
+        var tweet = tweets[key].text
+        var user = tweets[key].user.screen_name
+        var toArr = {"tweet": tweet, "user": user}
+        tweetArr.push(toArr)
+      }
+    });
+  }
+  func.connection.query('select * from user where name = ?', JSON.stringify(options.channels).slice(3, -2), function(err, result) {
+    var info = {
+      url: 'https://api.twitch.tv/kraken/streams/' + result[0].userId,
+      headers: {
+        'Client-ID': clientID,
+        'Accept': 'application/vnd.twitchtv.v5+json'
+      }
+    }
+    var info2 = {
+      url: 'https://api.twitch.tv/kraken/channels/' + result[0].userId,
+      headers: {
+        'Client-ID': clientID,
+        'Accept': 'application/vnd.twitchtv.v5+json'
+      }
+    }
+    request(info, function (error, response, body) {
+      getMentions()
+      var follow = {
+        url: 'https://api.twitch.tv/kraken/channels/' + options.channels[0].substring(1) + '/follows',
+        headers: {
+          'Client-ID': clientID,
+          'Accept': 'application/vnd.twitchtv.v3+json'
+        }
+      }
+      request(follow, function (error, response, body) {
+        var base = JSON.parse(body).follows
+        for (key in base) {
+          var user = base[key].user.display_name
+          var since = base[key].created_at
+          var toPush = {"time": since, "user": user}
+          followArr.push(toPush)
+        }
+        if (JSON.parse(body).stream != undefined) {
+          var base = JSON.parse(body).stream
+          res.render('admin/home.html', {
+            status: "ONLINE",
+            game: base.game,
+            viewers: base.viewers,
+            title: base.channel.status,
+            streamer: base.channel.name,
+            views: base.channel.views,
+            followers: base.channel.followers,
+            tweets: tweetArr,
+            newFollowers: followArr
+          })
+        } else {
+          request(info2, function (error, response, body) {
+            var base = JSON.parse(body)
+            res.render('admin/home.html', {
+              status: "OFFLINE",
+              game: base.game,
+              viewers: 0,
+              title: base.status,
+              streamer: base.name,
+              views: base.views,
+              followers: base.followers,
+              tweets: tweetArr,
+              newFollowers: followArr
+            })
+          })
+        }
+      })
+    });
   });
 });
 

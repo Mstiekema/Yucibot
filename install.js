@@ -15,6 +15,7 @@ connection.query(
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'name VARCHAR(30),' +
 	'userId INT,' +
+	'accToken VARCHAR(30),' +
 	'points INT,' +
 	'num_lines INT,' +
 	'level INT,' +

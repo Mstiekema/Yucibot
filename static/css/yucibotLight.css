@@ -4,10 +4,19 @@
   color: #a2a8b7;
 }
 
+#twitchChat {
+  height: 90%;
+  width: 400px;
+}
+
+.tweet {
+
+}
+
 .answerRes, #answers {
   width: 250px;
   padding-left: 10px;
-  border-left: 1px solid #731195;
+  border-left: 6px solid #731195;
   background-color: transparent;
 }
 

@@ -43,7 +43,8 @@ Yucibot has recorded a total of: <br>
 #5 <%= toplines[4].name %> - <%= toplines[4].num_lines %> lines<br>
 </p>
 </div>
-<h4>Top 5 clips of the month</h4>
+<h4>Top 5 clips of the week</h4>
+<span>Do you want to see all the clips? Head over to <a href="https://www.twitch.tv/<%= locals.streamer %>/clips" target="_blank">THIS</a> page.</span>
 <p class="allClips" ng-repeat="iframe in iframe">
 Title: {{ iframe.title }}<br>
 Creator: {{ iframe.curator.name }}<br>

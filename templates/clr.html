@@ -3,23 +3,8 @@
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="../js/clr.js"></script>
 <script>
-  var webPurch = io.connect('<%= locals.website %>');
-  var chat = io.connect('http://localhost:2345');
-  webPurch.on('sound', function(data) {
-    console.log("Played sound: " + data.sound)
-    var sound = new Audio(sounds[data.sound]);
-    sound.play();
-  })
-  webPurch.on('gif', function(data) {
-    console.log("Played gif: " + data.gif)
-    var id = "id" + (String(Math.floor(Math.random() * 1000000)))
-    $(".gif").append("<img style='width='300'; height='300';' id="+id+" src="+gifs[data.gif]+" align='middle'><br>")
-    $("#" + id).hide()
-    $("#" + id).fadeIn(1000)
-    setTimeout(function () { $("#" + id).fadeOut(1000); }, 7000);
-    setTimeout(function () { document.getElementById(id).remove() }, 8000);
-  })
-  chat.on('message', function (data) {
+  var socket = io.connect('<% locals.website %>');
+  socket.on('message', function (data) {
     console.log("Showed message: " + data.message)
     var id = "id" + (String(Math.floor(Math.random() * 1000000)))
     $("body").append("<p id="+id+">" + data.user + ": " + data.message + " </p><br>")
@@ -31,7 +16,7 @@
     setTimeout(function () { $("#" + id).fadeOut(1000); }, 5000);
     setTimeout(function () { document.getElementById(id).remove() }, 6000);
   });
-  chat.on('emote', function (data) {
+  socket.on('emote', function (data) {
     console.log("Showed emote: " + data.emote)
     var id = "id" + (String(Math.floor(Math.random() * 1000000)))
     function getX() { return Math.floor(Math.random() * ($(window).width() - 300)) }
@@ -45,12 +30,12 @@
     setTimeout(function () { $("#" + id).fadeOut(1000); }, 5000);
     setTimeout(function () { document.getElementById(id).remove() }, 6000);
   });
-  chat.on('sound', function (data) {
+  socket.on('sound', function (data) {
     console.log("Played sound: " + data.sound)
     var sound = new Audio(sounds[data.sound]);
     sound.play();
   });
-  chat.on('gif', function (data) {
+  socket.on('gif', function (data) {
     console.log("Played gif: " + data.gif)
     var id = "id" + (String(Math.floor(Math.random() * 1000000)))
     $(".gif").append("<img style='width='300'; height='300';' id="+id+" src="+gifs[data.gif]+" align='middle'><br>")
