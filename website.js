@@ -362,36 +362,40 @@ app.get('/user/:id', function(req, res) {
 });
 
 app.get('/user/:id/logs', function(req, res) {
-  func.connection.query('select * from chatlogs where name = ?', req.params.id, function(err, result) {
-    if (result[0] == undefined) {
-      res.render("error404.html");
-    } else {
-      res.render('logs.html', {
-        log: result,
-        name: result[0].name,
-        date: date,
-        type: "all"
-      });
-    };
+  func.connection.query('select * from user where name = ?', req.params.id, function(err, result) {
+    func.connection.query('select * from chatlogs where userId = ?', result[0].userId, function(err, result) {
+      if (result[0] == undefined) {
+        res.render("error404.html");
+      } else {
+        res.render('logs.html', {
+          log: result,
+          name: result[0].name,
+          date: date,
+          type: "all"
+        });
+      };
+    });
   });
 });
 
 app.get('/user/:id/logs/:page', function(req, res) {
-  func.connection.query('select * from chatlogs where DATE_FORMAT(time,"%Y-%m-%d") = "' + req.params.page + '" AND name = ?', req.params.id, function(err, result) {
-    if (result[0] == undefined) {
-      res.render("logs.html", {
-        log: undefined,
-        date: req.params.page,
-        type: undefined
-      });
-    } else {
-      res.render('logs.html', {
-        log: result,
-        name: result[0].name,
-        date: req.params.page,
-        type: undefined
-      });
-    };
+  func.connection.query('select * from user where name = ?', req.params.id, function(err, result) {
+    func.connection.query('select * from chatlogs where DATE_FORMAT(time,"%Y-%m-%d") = "' + req.params.page + '" AND userId = ?', result[0].userId, function(err, result) {
+      if (result[0] == undefined) {
+        res.render("logs.html", {
+          log: undefined,
+          date: req.params.page,
+          type: undefined
+        });
+      } else {
+        res.render('logs.html', {
+          log: result,
+          name: result[0].name,
+          date: req.params.page,
+          type: undefined
+        });
+      };
+    });
   });
 });
 

@@ -8,11 +8,12 @@ var cooldowns = [];
 var connection;
 
 module.exports = {
-  addPoints: function (user, points) {
-	  module.exports.connection.query('update user set points = points + "' + points + '" where name = ?', user, function (err, result) {
+  addPoints: function (id, points, user) {
+	  module.exports.connection.query('update user set points = points + "' + points + '" where userId = ?', id, function (err, result) {
       if (result.changedRows == 0) {
 		    var userInfo = {
 			    name: user,
+          userId: id,
 				  points: points,
           num_lines: 0,
 				  level: 100

@@ -26,7 +26,17 @@ module.exports = {
 						var viewers = normViewers.concat(moderators);
 						for (var i = 0; i < viewers.length; i++) {
 							var userName = viewers[i]
-							func.addPoints(userName, 5)
+							var info = {
+								url: 'https://api.twitch.tv/kraken/users?login=' + userName,
+								headers: {
+									'Accept': 'application/vnd.twitchtv.v5+json',
+									'Client-ID': clientID
+								}
+							}
+							request(info, function (error, response, body) {
+								var id = JSON.parse(body).users[0]._id
+								func.addPoints(id, 5, userName)
+							})
 						}
 						console.log("[DEBUG] Succesfully added points")
 					});
@@ -49,25 +59,31 @@ module.exports = {
 				func.connection.query('update user set userId = "' + id + '" where name = ?', user, function (err, result) {if (err) {return}})
 			})
 		}
-		func.connection.query('select * from user where name = ?', user.username, function(err, result) {
+		var userName = user.username
+		func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
+			console.log(userName)
+			console.log(result[0].name)
 			if (result[0] == undefined) {
 				var userInfo = {
 					name: user.username,
+					userId: user['user-id'],
 					points: 0,
 					num_lines: 1,
 					level: 100,
 				}
 				getID(user.username)
 				func.connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
+			} else if (result[0].name != userName) {
+				func.connection.query('update user set name = "' + userName + '" where userId = ?', user['user-id'], function (err, result) {if (err) {console.log(err)}})
 			} else if (result[0].userId == null) {
 				getID(user.username)
-				func.connection.query('update user set num_lines = num_lines + 1 where name = ?', user.username, function (err, result) {if (err) {return}})
+				func.connection.query('update user set num_lines = num_lines + 1 where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
 			} else {
-				func.connection.query('update user set num_lines = num_lines + 1 where name = ?', user.username, function (err, result) {if (err) {return}})
+				func.connection.query('update user set num_lines = num_lines + 1 where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
 			}
 		})
 		var logInfo = {
-			name: user.username,
+			userId: user['user-id'],
 			log: message
 		}
 		func.connection.query('insert into chatlogs set ?', logInfo, function (err, result) {if (err) {return}})
@@ -75,21 +91,21 @@ module.exports = {
 	fetchProfile: function(channel, user, message, self) {
 		if (message.startsWith("!rq")) {
 			function rq() {
-			func.connection.query('SELECT * FROM chatlogs WHERE name = ? ORDER BY RAND() LIMIT 1', user.username, function (err, result) {
+			func.connection.query('SELECT * FROM chatlogs WHERE userId = ? ORDER BY RAND() LIMIT 1', user['user-id'], function (err, result) {
 				bot.say(channel, user.username + " : " + result[0].log)
 			})}
 			func.cooldown("rq", "user", user.username, 30, rq)
 		}
 		if (message.startsWith("!points")) {
 			function points() {
-			func.connection.query('select * from user where name = ?', user.username, function(err, result) {
+			func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
 				bot.whisper(user.username, "You have " + result[0].points + " points!")
 			})}
 			func.cooldown("points", "global", user.username, 5, points)
 		}
 		if (message.startsWith("!lines")) {
 			function lines() {
-			func.connection.query('select * from user where name = ?', user.username, function(err, result) {
+			func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
 				bot.whisper(user.username, "You have written " + result[0].num_lines + " lines in this chat!")
 			})}
 			func.cooldown("lines", "global", user.username, 20, lines)

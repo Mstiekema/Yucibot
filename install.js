@@ -55,7 +55,7 @@ connection.query(
 	'CREATE TABLE chatlogs (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
-	'name VARCHAR(30),' +
+	'userId INT,' +
 	'log VARCHAR(500))',
 	function (err, result) {if (err) {return}}
 )
