@@ -62,7 +62,7 @@ module.exports = {
 		if (message.startsWith("!slot")) {
 			function slot() {
 			var sets = {
-				"1":["Kappa", "Keepo", "PogChamp", "OMGScoots"],
+				"1":["Kappa", "Keepo", "PogChamp", "EleGiggle"],
 				"2":["SeemsGood", "DansGame", "FeelsGoodMan", "FeelsBadMan"],
 				"3":["LUL", "DatSheffy ", "haHAA", "FailFish"]
 			}

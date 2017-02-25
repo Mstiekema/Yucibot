@@ -61,8 +61,6 @@ module.exports = {
 		}
 		var userName = user.username
 		func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
-			console.log(userName)
-			console.log(result[0].name)
 			if (result[0] == undefined) {
 				var userInfo = {
 					name: user.username,
@@ -74,7 +72,7 @@ module.exports = {
 				getID(user.username)
 				func.connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
 			} else if (result[0].name != userName) {
-				func.connection.query('update user set name = "' + userName + '" where userId = ?', user['user-id'], function (err, result) {if (err) {console.log(err)}})
+				func.connection.query('update user set name = "' + userName + '" where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
 			} else if (result[0].userId == null) {
 				getID(user.username)
 				func.connection.query('update user set num_lines = num_lines + 1 where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
