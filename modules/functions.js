@@ -38,6 +38,16 @@ module.exports = {
       }
     })
   },
+  addXP: function (id, xp, user) {
+    module.exports.connection.query('update user set xp = xp + "' + xp + '" where userId = ?', id, function (err, result) {if (err) {return}})
+  },
+  addTime: function (id, minutes, user, state) {
+    if (state == "online") {
+      module.exports.connection.query('update user set timeOnline = timeOnline + "' + minutes + '" where userId = ?', id, function (err, result) {if (err) {return}})
+    } else {
+      module.exports.connection.query('update user set timeOffline = timeOffline + "' + minutes + '" where userId = ?', id, function (err, result) {if (err) {return}})
+    }
+  },
   cooldown: function(command, cdtype, user, cooldown, exc) {
     var toCD = user + command
     var cd = cooldown * 1000

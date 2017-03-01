@@ -10,7 +10,7 @@ var clientID = options.identity.clientId
 module.exports = {
 	updateProfile: function () {
 		var channel = JSON.stringify(options.channels).slice(2, -2);
-		var info = {
+		var info1 = {
   		url: 'https://api.twitch.tv/kraken/streams?channel=' + channel.substring(1),
  			headers: {
   		  'Client-ID': clientID
@@ -18,31 +18,49 @@ module.exports = {
   	}
 		new CronJob('*/5 * * * *', function() {
 			function callback(error, response, body) {
-				if(JSON.parse(body).streams[0] != undefined) {
-					request("https://tmi.twitch.tv/group/user/" + channel.substring(1) + "/chatters", function (error, response, body, channel) {
-						var chatters = JSON.parse(body)
-						var normViewers = chatters.chatters.viewers
-						var moderators = chatters.chatters.moderators
-						var viewers = normViewers.concat(moderators);
+				var streamStatus = JSON.parse(body).streams[0]
+				request("https://tmi.twitch.tv/group/user/" + channel.substring(1) + "/chatters", function (error, response, body, channel) {
+					var chatters = JSON.parse(body)
+					var normViewers = chatters.chatters.viewers
+					var moderators = chatters.chatters.moderators
+					var viewers = normViewers.concat(moderators);
+					if(streamStatus != undefined) {
 						for (var i = 0; i < viewers.length; i++) {
 							var userName = viewers[i]
-							var info = {
+							var info2 = {
 								url: 'https://api.twitch.tv/kraken/users?login=' + userName,
 								headers: {
 									'Accept': 'application/vnd.twitchtv.v5+json',
 									'Client-ID': clientID
 								}
 							}
-							request(info, function (error, response, body) {
+							request(info2, function (error, response, body) {
 								var id = JSON.parse(body).users[0]._id
 								func.addPoints(id, 5, userName)
+								func.addXP(id, 1, userName)
+								func.addTime(id, 5, userName, "online")
 							})
 						}
-						console.log("[DEBUG] Succesfully added points")
-					});
-				}
+					} else {
+						for (var i = 0; i < viewers.length; i++) {
+							var userName = viewers[i]
+							var info2 = {
+								url: 'https://api.twitch.tv/kraken/users?login=' + userName,
+								headers: {
+									'Accept': 'application/vnd.twitchtv.v5+json',
+									'Client-ID': clientID
+								}
+							}
+							request(info2, function (error, response, body) {
+								var id = JSON.parse(body).users[0]._id
+								func.addTime(id, 5, userName, "offline")
+							})
+						}
+					}
+					console.log("[DEBUG] Updated stats")
+				});
 			}
-			request(info, callback)
+			request(info1, callback)
 		}, function () {}, true );
 	},
 	updateLines: function(channel, user, message, self) {
@@ -60,6 +78,7 @@ module.exports = {
 			})
 		}
 		var userName = user.username
+		if (user['user-id'] == undefined) return
 		func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
 			if (result[0] == undefined) {
 				var userInfo = {
