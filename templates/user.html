@@ -2,16 +2,94 @@
 <div class="top"><h2>User page | <%= user %></h2></div>
 <div class="main">
 <div class="userinfo">
-<p><img id="userPf" src="<%= profile_pic_page %>" width="150" height="150">
-<span id="userName"><%= user %></span><br><br>
-Points: <%= points %> <br>
-Lines: <%= lines %> <br>
-Account creation date: <%= age %> <br>
-Account age: <%= days %> days <br>
-Followage: <%= followAge %> <br>
-<button class="pfBtn"><a href="/user/<%= user %>/logs">Logs</a></button> <button class="pfBtn"><a href="https://www.twitch.tv/<%= user %>" target="_blank">Twitch</a></button>
+<p>
+  <img id="userPf" src="<%= profile_pic_page %>" width="150" height="150"/>
+  <div id="xpBar"></div>
+  <span id="userName"><%= user %></span><br><br>
+  Points: <%= points %> <br>
+  Lines: <%= lines %> <br>
+  Time in chat: <%= Math.ceil(online / 60) %> hours (<%= online %> minutes)<br>
+  Time in offline chat: <%= offline %> <br>
+  Account creation date: <%= age %> <br>
+  Account age: <%= days %> days <br>
+  Followage: <%= followAge %> <br>
+  XP: <%= xp %> XP | Level: <%= level %> | XP to next level: <%= 100 - perc %> (<%= perc %>%)
 </p>
 </div>
+<div id="logDiv">
+  <% if(date != "logs") { %>
+  <div id="logTop"><h3>Showing chat logs from <%= date %></h3> <a href="/user/<%= user %>/logs"><button id="allLogBtn">All logs</button></a>
+  <% } else { %>
+  <div id="logTop"><h3>Showing all chat logs</h3>
+  <% } %>
+  <a href="/user/<%= user %>"><button id="todayLog">Today's logs</button></a> <p>Search logs: <input id="searchBarLogs" type="text" placeholder="Chat log"></p>
+  <div id="selectDate"><label>Select stream date</label> <input type="date" id="myDate" onchange="changeDate()" value="<%= date %>"></div>
+  </div>
+  <% if(log != undefined) { %>
+  <div id="allLogs">
+    <% log.forEach(function(log) { %>
+    <% if (date == "logs") { %>
+      <div class="logs" id="<%= log.id %>"><p>
+        [<%= log.time.toLocaleDateString('nl-nl', {day: '2-digit', month: '2-digit', year: 'numeric'}) %>
+        <%= log.time.toLocaleTimeString('nl-nl', {hour12: false}); %>]
+        <%= log.log %><br>
+      </p></div>
+    <% } else if (log.time.toISOString().substr(0, 10) == date) { %>
+      <div class="logs" id="<%= log.id %>"><p>
+        [<%= log.time.toLocaleDateString('nl-nl', {day: '2-digit', month: '2-digit', year: 'numeric'}) %>
+        <%= log.time.toLocaleTimeString('nl-nl', {hour12: false}); %>]
+        <%= log.log %><br>
+      </p></div>
+    <% } %>
+    <% }); %>
+  </div>
+  <% } else { %>
+  <p>Couldn't find logs.</p>
+  <% } %>
+  </div>
 </div>
+</div>
+<script type="text/javascript" src="https://rawgit.com/kimmobrunfeldt/progressbar.js/master/dist/progressbar.js"></script>
 <script type="text/javascript" src="../js/yucisite.js"></script>
 </body>
+<script>
+var xpBar = new ProgressBar.Circle('#xpBar', {
+  color: '#71697d',
+  strokeWidth: 4,
+  trailWidth: 4,
+  easing: 'easeInOut',
+  duration: 5000,
+  text: {autoStyleContainer: false},
+  from: {color: '#482e77', width: 5},
+  to: {color: '#6441A4', width: 5},
+  step: function(state, circle) {
+    circle.path.setAttribute('stroke', state.color);
+    circle.path.setAttribute('stroke-width', state.width);
+  }
+});
+xpBar.animate("<%= xp %>".slice(-2) / 100);
+
+document.getElementById('xpBar').addEventListener('click', function() {
+  window.open("https://www.twitch.tv/<%= user %>")
+})
+
+function changeDate() {
+  var x = document.getElementById("myDate");
+  var date = x.value;
+  var url = location.href.split("/")
+  window.location.href = "/user/" + url[4] + "/" + date;
+}
+
+$("#searchBarLogs").keyup(function() {
+  var input = document.getElementById("searchBarLogs");
+  var filter = input.value.toLowerCase();
+  var log = document.getElementsByClassName("logs");
+  for (var x = 0; x < log.length; x++) {
+    if (log[x].innerHTML.toLowerCase().indexOf(filter) > -1) {
+      log[x].style.display = "";
+    } else {
+      log[x].style.display = "none";
+    }
+  }
+})
+</script>

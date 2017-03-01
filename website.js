@@ -68,6 +68,7 @@ app.all('*', function(req, res, next) {
   res.locals.website = options.identity.websiteUrl
   res.locals.botName = options.identity.username
   res.locals.streamer = options.channels[0]
+  res.locals.date = date
   if (req.user) {
     func.connection.query('select * from user where name = ?', req.user, function(err, result) {
       if (result == undefined || result[0] == undefined) {
@@ -327,75 +328,51 @@ app.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
-app.get('/user/:id', function(req, res) {
+app.use('/user/:id', function(req, res) {
   func.connection.query('select * from user where name = ?', req.params.id, function(err, result) {
     if (result[0] == undefined) {
       res.render("error404.html");
     } else {
-      var info = {
-        url: 'https://api.twitch.tv/kraken/users/' + req.params.id,
-        headers: {
-          'Client-ID': clientID
+      var user = result[0]
+      func.connection.query('select * from chatlogs where userId = ?', result[0].userId, function(err, result) {
+        var info = {
+          url: 'https://api.twitch.tv/kraken/users/' + req.params.id,
+          headers: {
+            'Client-ID': clientID
+          }
         }
-      }
-      request(info, function (error, response, body) {
-        var reqBody = JSON.parse(body)
-        var userPf = reqBody.logo
-        func.connection.query('update user set profile_pic = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
-        var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
-        var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
-        var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
-        request("https://api.rtainc.co/twitch/channels/" + options.channels[0].substring(1) + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
-          res.render('user.html', {
-            age: age,
-            days: days,
-            followAge: body,
-            user: result[0].name,
-            points: result[0].points,
-            lines: result[0].num_lines,
-            profile_pic_page: userPf
-          })
-        })
+        request(info, function (error, response, body) {
+          var reqBody = JSON.parse(body)
+          var userPf = reqBody.logo
+          func.connection.query('update user set profile_pic = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
+          var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
+          var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
+          var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
+          var level = Math.ceil(user.xp / 100)
+          var perc = Math.ceil(String(user.xp).slice(-2))
+          var url = req.originalUrl
+          if (url.split("/")[3] != undefined) {res.locals.logDate = url.split("/")[3]} else {res.locals.logDate = date}
+          request("https://api.rtainc.co/twitch/channels/" + options.channels[0].substring(1) + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
+            res.render('user.html', {
+              age: age,
+              days: days,
+              followAge: body,
+              level: level,
+              perc: perc,
+              xp: user.xp,
+              user: user.name,
+              points: user.points,
+              lines: user.num_lines,
+              online: user.timeOnline,
+              offline: user.timeOffline,
+              profile_pic_page: userPf,
+              log: result,
+              date: res.locals.logDate
+            });
+          });
+        });
       });
     };
-  });
-});
-
-app.get('/user/:id/logs', function(req, res) {
-  func.connection.query('select * from user where name = ?', req.params.id, function(err, result) {
-    func.connection.query('select * from chatlogs where userId = ?', result[0].userId, function(err, result) {
-      if (result[0] == undefined) {
-        res.render("error404.html");
-      } else {
-        res.render('logs.html', {
-          log: result,
-          name: result[0].name,
-          date: date,
-          type: "all"
-        });
-      };
-    });
-  });
-});
-
-app.get('/user/:id/logs/:page', function(req, res) {
-  func.connection.query('select * from user where name = ?', req.params.id, function(err, result) {
-    func.connection.query('select * from chatlogs where DATE_FORMAT(time,"%Y-%m-%d") = "' + req.params.page + '" AND userId = ?', result[0].userId, function(err, result) {
-      if (result[0] == undefined) {
-        res.render("logs.html", {
-          log: undefined,
-          date: req.params.page,
-          type: undefined
-        });
-      } else {
-        res.render('logs.html', {
-          log: result,
-          name: result[0].name,
-          date: req.params.page,
-          type: undefined
-        });
-      };
-    });
   });
 });
 

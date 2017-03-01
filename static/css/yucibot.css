@@ -4,6 +4,40 @@
   color: #a2a8b7;
 }
 
+#xpBar {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  cursor: pointer
+}
+
+#userPf {
+  border-radius: 50%;
+  float: left;
+  margin-right: 20px;
+}
+
+#logDiv {
+  position: absolute;
+  padding: 20px;
+  top: 290px;
+  bottom: 20px;
+  padding-top: 10px;
+  left: 20px;
+  right: 20px;
+  background-color: #141b1d;
+}
+
+.userinfo {
+  position: absolute;
+  padding: 20px 20px 0px 20px;
+  top: 20px;
+  padding-top: 10px;
+  left: 20px;
+  right: 20px;
+  background-color: #141b1d;
+}
+
 #twitchInfo, #donations, #followers, #twitter {
   background-color: #282828;
 }
@@ -466,11 +500,6 @@ div.menu h3 {
   padding-right: 10px;
 }
 
-#userPf {
-  float: left;
-  margin-right: 20px;
-}
-
 .pfBtn {
   margin-left: 10px;
 }
@@ -481,7 +510,11 @@ div.menu h3 {
 
 #allLogBtn {
   float: right;
-  margin-right: 20px;
+}
+
+#todayLog {
+  float: right;
+  margin-right: 10px;
 }
 
 .logs {
@@ -502,16 +535,6 @@ div.menu h3 {
 
 .logs:nth-child(odd) {
   background-color: #212325;
-}
-
-.userinfo {
-  position: absolute;
-  padding: 20px;
-  top: 20px;
-  padding-top: 10px;
-  left: 20px;
-  right: 20px;
-  background-color: #141b1d;
 }
 
 .profile {
