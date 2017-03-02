@@ -19,6 +19,7 @@ module.exports = {
 				  level: 100
 			  }
 			  module.exports.connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
+        module.exports.connection.query('insert into userstats set userId = ?', id, function (err, result) {if (err) {return}})
       }
     })
   },
@@ -35,6 +36,16 @@ module.exports = {
         }
       } else {
         return false
+      }
+    })
+  },
+  addStats: function (id, type, result, profit) {
+    var upRes = type + result
+	  module.exports.connection.query('update userstats set '+upRes+' = '+upRes+' + 1, '+type+'Profit = '+type+'Profit + '+profit+' where userId = ?', id, function (err, result) {
+      if (result.changedRows == 0) {
+        module.exports.connection.query('insert into userstats set userId = ?', id, function (err, result) {
+          module.exports.connection.query('update userstats set '+upRes+' = '+upRes+' + 1, '+type+'Profit = '+type+'Profit + '+profit+' where userId = ?', id, function (err, result) {if (err) {return}})
+        })
       }
     })
   },

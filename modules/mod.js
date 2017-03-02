@@ -13,9 +13,6 @@ module.exports = {
 				bot.disconnect()
 				process.exit(1)
 			}
-			else {
-				bot.say(channel, "You are not allowed to turn off the bot OMGScoots")
-			};
 		}
 		 var message = message.toLowerCase()
 		 if (user.mod == false) { if (user.username != channel.substring(1)) { if (user.subscriber != true) {

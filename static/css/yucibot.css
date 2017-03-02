@@ -7,25 +7,32 @@
 #xpBar {
   width: 150px;
   height: 150px;
+  top: 53px;
+  left: 70px;
   position: absolute;
   cursor: pointer
 }
 
 #userPf {
   border-radius: 50%;
-  float: left;
-  margin-right: 20px;
+  display: block;
+  margin: 0 auto;
+}
+
+.userProfile h1 {
+  line-height: 0px;
 }
 
 #logDiv {
   position: absolute;
   padding: 20px;
-  top: 290px;
+  top: 325px;
   bottom: 20px;
   padding-top: 10px;
   left: 20px;
   right: 20px;
   background-color: #141b1d;
+  overflow-y: auto;
 }
 
 .userinfo {
@@ -33,9 +40,40 @@
   padding: 20px 20px 0px 20px;
   top: 20px;
   padding-top: 10px;
-  left: 20px;
-  right: 20px;
+  left: 325px;
+  height: 280px;
+  width: 300px;
   background-color: #141b1d;
+}
+
+.userRanks {
+  position: absolute;
+  padding: 20px 20px 0px 20px;
+  top: 20px;
+  padding-top: 10px;
+  left: 680px;
+  height: 280px;
+  width: 250px;
+  background-color: #141b1d;
+}
+
+.userInfo b, .userRanks b {
+  border-left-style: solid;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: rgba(100, 65, 164, 0.6);
+}
+
+.userProfile {
+  position: absolute;
+  padding: 20px 20px 0px 20px;
+  top: 20px;
+  padding-top: 10px;
+  left: 20px;
+  width: 250px;
+  height: 280px;
+  background-color: #141b1d;
+  text-align: center;
 }
 
 #twitchInfo, #donations, #followers, #twitter {
@@ -502,10 +540,6 @@ div.menu h3 {
 
 .pfBtn {
   margin-left: 10px;
-}
-
-#userName {
-  font-size: 35px;
 }
 
 #allLogBtn {

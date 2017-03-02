@@ -329,12 +329,46 @@ app.get('/logout', function(req, res) {
 });
 
 app.use('/user/:id', function(req, res) {
-  func.connection.query('select * from user where name = ?', req.params.id, function(err, result) {
-    if (result[0] == undefined) {
+  func.connection.query('select * from user INNER JOIN userstats ON user.userId = userstats.userId where user.name = ?', req.params.id , function(err, userO) {
+  func.connection.query('select * from user order by points DESC', function(err, points) {
+  func.connection.query('select * from user order by xp DESC', function(err, xp) {
+  func.connection.query('select * from user order by num_lines DESC', function(err, lines) {
+  func.connection.query('select * from user order by timeOnline DESC', function(err, timeOnline) {
+  func.connection.query('select * from user order by timeOffline DESC', function(err, timeOffline) {
+    var pointIndex;
+    var xpIndex;
+    var linesIndex;
+    var timeOnlineIndex;
+    var timeOfflineIndex;
+    for(var i = 0; i < points.length; i++) {
+      if(points[i]["name"] === req.params.id) {
+        pointIndex = i + 1
+      }
+    }
+    for(var i = 0; i < xp.length; i++) {
+      if(xp[i]["name"] === req.params.id) {
+        xpIndex = i + 1
+      }
+    }
+    for(var i = 0; i < lines.length; i++) {
+      if(lines[i]["name"] === req.params.id) {
+        linesIndex = i + 1
+      }
+    }
+    for(var i = 0; i < timeOnline.length; i++) {
+      if(timeOnline[i]["name"] === req.params.id) {
+        timeOnlineIndex = i + 1
+      }
+    }
+    for(var i = 0; i < timeOffline.length; i++) {
+      if(timeOffline[i]["name"] === req.params.id) {
+        timeOfflineIndex = i + 1
+      }
+    }
+    if (userO[0] == undefined) {
       res.render("error404.html");
     } else {
-      var user = result[0]
-      func.connection.query('select * from chatlogs where userId = ?', result[0].userId, function(err, result) {
+      func.connection.query('select * from chatlogs where userId = ?', userO[0].userId, function(err, result) {
         var info = {
           url: 'https://api.twitch.tv/kraken/users/' + req.params.id,
           headers: {
@@ -342,15 +376,22 @@ app.use('/user/:id', function(req, res) {
           }
         }
         request(info, function (error, response, body) {
+          var userObj = userO[0]
           var reqBody = JSON.parse(body)
           var userPf = reqBody.logo
           func.connection.query('update user set profile_pic = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
           var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
           var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
           var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
-          var level = Math.ceil(user.xp / 100)
-          var perc = Math.ceil(String(user.xp).slice(-2))
+          var level = Math.ceil(userObj.xp / 100)
+          var perc = Math.ceil(String(userObj.xp).slice(-2))
           var url = req.originalUrl
+          var onH = Math.floor(userObj.timeOnline / 60);
+          var offH = Math.floor(userObj.timeOffline / 60);
+          var onM = Math.floor(userObj.timeOnline % 60);
+          var offM = Math.floor(userObj.timeOffline % 60);
+          var timeOnline = (onH > 0 ? onH + " houts " + (onM < 10 ? "0" : "") : "") + onM + " minutes"
+          var timeOffline = (offH > 0 ? offH + " hours " + (offM < 10 ? "0" : "") : "") + offM + " minutes"
           if (url.split("/")[3] != undefined) {res.locals.logDate = url.split("/")[3]} else {res.locals.logDate = date}
           request("https://api.rtainc.co/twitch/channels/" + options.channels[0].substring(1) + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
             res.render('user.html', {
@@ -359,21 +400,34 @@ app.use('/user/:id', function(req, res) {
               followAge: body,
               level: level,
               perc: perc,
-              xp: user.xp,
-              user: user.name,
-              points: user.points,
-              lines: user.num_lines,
-              online: user.timeOnline,
-              offline: user.timeOffline,
+              xp: userObj.xp,
+              user: userObj.name,
+              points: userObj.points,
+              lines: userObj.num_lines,
+              online: timeOnline,
+              offline: timeOffline,
               profile_pic_page: userPf,
               log: result,
-              date: res.locals.logDate
+              date: res.locals.logDate,
+              pointIndex: pointIndex,
+              xpIndex: xpIndex,
+              linesIndex: linesIndex,
+              timeOnlineIndex: timeOnlineIndex,
+              timeOfflineIndex: timeOfflineIndex,
+              slotWin: userObj.slotWin,
+              slotLoss: userObj.slotLoss,
+              slotProfit: userObj.slotProfit,
+              roulWin: userObj.roulWin,
+              roulLoss: userObj.roulLoss,
+              roulProfit: userObj.roulProfit,
+              dungWin: userObj.dungWin,
+              dungProfit: userObj.dungProfit
             });
           });
         });
       });
     };
-  });
+  });});});});});});
 });
 
 app.get('/commands', function(req, res) {

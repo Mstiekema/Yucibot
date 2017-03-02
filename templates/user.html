@@ -1,20 +1,54 @@
 <% include header.ejs %>
 <div class="top"><h2>User page | <%= user %></h2></div>
 <div class="main">
-<div class="userinfo">
+<div class="userProfile">
 <p>
-  <img id="userPf" src="<%= profile_pic_page %>" width="150" height="150"/>
-  <div id="xpBar"></div>
-  <span id="userName"><%= user %></span><br><br>
+  <h1><%= user %></h1>
+  <img id="userPf" src="<%= profile_pic_page %>" width="150" height="150" align="middle"/>
+  <div id="xpBar"></div><br>
+  <%= xp %> XP | Level: <%= level %> <br> XP to next level: <%= 100 - perc %> (<%= perc %>%)
+</p>
+</div>
+<div class="userInfo">
+  <b>Chat info</b><br>
   Points: <%= points %> <br>
   Lines: <%= lines %> <br>
-  Time in chat: <%= Math.ceil(online / 60) %> hours (<%= online %> minutes)<br>
-  Time in offline chat: <%= offline %> <br>
+  Time in chat: <%= online %><br>
+  Time in offline chat: <%= offline %><br><br>
+  <b>Account info</b><br>
   Account creation date: <%= age %> <br>
   Account age: <%= days %> days <br>
   Followage: <%= followAge %> <br>
-  XP: <%= xp %> XP | Level: <%= level %> | XP to next level: <%= 100 - perc %> (<%= perc %>%)
-</p>
+</div>
+<div class="userRanks">
+<b>Ranks</b><br>
+Point rank: <%= pointIndex %> <br>
+Level rank: <%= xpIndex %> <br>
+Line rank: <%= linesIndex %> <br>
+Watch rank: <%= timeOnlineIndex %> <br>
+Offline rank: <%= timeOfflineIndex %> <br><br>
+<b>Point game stats</b><br>
+Slot ratio: <span style="color: green;"><%= slotWin %></span>/<span style="color: red;"><%= slotLoss %></span> (<%= Math.floor((slotWin / (slotWin + slotLoss)) * 100) %>%)<br>
+Slot profit:
+<% if(slotProfit < 0) { %>
+  <span style="color: red;"><%= slotProfit %></span>
+<% } else { %>
+  <span style="color: green;"><%= slotProfit %></span>
+<% } %> points<br>
+Roulette ratio: <span style="color: green;"><%= roulWin %></span>/<span style="color: red;"><%= roulLoss %></span> (<%= Math.floor((roulWin / (roulWin + roulLoss)) * 100) %>%)<br>
+Roulette profit:
+<% if(roulProfit < 0) { %>
+  <span style="color: red;"><%= roulProfit %></span>
+<% } else { %>
+  <span style="color: green;"><%= roulProfit %></span>
+<% } %> points<br>
+Dungeon wins: <span style="color: green;"><%= dungWin %></span> wins<br>
+Dungeon profit:
+<% if(dungProfit < 0) { %>
+  <span style="color: red;"><%= dungProfit %></span>
+<% } else { %>
+  <span style="color: green;"><%= dungProfit %></span>
+<% } %> points<br>
 </div>
 <div id="logDiv">
   <% if(date != "logs") { %>
@@ -50,7 +84,7 @@
 </div>
 </div>
 <script type="text/javascript" src="https://rawgit.com/kimmobrunfeldt/progressbar.js/master/dist/progressbar.js"></script>
-<script type="text/javascript" src="../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/yucisite.js"></script>
 </body>
 <script>
 var xpBar = new ProgressBar.Circle('#xpBar', {

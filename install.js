@@ -12,18 +12,31 @@ connection = mysql.createConnection({
 
 connection.query(
 	'CREATE TABLE user (' +
-	'id INT AUTO_INCREMENT PRIMARY KEY,' +
-	'name VARCHAR(30),' +
+	'name VARCHAR(30) PRIMARY KEY,' +
 	'userId INT,' +
 	'accToken VARCHAR(30),' +
 	'points INT,' +
-	'xp INT,' +
+	'xp INT DEFAULT 0,' +
 	'num_lines INT,' +
 	'level INT,' +
-	'timeOnline INT,' +
-	'timeOffline INT,' +
+	'timeOnline INT DEFAULT 0,' +
+	'timeOffline INT DEFAULT 0,' +
 	'profile_pic VARCHAR(200),' +
 	'isMod BOOL DEFAULT FALSE)',
+	function (err, result) {if (err) {return}}
+)
+
+connection.query(
+	'CREATE TABLE userstats (' +
+	'userId INT PRIMARY KEY,' +
+	'slotLoss INT DEFAULT 0,' +
+	'slotWin INT DEFAULT 0,' +
+	'slotProfit INT DEFAULT 0,' +
+	'dungWin INT DEFAULT 0,' +
+	'dungProfit INT DEFAULT 0,' +
+	'roulLoss INT DEFAULT 0,' +
+	'roulWin INT DEFAULT 0,' +
+	'roulProfit INT DEFAULT 0)',
 	function (err, result) {if (err) {return}}
 )
 

@@ -22,6 +22,7 @@ module.exports = {
 							func.connection.query('update user set points = points + ' + r + ' where name = ?', user.username, function (err, result) {if (err) {return}})
 							bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points!")
 							var newLog = {type: "points", log: user.username + " won " + bet + " in roulette"}
+							func.addStats(user['user-id'], "roul", "Win", bet)
 							func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 						}
 						else {
@@ -29,6 +30,7 @@ module.exports = {
 							func.connection.query('update user set points = points - ' + r + ' where name = ?', user.username, function (err, result) {if (err) {return}})
 							bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points!")
 							var newLog = {type: "points", log: user.username + " lost " + bet + " in roulette"}
+							func.addStats(user['user-id'], "roul", "Loss", "-"+bet)
 							func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 						}
 					}
@@ -40,14 +42,16 @@ module.exports = {
 					var x = Math.random() * 100
 					if (x > 50) {
 						func.connection.query('update user set points = points + points where name = ?', user.username, function (err, result) {if (err) {return}})
-						bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points!")
-						var newLog = {type: "points", log: user.username + " won " + bet + " in roulette"}
+						bot.say(channel, user.username + ", You've won the roulette for " + oldPoints  + " points!")
+						var newLog = {type: "points", log: user.username + " won " + oldPoints + " in roulette"}
+						func.addStats(user['user-id'], "roul", "Win", oldPoints)
 						func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 					}
 					else {
 						func.connection.query('update user set points = 0 where name = ?', user.username, function (err, result) {if (err) {return}})
-						bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points!")
-						var newLog = {type: "points", log: user.username + " lost " + bet + " in roulette"}
+						bot.say(channel, user.username + ", You've lost the roulette for " + oldPoints + " points!")
+						var newLog = {type: "points", log: user.username + " lost " + oldPoints + " in roulette"}
+						func.addStats(user['user-id'], "roul", "Loss", "-"+oldPoints)
 						func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 					}
 				}
@@ -75,24 +79,28 @@ module.exports = {
 				func.connection.query('update user set points = points + 500 where name = ?', user.username, function (err, result) {if (err) {return}})
 				bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! They are the same, you win 500 points! PogChamp")
 				var newLog = {type: "points", log: user.username + " won 500 points with the slot machine"}
+				func.addStats(user['user-id'], "slot", "Win", 500)
 				func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 			}
 			else if (a == b || b == c){
 				func.connection.query('update user set points = points + 50 where name = ?', user.username, function (err, result) {if (err) {return}})
 				bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! So close, but yet so far FeelsBadMan You get 50 points")
 				var newLog = {type: "points", log: user.username + " won 50 points with the slot machine"}
+				func.addStats(user['user-id'], "slot", "Win", 50)
 				func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 			}
 			else if (a == c) {
 				func.connection.query('update user set points = points - 50 where name = ?', user.username, function (err, result) {if (err) {return}})
 				bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! It's something, but you lose 50 points EleGiggle")
 				var newLog = {type: "points", log: user.username + " lost 50 points with the slot machine"}
+				func.addStats(user['user-id'], "slot", "Loss", -50)
 				func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 			}
 			else {
 				func.connection.query('update user set points = points - 100 where name = ?', user.username, function (err, result) {if (err) {return}})
 				bot.say(channel, "| " + a + " | " + b + " | " + c + " | " + user.username + ", this is the result! What is this? You got nothing? You lose 100 points LUL")
 				var newLog = {type: "points", log: user.username + " lost 100 points with the slot machine"}
+				func.addStats(user['user-id'], "slot", "Loss", -100)
 				func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 			}}
 			func.cooldown("slot", "user", user.username, 300, slot)
@@ -115,8 +123,19 @@ module.exports = {
 						for(x = 0; x < winners; ++x) {
 							var i = Math.floor(Math.random() * participants.length);
 							var winner = participants[i]
+							var getUserInfo = {
+								url: 'https://api.twitch.tv/kraken/users?login=' + userName,
+								headers: {
+									'Accept': 'application/vnd.twitchtv.v5+json',
+									'Client-ID': clientID
+								}
+							}
+							request(getUserInfo, function (error, response, body) {
+								var id = JSON.parse(body).users[0]._id
+								func.addStats(id, "dung", "Win", poolDiv)
 								func.connection.query('update user set points = points + ' + parseInt(poolDiv) + ' where name = ?', winner, function (err, result) {if (err) {console.log(err)}})
 								func.connection.query('update dungeon set win = 1 where user = ?', winner, function (err, result) {if (err) {console.log("err")}})
+							})
 						}
 						bot.say(channel, getFile.winners + " each won " + poolDiv + " points! PogChamp //")
 						func.connection.query('TRUNCATE dungeon',  function(err, result) {if (err) {console.log(err)}})
@@ -127,8 +146,19 @@ module.exports = {
 						for(x = 0; x < winners; ++x) {
 							var i = Math.floor(Math.random() * participants.length);
 							var winner = participants[i]
-							func.connection.query('update user set points = points + ' + parseInt(poolDiv) + ' where name = ?', winner.user, function (err, result) {if (err) {console.log(err)}})
-							func.connection.query('update dungeon set win = 1 where user = ?', winner.user, function (err, result) {if (err) {console.log("err")}})
+							var getUserInfo = {
+								url: 'https://api.twitch.tv/kraken/users?login=' + userName,
+								headers: {
+									'Accept': 'application/vnd.twitchtv.v5+json',
+									'Client-ID': clientID
+								}
+							}
+							request(getUserInfo, function (error, response, body) {
+								var id = JSON.parse(body).users[0]._id
+								func.addStats(id, "dung", "Win", poolDiv)
+								func.connection.query('update user set points = points + ' + parseInt(poolDiv) + ' where name = ?', winner, function (err, result) {if (err) {console.log(err)}})
+								func.connection.query('update dungeon set win = 1 where user = ?', winner, function (err, result) {if (err) {console.log("err")}})
+							})
 						}
 						func.connection.query('SELECT * FROM dungeon WHERE win = 1',  function(err, result) {
 							allWinners = result.map(function(a) {return a.user;})

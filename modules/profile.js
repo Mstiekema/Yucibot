@@ -90,11 +90,13 @@ module.exports = {
 				}
 				getID(user.username)
 				func.connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
+				func.connection.query('insert into userstats set userId = ?', user['user-id'], function (err, result) {if (err) {return}})
 			} else if (result[0].name != userName) {
 				func.connection.query('update user set name = "' + userName + '" where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
 			} else if (result[0].userId == null) {
 				getID(user.username)
 				func.connection.query('update user set num_lines = num_lines + 1 where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
+				func.connection.query('insert into userstats set userId = ?', user['user-id'], function (err, result) {if (err) {return}})
 			} else {
 				func.connection.query('update user set num_lines = num_lines + 1 where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
 			}
