@@ -303,7 +303,7 @@ app.get('/', function(req, res) {
 })
 
 app.get('/about', function(req, res) {
-  func.connection.query('select * from streaminfo', function(err, result) {res.render('about.html')});
+  func.connection.query('select * from user', function(err, result) {res.render('about.html')});
 });
 
 app.get('/clr', function(req, res) {
@@ -313,7 +313,7 @@ app.get('/clr', function(req, res) {
 });
 
 app.get('/support', function(req, res) {
-  func.connection.query('select * from streaminfo', function(err, result) {res.render('support.html')});
+  func.connection.query('select * from user', function(err, result) {res.render('support.html')});
 });
 
 app.get("/login", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
@@ -454,7 +454,7 @@ app.get('/commands/:id', function(req, res) {
 });
 
 app.get('/stats', function(req, res) {
-  func.connection.query('select * from streaminfo', function(err, result) {
+  func.connection.query('select * from user', function(err, result) {
     request({
       url: 'https://api.twitch.tv/kraken/clips/top?limit=5&channel=' + options.channels[0].substring(1),
       headers: {
@@ -766,11 +766,11 @@ app.get('/admin/commands/edit/:id', function(req, res) {
 });
 
 app.get('/403', function(req, res) {
-  func.connection.query('select * from streaminfo', function(err, result) {res.render('error403.html')});
+  func.connection.query('select * from user', function(err, result) {res.render('error403.html')});
 });
 
 app.all('*', function(req, res, next) {
-  func.connection.query('select * from streaminfo', function(err, result) {res.render('error404.html')});
+  func.connection.query('select * from user', function(err, result) {res.render('error404.html')});
 });
 
 console.log("[DEBUG] Started website")

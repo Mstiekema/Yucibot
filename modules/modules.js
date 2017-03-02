@@ -4,7 +4,6 @@ var points = require('./points.js')
 var songrequest	= require('./songrequest.js')
 var mod = require('./mod.js')
 var events = require('./events.js')
-var streaminfo = require('./streaminfo.js')
 var func = require("./functions.js")
 var clr = require("./clrCommands.js")
 var exp = module.exports = {}
@@ -53,7 +52,6 @@ exp.commands = function(channel, user, message, self) {
 };
 
 exp.events = function(channel, user, message, self) {
-	streaminfo.fetchInfo()
 	func.connection.query('select * from module', function(err, result) {
 		if (result[4].state == 1) {
 			profile.updateProfile(channel, user, message, self);

@@ -41,19 +41,6 @@ connection.query(
 )
 
 connection.query(
-	'CREATE TABLE streaminfo (' +
-	'streamid VARCHAR(20) PRIMARY KEY,' +
-	'date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
-	'title VARCHAR(100),' +
-	'game VARCHAR(100),' +
-	'vod VARCHAR(100),' +
-	'lowView INT,' +
-	'currView INT,' +
-	'highView INT)',
-	function (err, result) {if (err) {return}}
-)
-
-connection.query(
 	'CREATE TABLE commands (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'commName VARCHAR(50),' +
