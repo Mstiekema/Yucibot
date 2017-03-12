@@ -41,6 +41,15 @@ connection.query(
 )
 
 connection.query(
+	'CREATE TABLE emotestats (' +
+	'id INT PRIMARY KEY,' +
+	'name VARCHAR(30),' +
+	'type VARCHAR(30),' +
+	'uses INT DEFAULT 1)',
+	function (err, result) {if (err) {return}}
+)
+
+connection.query(
 	'CREATE TABLE commands (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'commName VARCHAR(50),' +

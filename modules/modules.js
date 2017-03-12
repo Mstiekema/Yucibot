@@ -6,10 +6,12 @@ var mod = require('./mod.js')
 var events = require('./events.js')
 var func = require("./functions.js")
 var clr = require("./clrCommands.js")
+var emotes = require("./emotes.js")
 var exp = module.exports = {}
 
 exp.commands = function(channel, user, message, self) {
 	basic.customCommands(channel, user, message, self)
+	emotes.track(channel, user, message, self)
 	mod.commandManagement(channel, user, message, self)
 	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
