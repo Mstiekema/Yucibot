@@ -8,32 +8,31 @@ var func = require("./functions.js")
 
 module.exports = {
 	getSongs: function (channel, user, message, self) {
-		if (message.startsWith("!sr") || message.startsWith("!songrequest")) {
+		if (message[0] == "!sr" || message[0] == "!songrequest") {
 			if(user.subscriber == true) {
-				songlink = message.split(" ")
-				match(songlink, channel, user, message)
+				match(message, channel, user)
 			} else {
 				bot.whisper(user.username, "You're not allowed to request songs in this channel")
 			}
 		}
-		function match (songlink, channel, user, message) {
+		function match (songlink, channel, user) {
 			var link = String(songlink).match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
 			var id = songlink[1]
 			if (link != null) {
-				processYouTubeStuff(link[1], channel, user, message)
+				processYouTubeStuff(link[1], channel, user)
 			} else if (id.length == 11){
-				processYouTubeStuff(id, channel, user, message)
+				processYouTubeStuff(id, channel, user)
 			} else {
 				songlink.shift()
 				songlist = songlink.join(" ")
 				var url2 = "https://www.googleapis.com/youtube/v3/search?part=id&q=" + songlink + "&key=" + ytApiKey
 				request(url2, function (error, response, body) {
 					var id = JSON.parse(body).items[0].id.videoId
-					processYouTubeStuff(id, channel, user, message)
+					processYouTubeStuff(id, channel, user)
 				})
 			}
 		}
-		function processYouTubeStuff(id, channel, user, message) {
+		function processYouTubeStuff(id, channel, user) {
 			var url = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + ytApiKey + "%20&part=snippet,contentDetails,statistics,status"
 			request(url, function (error, response, body) {
 				info = JSON.parse(body)
@@ -77,7 +76,7 @@ module.exports = {
 				})
 			}
 		)}
-		if (message.startsWith("!currentsong")) {
+		if (message[0] == "!currentsong") {
 			func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
 				if(result[0] == undefined) {
 					bot.say(channel, "There's no song currently playing :/")

@@ -9,17 +9,16 @@ var clientID 	= options.identity.clientId
 module.exports = {
 	customCommands: function(channel, user, message, self) {
 		func.connection.query('select * from commands WHERE commDesc IS NULL', function(err, result) {
-			var comm = message.split(" ")[0]
 			var commands = result.map(function(a) {return a.commName;})
-			var check = new RegExp(commands.join("|")).test(comm)
+			var check = new RegExp(commands.join("|")).test(message[0])
 			if (check != false) {
-				var commInfo = result[commands.indexOf(comm)]
-				func.command(channel, user, message, comm, commInfo.cdType, parseInt(commInfo.cd), commInfo.response, commInfo.points)
+				var commInfo = result[commands.indexOf(message[0])]
+				func.command(channel, user, message, message[0], commInfo.cdType, parseInt(commInfo.cd), commInfo.response, commInfo.points)
 			}
 		})
 	},
 	basicCommands: function (channel, user, message, self) {
-		if (message.startsWith("!google")) {
+		if (message[0] == "!google") {
 			function google() {
 			var q = message.substring(message.indexOf(" ") + 1);
 			var question = q.split(' ').join('+');
@@ -28,7 +27,7 @@ module.exports = {
 			bot.say(channel, user.username + " Google is je beste vriend! " + link)}
 			func.cooldown("google", "global", user.username, 10, google)
 		}
-		else if (message.startsWith("!lmgtfy")) {
+		else if (message[0] == "!lmgtfy") {
 			function lmgtfy() {
 			var q = message.substring(message.indexOf(" ") + 1);
 			var question = q.split(' ').join('+');
@@ -37,9 +36,6 @@ module.exports = {
 			bot.say(channel, user.username + " Google is je beste vriend! " + link)}
 			func.cooldown("lmgtfy", "global", user.username, 10, lmgtfy)
 		}
-		else if (message.includes("Alliance") || message.includes("alliance")) {
-			bot.say(channel, "LOK'TAR OGAR, FOR THE HORDE SMOrc")
-		};
 	},
 	useTwitchAPI: function (channel, user, message, self) {
 		var info = {
@@ -48,7 +44,7 @@ module.exports = {
   			  'Client-ID': clientID
   			}
 		};
-		if(message.startsWith("!viewers")) {
+		if(message[0] == "!viewers") {
 			function getViewers(error, response, body) {
 			  if (!error && response.statusCode == 200) {
 			    var info = JSON.parse(body).streams[0];
@@ -63,7 +59,7 @@ module.exports = {
 			function viewers() {request(info, getViewers)}
 			func.cooldown("viewers", "global", user.username, 10, viewers)
 		}
-		else if(message.startsWith("!game")) {
+		else if(message[0] == ("!game")) {
 			function getGame(error, response, body) {
 			  if (!error && response.statusCode == 200) {
 			    var info = JSON.parse(body).streams[0];
@@ -78,7 +74,7 @@ module.exports = {
 			function game() {request(info, getGame)}
 			func.cooldown("game", "global", user.username, 10, game)
 		}
-		else if(message.startsWith("!title")) {
+		else if(message[0] == "!title") {
 			function getTitle(error, response, body) {
 			  if (!error && response.statusCode == 200) {
 			    var info = JSON.parse(body).streams[0];
@@ -93,7 +89,7 @@ module.exports = {
 			function title() {request(info, getTitle)}
 			func.cooldown("title", "global", user.username, 10, title)
 		}
-		else if(message.startsWith("!uptime")) {
+		else if(message[0] == "!uptime") {
 			function getUptime(error, response, body) {
 				if (!error && response.statusCode == 200) {
 				  if(!body.includes("is not streaming")) {
@@ -109,7 +105,7 @@ module.exports = {
 		}
 	},
 	owCommands: function (channel, user, message, self) {
-		if(message.startsWith("!owrank")) {
+		if(message[0] == "!owrank") {
 			function owrank() {
 			if(message.length < 8) {
 				request('https://api.lootbox.eu/pc/eu/' + options.identity.owUser + '/profile', function (error, response, body) {

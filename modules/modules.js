@@ -10,46 +10,49 @@ var emotes = require("./emotes.js")
 var exp = module.exports = {}
 
 exp.commands = function(channel, user, message, self) {
-	basic.customCommands(channel, user, message, self)
-	emotes.track(channel, user, message, self)
-	emotes.getStats(channel, user, message, self)
-	mod.commandManagement(channel, user, message, self)
+	var msg = message.toLowerCase().split(" ")
+	basic.customCommands(channel, user, msg, self)
+	mod.commandManagement(channel, user, msg, self)
+
+	emotes.track(channel, user, msg, self)
+	emotes.getStats(channel, user, msg, self)
+
 	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
-			basic.useTwitchAPI(channel, user, message, self)
+			basic.useTwitchAPI(channel, user, msg, self)
 		}
 		if (result[2].state == 1) {
-			basic.basicCommands(channel, user, message, self)
+			basic.basicCommands(channel, user, msg, self)
 		}
 		if (result[3].state == 1) {
-			basic.owCommands(channel, user, message, self)
+			basic.owCommands(channel, user, msg, self)
 		}
 		if (result[4].state == 1) {
 			profile.updateLines(channel, user, message, self);
 		}
 		if (result[5].state == 1) {
-			profile.fetchProfile(channel, user, message, self);
+			profile.fetchProfile(channel, user, msg, self);
 		}
 		if (result[6].state == 1) {
-			points.roulette(channel, user, message, self);
+			points.roulette(channel, user, msg, self);
 		}
 		if (result[7].state == 1) {
-			points.slot(channel, user, message, self);
+			points.slot(channel, user, msg, self);
 		}
 		if (result[8].state == 1) {
-			points.dungeon(channel, user, message, self);
+			points.dungeon(channel, user, msg, self);
 		}
 		if (result[11].state == 1) {
-			songrequest.getSongs(channel, user, message, self);
+			songrequest.getSongs(channel, user, msg, self);
 		}
 		if (result[12].state == 1) {
-			mod.mod(channel, user, message, self);
+			mod.mod(channel, user, msg, self);
 		}
 		if (result[13].state == 1) {
-			mod.link(channel, user, message, self);
+			mod.link(channel, user, msg, self);
 		}
 		if (result[14].state == 1) {
-			clr.clrComm(channel, user, message, self)
+			clr.clrComm(channel, user, msg, self)
 		}
 	})
 };

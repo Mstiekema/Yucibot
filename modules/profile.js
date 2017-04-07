@@ -108,35 +108,35 @@ module.exports = {
 		func.connection.query('insert into chatlogs set ?', logInfo, function (err, result) {if (err) {return}})
 	},
 	fetchProfile: function(channel, user, message, self) {
-		if (message.startsWith("!rq")) {
+		if (message[0] == "!rq") {
 			function rq() {
 			func.connection.query('SELECT * FROM chatlogs WHERE userId = ? ORDER BY RAND() LIMIT 1', user['user-id'], function (err, result) {
 				bot.say(channel, user.username + " : " + result[0].log)
 			})}
 			func.cooldown("rq", "user", user.username, 30, rq)
 		}
-		if (message.startsWith("!points")) {
+		if (message[0] == "!points") {
 			function points() {
 			func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
 				bot.whisper(user.username, "You have " + result[0].points + " points!")
 			})}
 			func.cooldown("points", "global", user.username, 5, points)
 		}
-		if (message.startsWith("!lines")) {
+		if (message[0] == "!lines") {
 			function lines() {
 			func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
 				bot.whisper(user.username, "You have written " + result[0].num_lines + " lines in this chat!")
 			})}
 			func.cooldown("lines", "global", user.username, 20, lines)
 		}
-		if (message.startsWith("!totallines")) {
+		if (message[0] == "!totallines") {
 			function totallines() {
 			func.connection.query('select * from chatlogs', function(err, result) {
 				bot.say(channel, "Chat has written a total of " + result.length + " lines in this chat!")
 			})}
 			func.cooldown("totallines", "global", user.username, 30, totallines)
 		}
-		if (message.startsWith("!addpoints")) {
+		if (message[0] == "!addpoints") {
 			if (user.mod === true || user.username == channel.substring(1)) {
 				var msg = message.split(" ");
 				var points = parseInt(msg[2])
@@ -153,7 +153,7 @@ module.exports = {
 				})
 			}
 		}
-		if (message.startsWith("!resetpoints")) {
+		if (message[0] == "!resetpoints") {
 			if (user.mod === true || user.username == channel.substring(1)) {
 				var msg = message.split(" ");
 				var rec = msg[1]

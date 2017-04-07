@@ -203,7 +203,7 @@ module.exports = {
     })}, 7000);
   },
   command: function(channel, user, message, command, cdtype, cooldown, botSay, remPoints) {
-    if (message.startsWith(command)) {
+    if (message[0] == command) {
       var toCD = user.username + command
       var cd = cooldown * 1000
       if(cdtype == "user") {

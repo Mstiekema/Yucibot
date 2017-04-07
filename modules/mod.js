@@ -7,17 +7,16 @@ var func = require("./functions.js")
 
 module.exports = {
 	mod: function (channel, user, message, self) {
-		if (message.startsWith("1quit")) {
+		if (message[0] == "1quit") {
 			if (user.mod === true || user.username == channel.substring(1)) {
 				bot.say(channel, "Shutting down Yucibot MrDestructoid")
 				bot.disconnect()
 				process.exit(1)
 			}
 		}
-		if (message.startsWith("!emoteupdate")) { if (user.mod === true || user.username == channel.substring(1)) {
+		if (message[0] == "!emoteupdate") { if (user.mod === true || user.username == channel.substring(1)) {
 			func.updateEmotes(channel.substring(1));
 		}}
-		 var message = message.toLowerCase()
 		 if (user.mod == false) { if (user.username != channel.substring(1)) { if (user.subscriber != true) {
 		 	func.connection.query('select * from timeout where type = "purge"', function(err, result) {
 		 		var purge = result.map(function(a) {return a.word;})
@@ -39,7 +38,6 @@ module.exports = {
 		 	})
 		 }}}
 		if (user.mod || user.username == channel.substring(1)) {
-			var message = message.split(" ");
 			if (message.length == 2) {
 				if (message[0] == "!addpurge") {
 					var newWord = {word: message[1], type: "purge"}
@@ -67,7 +65,7 @@ module.exports = {
 	},
 	commandManagement: function(channel, user, message, self) {
 		if (user.mod || user.username == channel.substring(1)) {
-			if(message.startsWith("!addcommand")) {
+			if(message[0] == ("!addcommand")) {
 				var info = message.split(" ")
 				var commName = info[1]
 				info.splice(0, 2)
@@ -80,7 +78,7 @@ module.exports = {
 				func.connection.query('insert into commands set ?', commInfo, function (err, result) {if (err) {return}})
 				bot.whisper(user.username, "Succesfully added the new command " + commName)
 			}
-			if(message.startsWith("!removecommand")) {
+			if(message[0] == "!removecommand") {
 				var info = message.split(" ")
 				var commName = info[1]
 				func.connection.query('delete from commands where commName = ?', commName, function (err, result) {

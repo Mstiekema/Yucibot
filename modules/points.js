@@ -8,11 +8,10 @@ var CronJob = require('cron').CronJob;
 
 module.exports = {
 	roulette: function (channel, user, message, self) {
-		if (message.startsWith("!roulette")) {
+		if (message[0] == "!roulette") {
 			function roulette() {
 			func.connection.query('select * from user where name = ?', user.username, function (err, result) {
-				var y = message.split(' ');
-				var bet = y[1]
+				var bet = message[1]
 				var oldPoints = result[0].points
 				if(!isNaN(bet)) {
 					if(oldPoints >= bet) {
@@ -63,7 +62,7 @@ module.exports = {
 		}
 	},
 	slot: function (channel, user, message, self) {
-		if (message.startsWith("!slot")) {
+		if (message[0] == ("!slot")) {
 			function slot() {
 			var sets = {
 				"1":["Kappa", "Keepo", "PogChamp", "EleGiggle"],
@@ -107,7 +106,7 @@ module.exports = {
 		}
 	},
 	dungeon: function (channel, user, message, self) {
-		if (message.startsWith("!startdungeon") && (user.username === channel.substring(1) || user.mod === true)) {
+		if (message[0] == "!startdungeon" && (user.username === channel.substring(1) || user.mod === true)) {
 			func.connection.query('update module set state = 1 where moduleName = "dungeonActive"', function (err, result) {if (err) {console.log(err)}})
 			bot.say(channel, "The dungeon queue has started! Type !enter in the chat to join the queue")
 			function doDungeonOpt(chance) {
@@ -204,7 +203,7 @@ module.exports = {
 			}
 			setTimeout(doDungeon, 120000)
 		}
-		if (message.startsWith("!enter")) {
+		if (message[0] == "!enter") {
 			func.connection.query('select * from module where moduleName = "dungeonActive"', function(err, result) {
 				if (result[0].state == 1) {
 					func.connection.query('SELECT * FROM dungeon WHERE user = ?', user.username, function(err, result) {
