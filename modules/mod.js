@@ -14,6 +14,9 @@ module.exports = {
 				process.exit(1)
 			}
 		}
+		if (message.startsWith("!emoteupdate")) { if (user.mod === true || user.username == channel.substring(1)) {
+			func.updateEmotes(channel.substring(1));
+		}}
 		 var message = message.toLowerCase()
 		 if (user.mod == false) { if (user.username != channel.substring(1)) { if (user.subscriber != true) {
 		 	func.connection.query('select * from timeout where type = "purge"', function(err, result) {

@@ -131,6 +131,74 @@ module.exports = {
       }
     }
   },
+  updateEmotes: function(channel) {
+    var sql = "insert into emotes (name, type, url) values ?"
+    var emotes = new Array;
+    var chnl = channel.slice(1,0)
+    module.exports.connection.query('TRUNCATE emotes',  function(err, result) {if (err) {console.log(err)}})
+
+    // Twitch emotes
+    request('https://twitchemotes.com/api_cache/v2/global.json', function (error, response, body) {
+    	var emoteBase = JSON.parse(body).emotes
+    	for(var key in emoteBase) {
+    		var emote = key
+    		var type = 'twitch'
+    		var imgId = emoteBase[key].image_id
+    		var url = 'https://static-cdn.jtvnw.net/emoticons/v1/' + imgId + '/3.0'
+    		emotes.push([emote, type, url])
+    	}
+    });
+    // BTTV emotes channel
+    request('https://api.betterttv.net/2/channels/' + channel, function (error, response, body) {
+    	var emoteBase = JSON.parse(body).emotes
+    	for(var key in emoteBase) {
+    		var emote = emoteBase[key].code
+    		var type = 'bttv'
+    		var imgId = emoteBase[key].id
+    		var url = 'https://cdn.betterttv.net/emote/' + imgId + '/3x'
+    		emotes.push([emote, type, url])
+    	}
+    });
+    // FFZ emotes channel
+    request('http://api.frankerfacez.com/v1/room/' + channel, function (error, response, body) {
+    	var base = JSON.parse(body)
+    	if (!base["room"]) return
+    	var roomid = base["room"]["_id"]
+    	var emoteBase = base["sets"][roomid].emoticons
+    	for(var key in emoteBase) {
+    		var emote = emoteBase[key].name
+    		var type = 'ffz'
+    		var imgId = emoteBase[key].id
+    		var url = 'https://cdn.frankerfacez.com/emoticon/' + imgId + '/4'
+    		emotes.push([emote, type, url])
+    	}
+    });
+    // BTTV emotes global
+    request('https://api.betterttv.net/2/emotes', function (error, response, body) {
+    	var emoteBase = JSON.parse(body).emotes
+    	for(var key in emoteBase) {
+    		var emote = emoteBase[key].code
+    		var type = 'bttv'
+    		var imgId = emoteBase[key].id
+    		var url = 'https://cdn.betterttv.net/emote/' + imgId + '/3x'
+    		emotes.push([emote, type, url])
+    	}
+    });
+    // FFZ emotes global
+    request('https://api.frankerfacez.com/v1/set/global', function (error, response, body) {
+    	var emoteBase = JSON.parse(body).sets['3'].emoticons
+    	for(var key in emoteBase) {
+    		var emote = emoteBase[key].name
+    		var type = 'ffz'
+    		var imgId = emoteBase[key].id
+    		var url = 'https://cdn.frankerfacez.com/emoticon/' + imgId + '/4'
+    		emotes.push([emote, type, url])
+    	}
+    });
+    setTimeout(function () { module.exports.connection.query(sql, [emotes], function (err, result) {
+      console.log("Updated all emotes")
+    })}, 7000);
+  },
   command: function(channel, user, message, command, cdtype, cooldown, botSay, remPoints) {
     if (message.startsWith(command)) {
       var toCD = user.username + command
