@@ -12,6 +12,7 @@ var exp = module.exports = {}
 exp.commands = function(channel, user, message, self) {
 	basic.customCommands(channel, user, message, self)
 	emotes.track(channel, user, message, self)
+	emotes.getStats(channel, user, message, self)
 	mod.commandManagement(channel, user, message, self)
 	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
