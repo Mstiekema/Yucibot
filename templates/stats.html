@@ -25,6 +25,15 @@ Yucibot has recorded a total of: <br>
 - <b><%= ban %></b> bans <br>
 
 <div class="top5">
+<h4>Top 5 Twitch emotes</h4>
+<p>
+#1 <img src="<%= (topemotes[0].url).slice(0, -4) %>/1.0"> <%= topemotes[0].name %> - <%= topemotes[0].uses %>x used<br>
+#2 <img src="<%= (topemotes[1].url).slice(0, -4) %>/1.0"> <%= topemotes[1].name %> - <%= topemotes[1].uses %>x used<br>
+#3 <img src="<%= (topemotes[2].url).slice(0, -4) %>/1.0"> <%= topemotes[2].name %> - <%= topemotes[2].uses %>x used<br>
+#4 <img src="<%= (topemotes[3].url).slice(0, -4) %>/1.0"> <%= topemotes[3].name %> - <%= topemotes[3].uses %>x used<br>
+#5 <img src="<%= (topemotes[4].url).slice(0, -4) %>/1.0"> <%= topemotes[4].name %> - <%= topemotes[4].uses %>x used<br>
+</p>
+
 <h4>Top 5 points</h4>
 <p>
 #1 <%= toppoints[0].name %> - <%= toppoints[0].points %> points<br>
