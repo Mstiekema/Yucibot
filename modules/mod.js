@@ -7,13 +7,6 @@ var func = require("./functions.js")
 
 module.exports = {
 	mod: function (channel, user, message, self) {
-		if (message[0] == "1quit") {
-			if (user.mod === true || user.username == channel.substring(1)) {
-				bot.say(channel, "Shutting down Yucibot MrDestructoid")
-				bot.disconnect()
-				process.exit(1)
-			}
-		}
 		if (message[0] == "!emoteupdate") { if (user.mod === true || user.username == channel.substring(1)) {
 			func.updateEmotes(channel.substring(1));
 		}}

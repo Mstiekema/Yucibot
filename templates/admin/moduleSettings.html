@@ -2,8 +2,27 @@
 <div class="top"><h2>Modules</h2></div>
 <div class="main">
 <h2>Module settings: <%= moduleInfo[0].moduleName %></h2>
-<p><a href="/admin/modules"><button>Go back</button></a><br>
-
+<p>
+  <table class="moduleTable">
+    <tr>
+      <th>Module</th>
+      <th>State</th>
+      <th>Description</th>
+      <th>Change</th>
+    </tr>
+  <% moduleInfo.forEach(function(moduleInfo) { %>
+    <tr>
+      <td><%= moduleInfo.shortName %></td>
+      <td><%= moduleInfo.state %></td>
+      <td><%= moduleInfo.moduleDescription %></td>
+      <td>
+      <button onclick="disableModule('<%= moduleInfo.moduleName %>')">Disable</button>
+      <button onclick="enableModule('<%= moduleInfo.moduleName %>')">Enable</button>
+      <a href="/admin/modules/<%= moduleInfo.moduleName %>"><button>Settings</button></a>
+      </td>
+    </tr>
+  <% }); %>
+  </table>
 </p>
 
 </div>

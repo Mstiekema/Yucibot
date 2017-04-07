@@ -17,7 +17,7 @@ module.exports = {
 			}
 		})
 	},
-	basicCommands: function (channel, user, message, self) {
+	google: function (channel, user, message, self) {
 		if (message[0] == "!google") {
 			function google() {
 			var q = message.substring(message.indexOf(" ") + 1);

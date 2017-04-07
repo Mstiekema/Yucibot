@@ -114,7 +114,9 @@ connection.query(
 	'CREATE TABLE module (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'moduleName VARCHAR(30),' +
+	'shortName VARCHAR(30),' +
 	'moduleDescription VARCHAR(500),' +
+	'type VARCHAR(30),' +
 	'state BOOL)',
 	function (err, result) {if (err) {return}}
 )
@@ -157,38 +159,56 @@ console.log("[DEBUG] Added all tables")
 
 connection.query('select * from user', function (err, result) {
 	if (result[0] == undefined) {
-		connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+		connection.query('insert into user set ? ', {"name": options.identity.admin, "points": 0, "num_lines": 0, "level": 500, "isMod": true },
+		function (err, result) {if (err) {console.log(err)}})
 		if (options.identity.admin != options.channels[0]) {
-			connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
-			connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+			connection.query('insert into user set ? ', {"name": options.channels[0], "points": 0, "num_lines": 0, "level": 400, "isMod": true },
+			function (err, result) {if (err) {console.log(err)}})
+			connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true },
+			function (err, result) {if (err) {console.log(err)}})
 		} else {
-			connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true }, function (err, result) {if (err) {console.log(err)}})
+			connection.query('insert into user set ? ', {"name": options.identity.username, "points": 0, "num_lines": 0, "level": 300, "isMod": true },
+			function (err, result) {if (err) {console.log(err)}})
 		}
 	} else {
 		console.log("[DEBUG] Didn't add users, already in table")
 	}
 })
 
-var sql = "insert into module (moduleName, moduleDescription, state) values ?";
+var sql = "insert into module (shortName, moduleName, moduleDescription, state, type) values ?";
 var moduleSettings = [
-	["dungeonActive", "Dungeon", false],
-	['useTwitchAPI', "All the commands that use the Twitch API to fetch data", true],
-	['basicCommands', "Some of the bais commands to use", true],
-	['updateProfile', "Creates a profile for each user with points, lines, etc.", true],
-	['fetchProfile', "Fetches information from all users, such as points and lines", true],
-	['owCommands', "Used to fetch the rank of any OW player", true],
-	['roulette', "Point gambling mini-game", true],
-	['slot', "Point gambling mini-game", true],
-	['dungeon', "Point gambling mini-game with the entire chat", true],
-	['fourtwenty', "Timer that notifies chat it's 16:20", true],
-	['twitter', "Pushes the users Twitter each 20 minutes", true],
-	['getSongs', "Songrequest from chat (player still buggy)", true],
-	['mod', "Module that enables purge, timeout and ban words to be enabled", true],
-	['link', "Gives non-subs a 20 second timeout if they post a link in chat", true],
-	['sub', "Notifies chat if a user subs or resubs", true],
-	['timeout', "Saves a log if a user is timed out or banned", true],
-	['clr', "Adds commands with CLR interaction", true],
+	// Main modules
+	[null, "dungeonActive", "Dungeon", false, null],
+	["Basic features", "basic", "Some basic commands and features", true, "main"],
+	["Fun commands", "fun", "A few fun commands for in the chat", false, "main"],
+	["Point commands", "point", "Point gambling commands", true, "main"],
+	["Profile", "profile", "Point system and creates profile for each user in the stream", true, "main"],
+	["Events", "events", "Different events that trigger in chat", true, "main"],
+	["Moderation", "moderation", "Adds moderation to the bot", true, "main"],
+	["CLR", "clr", "Features that enables chat interaction through CLR browser", true, "main"],
+	// Sub modules
+	["Info commands", "info", "Commands with info about the stream", true, "basic"],
+	["Custom commands", "custom", "Custom commands that can be added through chat or admin panel", true, "basic"],
+	["Songrequest", "songrequest", "Enables songrequest for users in chat", true, "basic"],
+	["Emotes", "emotes", "Enables the tracking of emote usage in chat", true, "basic"],
+	["Google", "google", "Google a question for chat", false, "fun"],
+	["OW Rank", "ow", "Checks Overwatch rank for streamer or custom input", false, "fun"],
+	["Roulette", "roulette", "Enables the !roulette command", true, "points"],
+	["Slot", "slot", "Enables the !slot command", true, "points"],
+	["Dungeons", "dungeon", "Enables the dungeons", false, "points"],
+	["Chat logger", "logger", "Log every message in chat", true, "profile"],
+	["Point system", "updatePoints", "Point system ", true, "profile"],
+	["Profile commands", "profileComm", "Enables commands to retrieve profile info", true, "profile"],
+	["Sub notifier", "subNotif", "Notifies when there's a new sub in chat", true, "events"],
+	["420 timer", "fourTwenty", "Pushes messages to chat at 16:20", false, "events"],
+	["Twitter timer", "twitter", "Pushes your Twitter to chat every 20 min", false, "events"],
+	["Ban words", "banWords", "Enables the banning of words", false, "mod"],
+	["Link moderation", "linkMod", "Disallow links from non subs", true, "mod"],
+	["CLR Commands", "clrComm", "Commands that triggers CLR sounds or images / GIFS", true, "clr"],
+	["Meme button", "clrMeme", "Meme button for CLR", false, "clr"],
+	["Clr sub notifier", "clrSub", "Sub alert on CLR", false, "clr"]
 ];
+
 connection.query('select * from module', function (err, result) {
 	if (result[0] == undefined) {
 		connection.query(sql, [moduleSettings], function (err, result) {console.log("[DEBUG] Added all modules")})
@@ -216,7 +236,8 @@ var standardCommands = [
 	["!clr", null, "Commands from the CLR module", "global", 10, 100, null, 1000],
 	["!totallines", null, "Returns the total recorded lines in chat", "global", 30, 100, null, 0],
 	["!currentsong", null, "Returns the song that's currently playing", "global", 1, 100, null, 0],
-	["!songrequest", null, "Allows subs to request songs in chat", "global", 10, 150, "!songrequest Enjoy the silence - Depeche Mode | !songrequest https://www.youtube.com/watch?v=aGSKrC7dGcY | !songrequest aGSKrC7dGcY", 0],
+	["!songrequest", null, "Allows subs to request songs in chat", "global", 10, 150, "!songrequest Enjoy the silence - Depeche Mode | \
+	!songrequest https://www.youtube.com/watch?v=aGSKrC7dGcY | !songrequest aGSKrC7dGcY", 0],
 	["!resetpoints", null, "Resets the points of the target", "global", 10, 300, "!resetpoints Mstiekema", 0],
 	["!addpoints", null, "Adds points to the target", "user", 1,300, "!addpoints kimodaptyl 12345", 0],
 	["!addcommand", null, "Adds a command to the bot", "user", 1, 300, "!addcommand !test This is a testing command :)", 0],

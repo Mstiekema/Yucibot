@@ -733,7 +733,7 @@ app.get('/admin/logs/:page', function(req, res) {
 });
 
 app.get('/admin/modules', function(req, res) {
-  func.connection.query('select * from module WHERE id != 1', function(err, result) {
+  func.connection.query('select * from module WHERE id != 1 AND type = "main"', function(err, result) {
     res.render('admin/modules.html', {
       moduleList: result,
       website: options.identity.websiteUrl
@@ -742,7 +742,7 @@ app.get('/admin/modules', function(req, res) {
 });
 
 app.get('/admin/modules/:page', function(req, res) {
-  func.connection.query('select * from module WHERE moduleName = ?', req.params.page, function(err, result) {
+  func.connection.query('select * from module WHERE type = ?', req.params.page, function(err, result) {
     res.render('admin/moduleSettings.html', {
       moduleInfo: result
     });

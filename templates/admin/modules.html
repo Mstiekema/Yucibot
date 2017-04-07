@@ -3,7 +3,7 @@
 <div class="main">
 <h2>Enable / disable modules</h2>
 <p>You can enable or disable all the modules here. <br>
-Doesn't the module start working after activating? <button onclick="restartBot()">Restart bot</button> </p>
+Doesn't the module start working after activation? <button onclick="restartBot()">Restart bot</button> </p>
 <table class="moduleTable">
   <tr>
     <th>Module</th>
@@ -13,7 +13,7 @@ Doesn't the module start working after activating? <button onclick="restartBot()
   </tr>
 <% moduleList.forEach(function(moduleList) { %>
   <tr>
-    <td><%= moduleList.moduleName %></td>
+    <td><%= moduleList.shortName %></td>
     <td><%= moduleList.state %></td>
     <td><%= moduleList.moduleDescription %></td>
     <td>
@@ -26,4 +26,5 @@ Doesn't the module start working after activating? <button onclick="restartBot()
 </table>
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/modules.js"></script>
 </body>
