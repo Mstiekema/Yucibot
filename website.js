@@ -747,7 +747,8 @@ app.get('/admin/modules', function(req, res) {
 app.get('/admin/modules/:page', function(req, res) {
   func.connection.query('select * from module WHERE type = ?', req.params.page, function(err, result) {
     res.render('admin/moduleSettings.html', {
-      moduleInfo: result
+      moduleInfo: result,
+      type: req.params.page
     });
   });
 });

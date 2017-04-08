@@ -1,6 +1,7 @@
 <% include adminheader.ejs %>
 <div class="top"><h2>Modules</h2></div>
 <div class="main">
+<% if (moduleInfo[0] != undefined) { %>
 <h2>Module settings: <%= moduleInfo[0].type %></h2>
 <p>
   <table class="moduleTable">
@@ -24,7 +25,41 @@
   <% }); %>
   </table>
 </p>
+<% } else { %>
+<h2>Module settings: <%= type %></h2>
+<p>
+<% if (type == "songrequest") { %>
+  SUB ONLY
+<% } else if (type == "roulette") { %>
+  MIN ROULETTE
+  COOLDOWN
+<% } else if (type == "slot") { %>
+  COOLDOWN
+<% } else if (type == "dungeon") { %>
+  MIN PARTICIPANTS
+  *MORE TO CUM*
+<% } else if (type == "updatePoints") { %>
+  POINT INTERVAL
+  POINTS PER INTERVAL
+<% } else if (type == "subNotif") { %>
+  NOTIF MESSAGE
+<% } else if (type == "linkMod") { %>
+  TIMEOUT TIME
+  PERMIT COMM
+<% } else if (type == "clrComm") { %>
+  COST PER TYPE
+  COOLDOWN
+<% } else if (type == "clrSub") { %>
+  MESSAGE
+  IMAGE
+  SOUND
+  MONTH MODIFIER
+<% } else { %>
+  No futher settings available at the moment.
+<% } %>
 
+</p>
+<% } %>
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>
 <script type="text/javascript" src="/../js/modules.js"></script>
