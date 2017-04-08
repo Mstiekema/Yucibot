@@ -148,7 +148,7 @@ connection.query(
 connection.query(
 	'CREATE TABLE emotes (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
-	'emoteId INT,' +
+	'emoteId VARCHAR(30),' +
 	'name VARCHAR(50),' +
 	'type VARCHAR(10),' +
 	'url VARCHAR(500))',
@@ -205,6 +205,7 @@ var moduleSettings = [
 	["Ban words", "banWords", "Enables the banning of words", false, "mod"],
 	["Link moderation", "linkMod", "Disallow links from non subs", true, "mod"],
 	["CLR Commands", "clrComm", "Commands that triggers CLR sounds or images / GIFS", true, "clr"],
+	["Chat emotes", "clrComm", "Sends every emote said in chat to the CLR", false, "clr"],
 	["Meme button", "clrMeme", "Meme button for CLR", false, "clr"],
 	["Clr sub notifier", "clrSub", "Sub alert on CLR", false, "clr"]
 ];

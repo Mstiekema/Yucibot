@@ -14,7 +14,7 @@ Doesn't the module start working after activation? <button onclick="restartBot()
 <% moduleList.forEach(function(moduleList) { %>
   <tr>
     <td><%= moduleList.shortName %></td>
-    <td><%= moduleList.state %></td>
+    <td><% if (moduleList.state == "1") { %> On <% } else { %> Off <% } %></td>
     <td><%= moduleList.moduleDescription %></td>
     <td>
     <button onclick="disableModule('<%= moduleList.moduleName %>')">Disable</button>

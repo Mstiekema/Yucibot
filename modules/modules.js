@@ -16,33 +16,33 @@ exp.commands = function(channel, user, message, self) {
 
 	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
-			basic.useTwitchAPI(channel, user, msg, self);
-			basic.customCommands(channel, user, msg, self);
-			mod.commandManagement(channel, user, msg, self);
-			songrequest.getSongs(channel, user, msg, self);
-			emotes.track(channel, user, msg, self)
-			emotes.getStats(channel, user, msg, self)
+			if (result[8].state == 1) { basic.useTwitchAPI(channel, user, msg, self); }
+			if (result[9].state == 1) { basic.customCommands(channel, user, msg, self); }
+			if (result[9].state == 1) { mod.commandManagement(channel, user, msg, self); }
+			if (result[10].state == 1) { songrequest.getSongs(channel, user, msg, self); }
+			if (result[11].state == 1) { emotes.track(channel, user, msg, self) }
+			if (result[11].state == 1) { emotes.getStats(channel, user, msg, self) }
 		}
 		if (result[2].state == 1) {
-			basic.google(channel, user, msg, self);
-			basic.owCommands(channel, user, msg, self);
+			if (result[12].state == 1) { basic.google(channel, user, msg, self); }
+			if (result[13].state == 1) { basic.owCommands(channel, user, msg, self); }
 		}
 		if (result[3].state == 1) {
-			points.roulette(channel, user, msg, self);
-			points.slot(channel, user, msg, self);
-			points.dungeon(channel, user, msg, self);
+			if (result[14].state == 1) { points.roulette(channel, user, msg, self); }
+			if (result[15].state == 1) { points.slot(channel, user, msg, self); }
+			if (result[16].state == 1) { points.dungeon(channel, user, msg, self); }
 		}
 		if (result[4].state == 1) {
-			profile.updateLines(channel, user, message, self);
-			profile.fetchProfile(channel, user, msg, self);
+			if (result[17].state == 1) { profile.updateLines(channel, user, message, self); }
+			if (result[19].state == 1) { profile.fetchProfile(channel, user, msg, self); }
 		}
 		if (result[6].state == 1) {
-			mod.mod(channel, user, msg, self);
-			mod.link(channel, user, msg, self);
+			if (result[23].state == 1) { mod.mod(channel, user, msg, self); }
+			if (result[24].state == 1) { mod.link(channel, user, msg, self); }
 		}
 		if (result[7].state == 1) {
-			clr.clrComm(channel, user, msg, self);
-			clr.emotes(channel, user, msg, self)
+			if (result[25].state == 1) { clr.clrComm(channel, user, msg, self); }
+			if (result[26].state == 1) { clr.emotes(channel, user, msg, self) }
 		}
 	})
 	if (msg[0] == "1quit") {
@@ -58,12 +58,12 @@ exp.events = function(channel, user, message, self) {
 	func.connection.query('select * from module', function(err, result) {
 		events.timeout();
 		if (result[4].state == 1) {
-			profile.updateProfile(channel, user, message, self);
+			if (result[18].state == 1) { profile.updateProfile(channel, user, message, self); }
 		}
 		if (result[5].state == 1) {
-			events.sub();
-			events.fourtwenty();
-			events.twitter();
+			if (result[20].state == 1) { events.sub(); }
+			if (result[21].state == 1) { events.fourtwenty(); }
+			if (result[22].state == 1) { events.twitter(); }
 		}
 	})
 };
