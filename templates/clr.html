@@ -44,6 +44,19 @@
     setTimeout(function () { $("#" + id).fadeOut(1000); }, 7000);
     setTimeout(function () { document.getElementById(id).remove() }, 8000);
   });
+  socket.on('chatEmote', function (data) {
+    var id = "id" + (String(Math.floor(Math.random() * 1000000)))
+    function getX() { return Math.floor(Math.random() * ($(window).width() - 300)) }
+    function getY() { return Math.floor(Math.random() * $(window).height()) }
+    $("body").append("<img id="+id+" src="+data.emote+"><br>")
+    $("#" + id).hide()
+    $("#" + id).fadeIn(1000)
+    document.getElementById(id).style.position = "absolute"
+    document.getElementById(id).style.left = getX()
+    document.getElementById(id).style.top = getY()
+    setTimeout(function () { $("#" + id).fadeOut(1000); }, 5000);
+    setTimeout(function () { document.getElementById(id).remove() }, 6000);
+  });
 </script>
 <style>
 body {

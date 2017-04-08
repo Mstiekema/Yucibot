@@ -138,9 +138,8 @@ module.exports = {
 		}
 		if (message[0] == "!addpoints") {
 			if (user.mod === true || user.username == channel.substring(1)) {
-				var msg = message.split(" ");
-				var points = parseInt(msg[2])
-				var rec = msg[1]
+				var points = parseInt(message[2])
+				var rec = message[1]
 				func.connection.query('update user set points = points + ' + points + ' where name = ?', rec, function (err, result) {
 					if (err) {
 						bot.whisper(user.username, "This isn't how you use this command. Usage: !addpoints USER POINTS")
@@ -155,8 +154,7 @@ module.exports = {
 		}
 		if (message[0] == "!resetpoints") {
 			if (user.mod === true || user.username == channel.substring(1)) {
-				var msg = message.split(" ");
-				var rec = msg[1]
+				var rec = message[1]
 				func.connection.query('update user set points = 0 where name = ?', rec, function (err, result) {
 					if (err) {
 						bot.whisper(user.username, "Something went wrong with excuting the command. Please try again")

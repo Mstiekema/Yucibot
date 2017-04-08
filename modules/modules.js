@@ -42,6 +42,7 @@ exp.commands = function(channel, user, message, self) {
 		}
 		if (result[7].state == 1) {
 			clr.clrComm(channel, user, msg, self);
+			clr.emotes(channel, user, msg, self)
 		}
 	})
 	if (msg[0] == "1quit") {

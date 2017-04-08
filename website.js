@@ -103,6 +103,9 @@ clr.on("sound", function(data) {
 clr.on("gif", function(data) {
   io.emit('gif', { "gif": data.gif })
 })
+clr.on("chatEmote", function(data) {
+  io.emit('chatEmote', { "emote": data.url })
+})
 
 io.on('connection', function (socket) {
   socket.on('restartBot', function (data) {
