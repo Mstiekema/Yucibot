@@ -594,10 +594,10 @@ app.get('/admin', function(req, res) {
   }
   function getMentions() {
     var client = new Twitter({
-      consumer_key: 'MT5mVF0itSoOw8cOnvH3iLxRD',
-      consumer_secret: 'bVHgy7JfEYDwrB5ijFmqNjLrI3NixTo7qgnGvWk3SA2QYjNBT6',
-      access_token_key: '367305627-1fVQhAvyO2fo73kiRCwq2PkdFV1fsyolcGPEym2f',
-      access_token_secret: '2WzsoxLjJA15A12ElesKM4NzVRQtjIAisRKkBgCBJPsd9'
+      consumer_key: options.apiKeys.twitter_consumer_key,
+      consumer_secret: options.apiKeys.twitter_consumer_secret,
+      access_token_key: options.apiKeys.twitter_access_token_key,
+      access_token_secret: options.apiKeys.twitter_access_token_secret
     });
     client.get('statuses/mentions_timeline', {count: 20}, function(error, tweets, response) {
       for(key in tweets) {

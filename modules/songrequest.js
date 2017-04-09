@@ -2,7 +2,7 @@ var tmi = require('tmi.js');
 var options = require('../config.js')
 var connect = require('../app.js')
 var bot = connect.bot
-var ytApiKey = options.identity.ytApiKey
+var ytApiKey = options.apiKeys.ytApiKey
 var request = require("request");
 var func = require("./functions.js")
 
