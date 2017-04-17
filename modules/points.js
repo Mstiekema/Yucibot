@@ -19,7 +19,7 @@ module.exports = {
 						if (x > 50) {
 							var r = parseInt(bet)
 							func.connection.query('update user set points = points + ' + r + ' where name = ?', user.username, function (err, result) {if (err) {return}})
-							bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points!")
+							bot.say(channel, user.username + ", You've won the roulette for " + bet  + " points! You now have " + (r + oldPoints) + " points! FeelsGoodMan")
 							var newLog = {type: "points", log: user.username + " won " + bet + " in roulette"}
 							func.addStats(user['user-id'], "roul", "Win", bet)
 							func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
@@ -27,7 +27,7 @@ module.exports = {
 						else {
 							var r = parseInt(bet)
 							func.connection.query('update user set points = points - ' + r + ' where name = ?', user.username, function (err, result) {if (err) {return}})
-							bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points!")
+							bot.say(channel, user.username + ", You've lost the roulette for " + bet + " points! You now have " + (oldPoints - r) + " points! FeelsBadMan")
 							var newLog = {type: "points", log: user.username + " lost " + bet + " in roulette"}
 							func.addStats(user['user-id'], "roul", "Loss", "-"+bet)
 							func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
@@ -41,14 +41,14 @@ module.exports = {
 					var x = Math.random() * 100
 					if (x > 50) {
 						func.connection.query('update user set points = points + points where name = ?', user.username, function (err, result) {if (err) {return}})
-						bot.say(channel, user.username + ", You've won the roulette for " + oldPoints  + " points!")
+						bot.say(channel, user.username + ", You've won the roulette for " + oldPoints  + " points! You now have " + (parseInt(oldPoints) + parseInt(oldPoints)) + " points! FeelsGoodMan")
 						var newLog = {type: "points", log: user.username + " won " + oldPoints + " in roulette"}
 						func.addStats(user['user-id'], "roul", "Win", oldPoints)
 						func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 					}
 					else {
 						func.connection.query('update user set points = 0 where name = ?', user.username, function (err, result) {if (err) {return}})
-						bot.say(channel, user.username + ", You've lost the roulette for " + oldPoints + " points!")
+						bot.say(channel, user.username + ", You've lost the roulette for " + oldPoints + " points! You now have 0 points FeelsBadMan")
 						var newLog = {type: "points", log: user.username + " lost " + oldPoints + " in roulette"}
 						func.addStats(user['user-id'], "roul", "Loss", "-"+oldPoints)
 						func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
