@@ -189,7 +189,8 @@ connection.query('select * from user', function (err, result) {
 var sql4 = "insert into moduleSettings (moduleType, settingName, shortName, value, message) values ?"
 var moduleSettingsPreset = [
 	["songrequest", "srSub", "Sub-only songrequest", 1, null],
-	["songrequest", "srMaxSong", "Max songs in queue", 3, null]
+	["songrequest", "srMaxSong", "Max songs in queue", 3, null],
+	["songrequest", "srMaxLength", "Max songlength (in seconds)", 600, null]
 ]
 
 connection.query('select * from moduleSettings', function (err, result) {

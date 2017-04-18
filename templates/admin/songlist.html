@@ -27,17 +27,25 @@ var player;
 
 function onYouTubeIframeAPIReady() {
 	setTimeout(function() {
-	player = new YT.Player('player', {
-		height: '360',
-		width: '640',
-		videoId: videos[0].songid,
-		events: {
-			'onReady': onPlayerReady,
-			'onStateChange': onPlayerStateChange
-		}
-	});
-}, 100);
+		player = new YT.Player('player', {
+			height: '360',
+			width: '640',
+			videoId: videos[0].songid,
+			events: {
+				'onReady': onPlayerReady,
+				'onStateChange': onPlayerStateChange
+			}
+		});
+	}, 100);
 }
+
+setTimeout(function (event) {
+	socket.emit('endSong', videos[0].songid)
+	socket.on('nextSong', function (data) {
+		socket.emit('refreshData');
+		nextVideo();
+	})
+}, (<%= srMaxLength %> * 1000) + 300);
 
 function onPlayerReady(event) {
 	event.target.playVideo();
@@ -64,7 +72,7 @@ function nextVideo() {
 	player.loadVideoById({
 	'videoId': videos[0].songid,
 	'startSeconds': 0,
-	'endSeconds': 600,
+	'endSeconds': <%= srMaxLength %>,
 	'suggestedQuality': 'large'
 	});
 }, 200);

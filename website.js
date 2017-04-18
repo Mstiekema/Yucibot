@@ -699,12 +699,14 @@ app.get('/admin/poll/create', function(req, res) {
 
 app.get('/admin/songlist', function(req, res) {
   func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
-    if (result == undefined || result[0] == undefined) {
-      res.render('admin/songlist.html', {songs: false})
-    }
-    else{
-      res.render('admin/songlist.html', {songs: true});
-    }
+    func.connection.query('select * from modulesettings where moduleType = "songrequest"', function(err, modSet) {
+      if (result == undefined || result[0] == undefined) {
+        res.render('admin/songlist.html', {songs: false, srMaxLength: 0})
+      }
+      else{
+        res.render('admin/songlist.html', {songs: true, srMaxLength: modSet[2].value});
+      }
+    });
   });
 });
 
