@@ -9,11 +9,17 @@ var func = require("./functions.js")
 module.exports = {
 	getSongs: function (channel, user, message, self) {
 		if (message[0] == "!sr" || message[0] == "!songrequest") {
-			if(user.subscriber == true) {
-				match(message, channel, user)
-			} else {
-				bot.whisper(user.username, "You're not allowed to request songs in this channel")
-			}
+			func.connection.query('select * from modulesettings where moduleType = "songrequest"', function(err, result) {
+				if (result[0].value == 1) {
+					if(user.subscriber == true) {
+						match(message, channel, user)
+					} else {
+						bot.whisper(user.username, "You're not allowed to request songs in this channel")
+					}
+				} else {
+					match(message, channel, user)
+				}
+			})
 		}
 		function match (songlink, channel, user) {
 			var link = String(songlink).match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
@@ -63,13 +69,16 @@ module.exports = {
 					if (songNames.indexOf(title) == -1) {
 						var users = result.map(function(a) {return a.name;})
 						var allNames = users.filter(function(b) {return b == user.username;});
-						var result = allNames.length;
-						if (result <= 2) {
-							func.connection.query('insert into songrequest set ?', srInfo, function (err, result) {if (err) {return}})
-							bot.say(channel, "Succesfully added " + base.snippet.title + ", requested by: " + user.username + " to the queue!")
-						} else {
-							bot.whisper(user.username, "You have more than 3 songs in the queue, please wait a minute before you request more")
-						}
+						var totalSongs = allNames.length;
+						func.connection.query('select * from modulesettings where moduleType = "songrequest"', function(err, result) {
+							var maxSong = result[1].value
+							if (totalSongs <= maxSong - 1) {
+								func.connection.query('insert into songrequest set ?', srInfo, function (err, result) {if (err) {return}})
+								bot.say(channel, "Succesfully added " + base.snippet.title + ", requested by: " + user.username + " to the queue!")
+							} else {
+								bot.whisper(user.username, "You have " + maxSong + " songs in the queue, please wait a minute before you request more")
+							}
+						})
 					} else {
 						bot.whisper(user.username, "This song has already been requested :/")
 					}

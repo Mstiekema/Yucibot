@@ -1,7 +1,8 @@
 <% include adminheader.ejs %>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/css-toggle-switch/latest/toggle-switch.css" />
 <div class="top"><h2>Modules</h2></div>
 <div class="main">
-<% if (moduleInfo[0] != undefined) { %>
+<% if (isSub != true) { %>
 <h2>Module settings: <%= moduleInfo[0].type %></h2>
 <p>
   <table class="moduleTable">
@@ -14,7 +15,7 @@
   <% moduleInfo.forEach(function(moduleInfo) { %>
     <tr>
       <td><%= moduleInfo.shortName %></td>
-      <td><% if (moduleInfo.state == "1") { %> On <% } else { %> Off <% } %></td>
+      <td><% if (moduleInfo.state == "1") { %> <span style="color: green;">On</span> <% } else { %> <span style="color: red;">Off</a> <% } %></td>
       <td><%= moduleInfo.moduleDescription %></td>
       <td>
       <button onclick="disableModule('<%= moduleInfo.moduleName %>')">Disable</button>
@@ -29,7 +30,16 @@
 <h2>Module settings: <%= type %></h2>
 <p>
 <% if (type == "songrequest") { %>
-  SUB ONLY
+
+  Sub-only songrequest
+  <div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox modSwitch" id="srSub" <% if (moduleInfo[0].value == "1") { %> checked <% } else { %>  <% } %> >
+    <label class="onoffswitch-label" for="srSub"></label>
+  </div><br>
+
+  Max songs in queue <br>
+  <input type="number" min=1 max=10 size=4 id="srMaxSong" value=<%= moduleInfo[1].value %>><br><br>
+
 <% } else if (type == "roulette") { %>
   MIN ROULETTE
   COOLDOWN
@@ -50,13 +60,19 @@
   COST PER TYPE
   COOLDOWN
 <% } else if (type == "clrSub") { %>
-  MESSAGE
+  This feature has not yet been implemented
+  <!-- MESSAGE
   IMAGE
   SOUND
-  MONTH MODIFIER
+  MONTH MODIFIER -->
 <% } else { %>
   No futher settings available at the moment.
 <% } %>
+
+<button id="modChange">Update module</button>
+
+<p id="showText"></p>
+<!-- THIS IS A SHITTY LOOKING MODAL, UPDATE WHEN YOU ADD BOOTSTRAP PLEASE -->
 
 </p>
 <% } %>

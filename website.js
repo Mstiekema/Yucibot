@@ -118,6 +118,15 @@ io.on('connection', function (socket) {
       socket.emit('pushSonglist', result);
     })
   })
+  socket.on('updateModule', function (data) {
+    console.log(data)
+    for (item in data) {
+      var id = data[item].id
+      var value = data[item].value
+      func.connection.query('update modulesettings set value = "'+value+'" where settingName = ?', id, function(err, result) {})
+    }
+    socket.emit("success")
+  })
   socket.on('buyCLR', function (data) {
     func.connection.query('select * from user where name = "'+data.user+'"', function(err,result){
       var points = result[0].points
@@ -746,10 +755,24 @@ app.get('/admin/modules', function(req, res) {
 
 app.get('/admin/modules/:page', function(req, res) {
   func.connection.query('select * from module WHERE type = ?', req.params.page, function(err, result) {
-    res.render('admin/moduleSettings.html', {
-      moduleInfo: result,
-      type: req.params.page
-    });
+    var specArr = ["songrequest", "roulette", "slot", "dungeon", "updatePoints", "subNotif", "linkMod", "clrComm", "clrSub"]
+    var type = req.params.page
+    if (type.indexOf(specArr)) {
+      func.connection.query('select * from modulesettings WHERE moduleType = ?', req.params.page, function(err, result) {
+        console.log(result)
+        res.render('admin/moduleSettings.html', {
+          moduleInfo: result,
+          type: type,
+          isSub: true
+        });
+      });
+    } else {
+      res.render('admin/moduleSettings.html', {
+        moduleInfo: result,
+        type: type,
+        isSub: false
+      });
+    }
   });
 });
 

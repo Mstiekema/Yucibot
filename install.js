@@ -122,6 +122,17 @@ connection.query(
 )
 
 connection.query(
+	'CREATE TABLE moduleSettings (' +
+	'id INT AUTO_INCREMENT PRIMARY KEY,' +
+	'moduleType VARCHAR(30),' +
+	'settingName VARCHAR(30),' +
+	'shortName VARCHAR(100),' +
+	'value INT,' +
+	'message VARCHAR(500))',
+	function (err, result) {if (err) {return}}
+)
+
+connection.query(
 	'CREATE TABLE pollQuestions (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'question VARCHAR(500))',
@@ -172,6 +183,20 @@ connection.query('select * from user', function (err, result) {
 		}
 	} else {
 		console.log("[DEBUG] Didn't add users, already in table")
+	}
+})
+
+var sql4 = "insert into moduleSettings (moduleType, settingName, shortName, value, message) values ?"
+var moduleSettingsPreset = [
+	["songrequest", "srSub", "Sub-only songrequest", 1, null],
+	["songrequest", "srMaxSong", "Max songs in queue", 3, null]
+]
+
+connection.query('select * from moduleSettings', function (err, result) {
+	if (result[0] == undefined) {
+		connection.query(sql4, [moduleSettingsPreset], function (err, result) {console.log("[DEBUG] Added all module settings")})
+	} else {
+		console.log("[DEBUG] Didn't add moduele settings, already in table")
 	}
 })
 
