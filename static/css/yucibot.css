@@ -453,10 +453,6 @@
   box-shadow: 3px 5px 5px black;
 }
 
-.menuItem:before {
-  content: '• ';
-}
-
 .main {
   position: absolute;
   left: 190px;

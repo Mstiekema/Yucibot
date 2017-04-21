@@ -58,7 +58,16 @@ module.exports = {
 					bot.say(channel, "I'm sorry, but that's not a valid roulette command " + user.username)
 				}
 			})}
-			func.cooldown("roulette", "user", user.username, 300, roulette)
+			func.connection.query('select * from modulesettings where moduleType = "roulette"', function(err, result) {
+				var bet = message[1]
+				var minBet = result[0].value
+				var cd = result[1].value
+				if (bet < minBet) {
+					bot.whisper(user.username, "You have to roulette atleast " + minBet + " points.")
+				} else {
+					func.cooldown("roulette", "user", user.username, cd, roulette)
+				}
+			})
 		}
 	},
 	slot: function (channel, user, message, self) {
@@ -102,7 +111,10 @@ module.exports = {
 				func.addStats(user['user-id'], "slot", "Loss", -100)
 				func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 			}}
-			func.cooldown("slot", "user", user.username, 300, slot)
+			func.connection.query('select * from modulesettings where moduleType = "slot"', function(err, result) {
+				var cd = result[0].value
+				func.cooldown("slot", "user", user.username, cd, slot)
+			})
 		}
 	},
 	dungeon: function (channel, user, message, self) {

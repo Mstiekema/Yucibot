@@ -450,11 +450,6 @@
   box-sizing: border-box;
   box-shadow: 3px 5px 5px gray;
 }
-
-.menuItem:before {
-  content: '• ';
-}
-
 .main {
   position: absolute;
   left: 190px;

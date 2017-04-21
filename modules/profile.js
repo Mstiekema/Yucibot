@@ -36,7 +36,10 @@ module.exports = {
 							}
 							request(info2, function (error, response, body) {
 								var id = JSON.parse(body).users[0]._id
-								func.addPoints(id, 5, userName)
+								func.connection.query('select * from modulesettings where moduleType = "updatePoints"', function(err, result) {
+									var pointAmount = result[0].value
+									func.addPoints(id, pointAmount, userName)
+								})
 								func.addXP(id, 1, userName)
 								func.addTime(id, 5, userName, "online")
 							})

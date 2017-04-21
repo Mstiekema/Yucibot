@@ -8,16 +8,23 @@ var func = require("./functions.js")
 
 module.exports = {
 	sub: function () {
-		bot.on("resub", function (channel, username, months, message) {
-		  bot.say(channel, "Thanks " + username + " for resubbing " + months + " months in a row to " + channel + "! PogChamp //")
-		  var newLog = {type: "sub", log: username + " resubbed for " + months + " months to " + channel + " with the following message: " + message}
-			func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
-		});
-		bot.on("subscription", function (channel, username, method) {
-			bot.say(channel, "Thanks " + username + " for subbing to " + channel.substring(1) + "! PogChamp")
-			var newLog = {type: "sub", log: username + " subbed to " + channel}
-			func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
-		});
+		func.connection.query('select * from modulesettings where moduleType = "subNotif"', function(err, result) {
+			bot.on("message", function (channel, username, months, message) {
+				if (months != "Kappa") return
+				var prePreResubMsg = result[1].message
+				var preResubMsg = prePreResubMsg.replace("[username]", username); var resubMsg = preResubMsg.replace("[months]", months);
+				bot.say(channel, resubMsg);
+		  	var newLog = {type: "sub", log: username + " resubbed for " + months + " months to " + channel + " with the following message: " + message}
+				func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
+			});
+			bot.on("subscription", function (channel, username, method) {
+				var preSubMsg = result[1].message
+				var subMsg = preSubMsg.replace("[username]", username)
+				bot.say(channel, subMsg);
+				var newLog = {type: "sub", log: username + " subbed to " + channel}
+				func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
+			});
+		})
 	},
 	timeout: function() {
 		bot.on("ban", function (channel, username, reason) {

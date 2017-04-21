@@ -194,7 +194,6 @@ var moduleSettingsPreset = [
 	["roulette", "roulMin", "Minimum amount of points for roulette", 10, null],
 	["roulette", "roulCd", "Cooldown (in seconds)", 300, null],
 	["slot", "slotCd", "Cooldown (in seconds)", 300, null],
-	["updatePoints", "pointInterval", "Point interval (in minutes)", 5, null],
 	["updatePoints", "amountPoints", "Points per interval", 5, null],
 	["subNotif", "subMsg", "New subcribers message", null, "Thanks for subbing [username]! PogChamp"],
 	["subNotif", "resubMsg", "Resubscriber message", null, "Thanks for resubbing [username] for [months] months! PogChamp"],

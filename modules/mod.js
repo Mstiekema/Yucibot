@@ -4,6 +4,7 @@ var connect = require('../app.js')
 var bot = connect.bot
 var request = require("request");
 var func = require("./functions.js")
+var allowedUsers = [];
 
 module.exports = {
 	mod: function (channel, user, message, self) {
@@ -50,14 +51,35 @@ module.exports = {
 			}
 		}
 	},
-	link: function(channel, user, message, self) {
+	link: function(channel, user, msg, self) {
+		var message = msg.join(" ")
+		func.connection.query('select * from modulesettings where moduleType = "linkMod"', function(err, result) {
+			var cd = result[1].value
+			var link = String(message).match(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/igm)
+			if(link != null) {
+				if (user.mod == false) { if (user.username != channel.substring(1)) { if(user.username.indexOf(allowedUsers) == -1 || allowedUsers[0] == undefined) {
+					if (result[0].value == 1) {
+						if (user.subscriber != true) { bot.timeout(channel, user.username, cd, "Non-subs are not allowed to post links") }
+					} else {
+						bot.timeout(channel, user.username, cd, "You are not allowed to post links")
+					}
+				}}}
+			}
+		})
 
-		// ADD A FUCKING PERMIT COMMAND YOU CUCK
+		function addToPermit(permUser) {
+			allowedUsers.push(permUser)
+			setTimeout(function() {
+				var index = allowedUsers.indexOf(permUser);
+				allowedUsers.splice(index, 1);
+			}, 30000);
+		}
 
-		var link = String(message).match(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/igm)
-		if(link != null) { if (user.mod == false) { if (user.username != channel.substring(1)) { if (user.subscriber != true) {
-			bot.timeout(channel, user.username, 20, "Non-subs are not allowed to post links")
-		}}}}
+		if (user.mod || user.username == channel.substring(1)) { if(msg[0] == "!permit") {
+			var permUser = msg[1]
+			addToPermit(permUser)
+			bot.say(channel, permUser + " can now post links for the next 30 seconds.")
+		}}
 	},
 	commandManagement: function(channel, user, message, self) {
 		if (user.mod || user.username == channel.substring(1)) {
