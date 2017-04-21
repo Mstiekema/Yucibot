@@ -51,6 +51,9 @@ module.exports = {
 		}
 	},
 	link: function(channel, user, message, self) {
+
+		// ADD A FUCKING PERMIT COMMAND YOU CUCK
+
 		var link = String(message).match(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/igm)
 		if(link != null) { if (user.mod == false) { if (user.username != channel.substring(1)) { if (user.subscriber != true) {
 			bot.timeout(channel, user.username, 20, "Non-subs are not allowed to post links")

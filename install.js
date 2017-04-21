@@ -190,7 +190,18 @@ var sql4 = "insert into moduleSettings (moduleType, settingName, shortName, valu
 var moduleSettingsPreset = [
 	["songrequest", "srSub", "Sub-only songrequest", 1, null],
 	["songrequest", "srMaxSong", "Max songs in queue", 3, null],
-	["songrequest", "srMaxLength", "Max songlength (in seconds)", 600, null]
+	["songrequest", "srMaxLength", "Max songlength (in seconds)", 600, null],
+	["roulette", "roulMin", "Minimum amount of points for roulette", 10, null],
+	["roulette", "roulCd", "Cooldown (in seconds)", 300, null],
+	["slot", "slotCd", "Cooldown (in seconds)", 300, null],
+	["updatePoints", "pointInterval", "Point interval (in minutes)", 5, null],
+	["updatePoints", "amountPoints", "Points per interval", 5, null],
+	["subNotif", "subMsg", "New subcribers message", null, "Thanks for subbing [username]! PogChamp"],
+	["subNotif", "resubMsg", "Resubscriber message", null, "Thanks for resubbing [username] for [months] months! PogChamp"],
+	["linkMod", "linkSubOnly", "Allow subs to post links", 1, null],
+	["linkMod", "linkTimeoutTime", "imeout for posting links (in seconds)", 20, null],
+	["clrComm", "clrCost", "Cost per CLR command", 1000, null],
+	["clrComm", "clrCd", "Cooldown (in seconds)", 120, null]
 ]
 
 connection.query('select * from moduleSettings', function (err, result) {

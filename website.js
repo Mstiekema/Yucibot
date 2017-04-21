@@ -119,7 +119,6 @@ io.on('connection', function (socket) {
     })
   })
   socket.on('updateModule', function (data) {
-    console.log(data)
     for (item in data) {
       var id = data[item].id
       var value = data[item].value
@@ -728,7 +727,7 @@ app.get('/admin/logs', function(req, res) {
   });
 });
 
-app.get('/admin/logs/:page', function(req, res) {
+app.get('/admin/logs/:page/', function(req, res) {
   func.connection.query('select * from adminlogs where type = ?', req.params.page, function(err, result) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
@@ -755,13 +754,21 @@ app.get('/admin/modules', function(req, res) {
   });
 });
 
-app.get('/admin/modules/:page', function(req, res) {
+app.get('/admin/modules/:page/', function(req, res) {
+  func.connection.query('select * from module WHERE type = ?', req.params.page, function(err, result) {
+    res.render('admin/moduleSettings.html', {
+      moduleInfo: result,
+      isSub: false
+    });
+  });
+});
+
+app.get('/admin/modules/:page/:id', function(req, res) {
   func.connection.query('select * from module WHERE type = ?', req.params.page, function(err, result) {
     var specArr = ["songrequest", "roulette", "slot", "dungeon", "updatePoints", "subNotif", "linkMod", "clrComm", "clrSub"]
-    var type = req.params.page
+    var type = req.params.id
     if (type.indexOf(specArr)) {
-      func.connection.query('select * from modulesettings WHERE moduleType = ?', req.params.page, function(err, result) {
-        console.log(result)
+      func.connection.query('select * from modulesettings WHERE moduleType = ?', req.params.id, function(err, result) {
         res.render('admin/moduleSettings.html', {
           moduleInfo: result,
           type: type,

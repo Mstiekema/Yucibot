@@ -20,7 +20,7 @@
       <td>
       <button onclick="disableModule('<%= moduleInfo.moduleName %>')">Disable</button>
       <button onclick="enableModule('<%= moduleInfo.moduleName %>')">Enable</button>
-      <a href="/admin/modules/<%= moduleInfo.moduleName %>"><button>Settings</button></a>
+      <a href="<%= moduleInfo.moduleName %>"><button>Settings</button></a>
       </td>
     </tr>
   <% }); %>
@@ -38,30 +38,79 @@
   </div><br>
 
   Max songs in queue <br>
-  <input type="number" min=1 max=10 size=4 id="srMaxSong" value=<%= moduleInfo[1].value %>><br><br>
+  <input type="number" min=1 max=10 size=4 id="srMaxSong" value="<%= moduleInfo[1].value %>"><br><br>
 
   Max songlength (in seconds) <br>
-  <input type="number" min=60 max=3600 size=4 id="srMaxLength" value=<%= moduleInfo[2].value %>><br><br>
+  <input type="number" min=60 max=3600 size=4 id="srMaxLength" value="<%= moduleInfo[2].value %>"><br><br>
+
+  <button id="modChange">Update module</button>
 
 <% } else if (type == "roulette") { %>
-  MIN ROULETTE
-  COOLDOWN
+
+  Minimum amount of points for roulette <br>
+  <input type="number" min=1 size=4 id="roulMin" value="<%= moduleInfo[0].value %>"><br><br>
+
+  Cooldown (in seconds) <br>
+  <input type="number" min=10 max=3600 size=4 id="roulCd" value="<%= moduleInfo[1].value %>"><br><br>
+
+  <button id="modChange">Update module</button>
+
 <% } else if (type == "slot") { %>
-  COOLDOWN
+
+  Cooldown (in seconds) <br>
+  <input type="number" min=10 max=3600 size=4 id="slotCd" value="<%= moduleInfo[0].value %>"><br><br>
+
+  <button id="modChange">Update module</button>
+
 <% } else if (type == "dungeon") { %>
-  MIN PARTICIPANTS
-  *MORE TO CUM*
+
+  Work in progress, more will be added in V1.4
+
 <% } else if (type == "updatePoints") { %>
-  POINT INTERVAL
-  POINTS PER INTERVAL
+
+  Point interval (in minutes) <br>
+  <input type="number" min=1 max=60 size=4 id="pointInterval" value="<%= moduleInfo[0].value %>"><br><br>
+
+  Points per interval <br>
+  <input type="number" min=1 max=100 size=4 id="amountPoints" value="<%= moduleInfo[1].value %>"><br><br>
+
+  <button id="modChange">Update module</button>
+
 <% } else if (type == "subNotif") { %>
-  NOTIF MESSAGE
+
+  New subcribers message <br>
+  <i>[username] = sub name, is a requirement in the sub message</i> <br>
+  <input type="text" id="subMsg" size=450 value="<%= moduleInfo[0].message %>"> <br>
+
+  Resubscriber message <br>
+  <i>[username] = sub name & [months] = number of months, are a requirement in the resub message</i> <br>
+  <input type="text" id="resubMsg" size=450 value="<%= moduleInfo[1].message %>"> <br>
+
+  <button id="modChange">Update module</button>
+
 <% } else if (type == "linkMod") { %>
-  TIMEOUT TIME
-  PERMIT COMM
+
+  Allow subs to post links
+  <div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox modSwitch" id="linkSubOnly" <% if (moduleInfo[0].value == "1") { %> checked <% } else { %>  <% } %> >
+    <label class="onoffswitch-label" for="linkSubOnly"></label>
+  </div><br>
+
+  Timeout for posting links (in seconds) <br>
+  <input type="number" min=1 max=600 size=4 id="linkTimeoutTime" value="<%= moduleInfo[1].value %>"><br><br>
+
+  <button id="modChange">Update module</button>
+
 <% } else if (type == "clrComm") { %>
-  COST PER TYPE
-  COOLDOWN
+
+  Cost per CLR command <br>
+  <input type="number" min=1 max=1000000 size=4 id="clrCost" value="<%= moduleInfo[0].value %>"><br><br>
+
+  Cooldown (in seconds) <br>
+  <input type="number" min=1 max=3600 size=4 id="clrCd" value="<%= moduleInfo[1].value %>"><br><br>
+
+  <button id="modChange">Update module</button>
+
 <% } else if (type == "clrSub") { %>
   This feature has not yet been implemented
   <!-- MESSAGE
@@ -71,8 +120,6 @@
 <% } else { %>
   No futher settings available at the moment.
 <% } %>
-
-<button id="modChange">Update module</button>
 
 <p id="showText"></p>
 <!-- THIS IS A SHITTY LOOKING MODAL, UPDATE WHEN YOU ADD BOOTSTRAP PLEASE -->
