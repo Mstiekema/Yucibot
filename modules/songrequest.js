@@ -1,3 +1,4 @@
+var io = require('socket.io')(2346);
 var tmi = require('tmi.js');
 var options = require('../config.js')
 var connect = require('../app.js')
@@ -9,15 +10,16 @@ var func = require("./functions.js")
 module.exports = {
 	getSongs: function (channel, user, message, self) {
 		if (message[0] == "!sr" || message[0] == "!songrequest") {
+			var msg = message.join(" ")
 			func.connection.query('select * from modulesettings where moduleType = "songrequest"', function(err, result) {
 				if (result[0].value == 1) {
 					if(user.subscriber == true) {
-						match(message, channel, user)
+						match(msg, channel, user)
 					} else {
 						bot.whisper(user.username, "You're not allowed to request songs in this channel")
 					}
 				} else {
-					match(message, channel, user)
+					match(msg, channel, user)
 				}
 			})
 		}
@@ -94,5 +96,35 @@ module.exports = {
 				}
 			});
 		}
+		if (message[0] == "!skip") { if (user.mod === true || user.username == channel.substring(1)) {
+			func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
+				if(result[0] == undefined) {
+					bot.whisper(user.username, "There's no song currently playing :/")
+				} else {
+					var id = result[0].id
+					io.emit('skipSong');
+					func.connection.query('delete from songrequest where id = "'+id+'" AND playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
+						bot.say(channel, "Succesfully removed the current song.")
+					});
+				}
+			});
+		}}
+		if (message[0] == "!removesong") { if (user.mod === true || user.username == channel.substring(1)) {
+			func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
+				if(result[0] == undefined) {
+					bot.whisper(user.username, "There's no song currently playing :/")
+				} else {
+					var id = message[1]
+					func.connection.query('delete from songrequest where songid = "'+id+'" AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
+						bot.say(user.username, "Succesfully removed the song.")
+					});
+				}
+			});
+		}}
+		if (message[0] == "!volume") { if (user.mod === true || user.username == channel.substring(1)) { io.emit('getVolumeComm') }}
+		if (message[0] == "!setvolume") { if (user.mod === true || user.username == channel.substring(1)) {
+			var newVol = message[1];
+			io.emit('setVolume', {"volume": newVol})
+		}}
 	}
 }

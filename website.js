@@ -24,6 +24,7 @@ var connect         = require('./app.js')
 var bot             = connect.bot
 var cio             = require('socket.io-client');
 var clr             = cio.connect('http://localhost:2345');
+var sr              = cio.connect('http://localhost:2346');
 var Twitter         = require('twitter');
 
 app.use(express.static(path.join(__dirname, 'static')));
@@ -106,12 +107,24 @@ clr.on("gif", function(data) {
 clr.on("chatEmote", function(data) {
   io.emit('chatEmote', { "emote": data.url })
 })
+sr.on("skipSong", function(data) {
+  io.emit('nextSong');
+})
+sr.on("setVolume", function(data) {
+  io.emit("setVolume", {"volume": data.volume})
+})
+sr.on("getVolumeComm", function() {
+  io.emit("getVolume")
+})
 
 io.on('connection', function (socket) {
   socket.on('restartBot', function (data) {
     bot.say(JSON.stringify(options.channels).slice(2, -2), "Restarting bot MrDestructoid");
     bot.disconnect();
     process.exit(1);
+  })
+  socket.on("returnVolume", function(data) {
+    bot.say(JSON.stringify(options.channels).slice(2, -2), "The current volume is: " + data.volume)
   })
   socket.on('refreshData', function (data) {
     func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){

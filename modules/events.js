@@ -9,8 +9,7 @@ var func = require("./functions.js")
 module.exports = {
 	sub: function () {
 		func.connection.query('select * from modulesettings where moduleType = "subNotif"', function(err, result) {
-			bot.on("message", function (channel, username, months, message) {
-				if (months != "Kappa") return
+			bot.on("resub", function (channel, username, months, message) {
 				var prePreResubMsg = result[1].message
 				var preResubMsg = prePreResubMsg.replace("[username]", username); var resubMsg = preResubMsg.replace("[months]", months);
 				bot.say(channel, resubMsg);

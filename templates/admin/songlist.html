@@ -39,7 +39,12 @@ function onYouTubeIframeAPIReady() {
 	}, 100);
 }
 
-setTimeout(function (event) {
+socket.on('nextSong', function (data) {
+	socket.emit('refreshData');
+	nextVideo();
+})
+
+var skipFirstOnTooLong = setTimeout(function (event) {
 	socket.emit('endSong', videos[0].songid)
 	socket.on('nextSong', function (data) {
 		socket.emit('refreshData');
@@ -59,6 +64,16 @@ function previousVideo() {
 	})
 }
 
+socket.on('setVolume', function(vol) {
+	var volume = parseInt(vol.volume)
+	player.setVolume(volume)
+})
+
+socket.on('getVolume', function() {
+	var vol = player.getVolume()
+	socket.emit('returnVolume', {"volume": vol})
+})
+
 function skipVideo() {
 	socket.emit('endSong', videos[0].songid)
 	socket.on('nextSong', function (data) {
@@ -69,13 +84,14 @@ function skipVideo() {
 
 function nextVideo() {
 	setTimeout(function() {
-	player.loadVideoById({
-	'videoId': videos[0].songid,
-	'startSeconds': 0,
-	'endSeconds': <%= srMaxLength %>,
-	'suggestedQuality': 'large'
-	});
-}, 200);
+		clearTimeout(skipFirstOnTooLong);
+		player.loadVideoById({
+			'videoId': videos[0].songid,
+			'startSeconds': 0,
+			'endSeconds': <%= srMaxLength %>,
+			'suggestedQuality': 'large'
+		});
+	}, 200);
 }
 
 function getSongName() {

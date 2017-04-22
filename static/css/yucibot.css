@@ -397,12 +397,12 @@
   border-style: solid;
   border-width: 1px;
   background-color: #253133;
-  margin-bottom: -33px;
+  margin-bottom: -49px;
 }
 
 .songItemInfoHistory {
   position: relative;
-  bottom: 30px;
+  bottom: 20px;
   float: inherit;
   left: 140px;
   text-align: left;
@@ -647,7 +647,7 @@ head {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Helvetica Neue', sans-serif;
   color: #d4dbdd;
   background-color: #292e2f;
   overflow: hidden;

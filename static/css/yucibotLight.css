@@ -395,12 +395,12 @@
   border-style: solid;
   border-width: 1px;
   background-color: #777b7c;
-  margin-bottom: -33px;
+  margin-bottom: -49px;
 }
 
 .songItemInfoHistory {
   position: relative;
-  bottom: 30px;
+  bottom: 20px;
   float: inherit;
   left: 140px;
   text-align: left;

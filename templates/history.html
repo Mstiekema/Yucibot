@@ -21,16 +21,19 @@ function change() {
 		<% if (songInfo.title == currSong[0].title) { %>
 			<div class="songItemHistory" id="playing">
 			<img src="<%= songInfo.thumb %>"></div><div class="songItemInfoHistory"><%= songInfo.title %> requested by: <%= songInfo.name %>
-			<br><a href="https://www.youtube.com/watch?v=<%= songInfo.songid %>" target="_blank" id="ytlink">YouTube link</a></div>
+			<br><a href="https://www.youtube.com/watch?v=<%= songInfo.songid %>" target="_blank" id="ytlink">YouTube link</a><br>
+      ID: <%= songInfo.songid %></div>
 		<% } else if (songInfo.playState == 0) { %>
 			<div class="songItemHistory">
 			<img src="<%= songInfo.thumb %>"></div><div class="songItemInfoHistory"><%= songInfo.title %> requested by: <%= songInfo.name %>
-			<br><a href="https://www.youtube.com/watch?v=<%= songInfo.songid %>" target="_blank" id="ytlink">YouTube link</a></div>
+			<br><a href="https://www.youtube.com/watch?v=<%= songInfo.songid %>" target="_blank" id="ytlink">YouTube link</a><br>
+      ID: <%= songInfo.songid %></div>
 		<% } else if (songInfo.playState == 2) { %>
 		<% } else { %>
 			<div class="songItemHistory" id="played">
 			<img src="<%= songInfo.thumb %>"></div><div class="songItemInfoHistory"><%= songInfo.title %> requested by: <%= songInfo.name %>
-			<br><a href="https://www.youtube.com/watch?v=<%= songInfo.songid %>" target="_blank" id="ytlink">YouTube link</a></div>
+			<br><a href="https://www.youtube.com/watch?v=<%= songInfo.songid %>" target="_blank" id="ytlink">YouTube link</a><br>
+      ID: <%= songInfo.songid %></div>
 		<% } %>
 	<% }); %>
 <% } else { %>
