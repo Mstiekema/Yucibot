@@ -59,6 +59,20 @@ module.exports = {
 			function viewers() {request(info, getViewers)}
 			func.cooldown("viewers", "global", user.username, 10, viewers)
 		}
+		if(message[0] == "!followage") {
+			function followage() {
+				var usr = user.username
+				var chnl = channel.substring(1)
+				if (message[1]) usr = message[1]
+				if (message[2]) chnl = message[2]
+				request('https://api.rtainc.co/twitch/channels/'+chnl+'/followers/'+usr+'?format=%5B1%5D+has+been+following+%5B0%5D+for+%5B2%5D',
+				function (error, response, body) {
+  				bot.say(channel, body)
+				});
+				request("", getViewers)
+			}
+			func.cooldown("followage", "global", user.username, 10, followage)
+		}
 		else if(message[0] == ("!game")) {
 			function getGame(error, response, body) {
 			  if (!error && response.statusCode == 200) {
