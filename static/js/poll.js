@@ -18,7 +18,7 @@ var socket = io.connect();
 			answers: pushAnswers
 		}
 		var askPoll = confirm("Are you sure that you are finished creating your poll?");
-		if (askPoll) {
+		if (askPoll == true) {
 			socket.emit('createPoll', newPoll)
 			window.location.href = "/poll"
 		} else {

@@ -3,6 +3,7 @@ var soundEl =document.querySelectorAll('.sound');
 var button =document.querySelectorAll('button');
 var popup = document.getElementById('showBox');
 var buy = document.getElementById('buyThing');
+var close = document.getElementById('close');
 var sounds = {
   "echo": 'https://puu.sh/tNZm7/6fd06f6b2f.mp3',
   "datboi": 'https://puu.sh/rk6dH/5ba8a259f8.mp3',
@@ -22,16 +23,28 @@ var gifs = {
 
 window.onclick = function(event) {
   if (event.target == popup) {
-    popup.style.display = "none";
-    $("#gifSpot").removeClass()
-    window.location.reload()
+    $('#showStuff').removeClass('animated bounceInDown');
+    $('#showStuff').addClass('animated bounceOutUp');
+    setTimeout(function () {
+      popup.style.display = "none";
+    }, 700);
   }
+}
+
+if (close) {
+  close.addEventListener('click', function() {
+    $('#showStuff').removeClass('animated bounceInDown');
+    $('#showStuff').addClass('animated bounceOutUp');
+    setTimeout(function () {
+      popup.style.display = "none";
+    }, 700);
+  })
 }
 
 if (buy) {
   buy.addEventListener('click', function() {
     var item = document.getElementById('gifSpot').getAttribute("class").split(" ")
-    var user = document.getElementById('name').innerHTML.slice(0, -2)
+    var user = document.getElementById('easyUsernameFetcher').innerHTML
     socket.emit("buyCLR", {"item": item[0], "user": user, "type": item[1]})
   })
 }
@@ -48,13 +61,15 @@ if (button) {
   for (var x = 0; x < button.length; x++) {
     button[x].addEventListener('click', function() {
       if(this.id == "loginBtn") return
+      $('#showStuff').removeClass('animated bounceOutUp');
+      $('#showStuff').addClass('animated bounceInDown');
       popup.style.display = "block";
       var type = $(this).attr("class")
-      if (type == "gif") {
+      if (type == "pure-button gif") {
         $("#gifSpot").addClass(this.id)
         $("#gifSpot").addClass("gif")
         $("#gifSpot").html("<img style='margin='auto'; width='300'; height='300';' src="+gifs[this.id]+" align='middle'><br>")
-      } else if (type == "sound") {
+      } else if (type == "pure-button sound") {
         $("#gifSpot").addClass(this.id)
         $("#gifSpot").addClass("sound")
         $("#gifSpot").html("<img style='margin='auto'; width='300'; height='300';' src="+gifs["sound"]+" align='middle'><br>")

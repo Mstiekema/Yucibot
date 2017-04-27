@@ -11,55 +11,66 @@ yucibot.controller('clips', function($scope, $interval, $log, $timeout) {
 	})
 })
 </script>
-<div class="top"><h2>Statistics</h2></div>
+<div class="container">
 <div class="main" ng-app="yucibot" ng-controller="clips">
+<h2>Statistics</h2>
+<div class="row">
 
-<h2>Stats</h2>
+<div class="col-lg-3 col-sm-6">
 <p>
-Yucibot has recorded a total of: <br>
-- <b><%= lines %></b> lines <br>
-- <b><%= user %></b> users <br>
-- <b><%= songrequest %></b> songrequests <br>
-- <b><%= stream %></b> streams <br>
-- <b><%= timeout %></b> timeouts <br>
-- <b><%= ban %></b> bans <br>
-
-<div class="top5">
-<h4>Top 5 Twitch emotes</h4>
-<p>
-#1 <img src="<%= (topemotes[0].url).slice(0, -4) %>/1.0"> <%= topemotes[0].name %> - <%= topemotes[0].uses %>x used<br>
-#2 <img src="<%= (topemotes[1].url).slice(0, -4) %>/1.0"> <%= topemotes[1].name %> - <%= topemotes[1].uses %>x used<br>
-#3 <img src="<%= (topemotes[2].url).slice(0, -4) %>/1.0"> <%= topemotes[2].name %> - <%= topemotes[2].uses %>x used<br>
-#4 <img src="<%= (topemotes[3].url).slice(0, -4) %>/1.0"> <%= topemotes[3].name %> - <%= topemotes[3].uses %>x used<br>
-#5 <img src="<%= (topemotes[4].url).slice(0, -4) %>/1.0"> <%= topemotes[4].name %> - <%= topemotes[4].uses %>x used<br>
-</p>
-
-<h4>Top 5 points</h4>
-<p>
-#1 <%= toppoints[0].name %> - <%= toppoints[0].points %> points<br>
-#2 <%= toppoints[1].name %> - <%= toppoints[1].points %> points<br>
-#3 <%= toppoints[2].name %> - <%= toppoints[2].points %> points<br>
-#4 <%= toppoints[3].name %> - <%= toppoints[3].points %> points<br>
-#5 <%= toppoints[4].name %> - <%= toppoints[4].points %> points<br>
-</p>
-
-<h4>Top 5 chatters</h4>
-<p>
-#1 <%= toplines[0].name %> - <%= toplines[0].num_lines %> lines<br>
-#2 <%= toplines[1].name %> - <%= toplines[1].num_lines %> lines<br>
-#3 <%= toplines[2].name %> - <%= toplines[2].num_lines %> lines<br>
-#4 <%= toplines[3].name %> - <%= toplines[3].num_lines %> lines<br>
-#5 <%= toplines[4].name %> - <%= toplines[4].num_lines %> lines<br>
+<h4>Standard stats</h4>
+<% if(lines) { %>- <b><%= lines %></b> lines <br> <% } %>
+<% if(user) { %>- <b><%= user %></b> users <br> <% } %>
+<% if(songrequest) { %>- <b><%= songrequest %></b> songrequests <br> <% } %>
+<% if(timeout) { %>- <b><%= timeout %></b> timeouts <br> <% } %>
+<% if(ban) { %>- <b><%= ban %></b> bans <% } %>
 </p>
 </div>
-<h4>Top 5 clips of the week</h4>
-<span>Do you want to see all the clips? Head over to <a href="https://www.twitch.tv/<%= locals.streamer %>/clips" target="_blank">THIS</a> page.</span>
+
+<div class="col-lg-3 col-sm-6">
+<h4>Top 5 Twitch emotes</h4>
+<p>
+<% if(topemotes[0]) { %> #1 <img src="<%= (topemotes[0].url).slice(0, -4) %>/1.0"> <%= topemotes[0].name %> - <%= topemotes[0].uses %>x used<br> <% } %>
+<% if(topemotes[1]) { %> #2 <img src="<%= (topemotes[1].url).slice(0, -4) %>/1.0"> <%= topemotes[1].name %> - <%= topemotes[1].uses %>x used<br> <% } %>
+<% if(topemotes[2]) { %> #3 <img src="<%= (topemotes[2].url).slice(0, -4) %>/1.0"> <%= topemotes[2].name %> - <%= topemotes[2].uses %>x used<br> <% } %>
+<% if(topemotes[3]) { %> #4 <img src="<%= (topemotes[3].url).slice(0, -4) %>/1.0"> <%= topemotes[3].name %> - <%= topemotes[3].uses %>x used<br> <% } %>
+<% if(topemotes[4]) { %> #5 <img src="<%= (topemotes[4].url).slice(0, -4) %>/1.0"> <%= topemotes[4].name %> - <%= topemotes[4].uses %>x used<br> <% } %>
+</p>
+</div>
+
+<div class="col-lg-3 col-sm-6">
+<h4>Top 5 points</h4>
+<p>
+<% if(toppoints[0]) { %> #1 <%= toppoints[0].name %> - <%= toppoints[0].points %> points<br> <% } %>
+<% if(toppoints[1]) { %> #2 <%= toppoints[1].name %> - <%= toppoints[1].points %> points<br> <% } %>
+<% if(toppoints[2]) { %> #3 <%= toppoints[2].name %> - <%= toppoints[2].points %> points<br> <% } %>
+<% if(toppoints[3]) { %> #4 <%= toppoints[3].name %> - <%= toppoints[3].points %> points<br> <% } %>
+<% if(toppoints[4]) { %> #5 <%= toppoints[4].name %> - <%= toppoints[4].points %> points<br> <% } %>
+</p>
+</div>
+
+<div class="col-lg-3 col-sm-6">
+<h4>Top 5 chatters</h4>
+<p>
+<% if(toplines[0]) { %> #1 <%= toplines[0].name %> - <%= toplines[0].num_lines %> lines<br> <% } %>
+<% if(toplines[1]) { %> #2 <%= toplines[1].name %> - <%= toplines[1].num_lines %> lines<br> <% } %>
+<% if(toplines[2]) { %> #3 <%= toplines[2].name %> - <%= toplines[2].num_lines %> lines<br> <% } %>
+<% if(toplines[3]) { %> #4 <%= toplines[3].name %> - <%= toplines[3].num_lines %> lines<br> <% } %>
+<% if(toplines[4]) { %> #5 <%= toplines[4].name %> - <%= toplines[4].num_lines %> lines<br> <% } %>
+</p>
+</div>
+</div>
+
+<div class="col-md-8">
+<h4>Top 5 clips of the week <small>Do you want to see all the clips? Head over to <a href="https://www.twitch.tv/<%= locals.streamer %>/clips" target="_blank">THIS</a> page.</small></h4>
 <p class="allClips" ng-repeat="iframe in iframe">
 Title: {{ iframe.title }}<br>
 Creator: {{ iframe.curator.name }}<br>
 Views: {{ iframe.views }}<br>
 <iframe ng-src='{{ iframe.embed_url + "&autoplay=false"}}' width='640' height='360' frameborder='0' scrolling='no' allowfullscreen='true'></iframe>
 </p>
+</div>
+</div>
 </div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
 </body>

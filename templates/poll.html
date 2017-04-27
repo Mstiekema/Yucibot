@@ -15,10 +15,10 @@ window.onload=function(){
 
 </script>
 <input type="hidden" id="refresh" value="no">
-<div class="top"><h1>Polls</h1></div>
 <div class="main" ng-app="yucibot" ng-controller="votePoll">
+<h2>Recent poll
 <% if (data[0] != undefined) { %>
-<p>Question: <%= data[0].question %><br><br>
+<small>Question: <%= data[0].question %></small></h2>
 
 Answers:
 <div id="answers" ng-repeat="x in answer">
@@ -29,7 +29,7 @@ Answers:
 
 <% if (voted.indexOf(localIp) != -1) { %><p><b>You have already voted on this poll</b></p><% } %>
 
-<br><button id="results">Results</button>
+<button id="results">Results</button>
 
 <% } else { %>
 <p>Couldn't find a poll with this ID :/</p>

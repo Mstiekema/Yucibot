@@ -1,532 +1,92 @@
-.footer {
-  text-align: center;
-  font-size: 12px;
-  color: #a2a8b7;
-}
-
-#xpBar {
-  width: 150px;
-  height: 150px;
-  top: 53px;
-  left: 70px;
-  position: absolute;
-  cursor: pointer
-}
-
-#userPf {
-  border-radius: 50%;
-  display: block;
-  margin: 0 auto;
-}
-
-.userProfile h1 {
-  line-height: 0px;
-}
-
-#logDiv {
-  position: absolute;
+.main {
   padding: 20px;
-  top: 325px;
-  bottom: 20px;
-  padding-top: 10px;
-  left: 20px;
-  right: 20px;
-  background-color: #141b1d;
-  overflow-y: auto;
+  padding-top: 0px;
 }
 
-.userinfo {
+.menu {
+  background-color: #f8f8f8;
+  border-bottom-style: groove;
+  text-align: center;
+  font-size: 18px;
+  line-height: 27px;
+  height: 50px;
+}
+
+.left {
+  top: -3px;
+  font-size: 25px;
   position: absolute;
-  padding: 20px 20px 0px 20px;
-  top: 20px;
-  padding-top: 10px;
-  left: 325px;
-  height: 280px;
-  width: 300px;
-  background-color: #141b1d;
+  left: 0px;
 }
 
-.userRanks {
-  position: absolute;
-  padding: 20px 20px 0px 20px;
-  top: 20px;
-  padding-top: 10px;
-  left: 680px;
-  height: 280px;
-  width: 250px;
-  background-color: #141b1d;
+.active {
+  background-color: #e9e9e9;
 }
 
-.userInfo b, .userRanks b {
-  border-left-style: solid;
+#answers, .answerRes {
   padding-left: 5px;
-  padding-right: 5px;
-  background-color: rgba(100, 65, 164, 0.6);
-}
-
-.userProfile {
-  position: absolute;
-  padding: 20px 20px 0px 20px;
-  top: 20px;
-  padding-top: 10px;
-  left: 20px;
-  width: 250px;
-  height: 280px;
-  background-color: #141b1d;
-  text-align: center;
-}
-
-#twitchInfo, #donations, #followers, #twitter {
-  background-color: #282828;
-}
-
-#twitchChat {
-  height: 90%;
-  width: 400px;
-}
-
-.tweet {
-  border: 3px solid #292e2f;
-  background-color: #2f3a3c;
-}
-
-.follower {
-  border-top: 1px solid #455867;
-  border-bottom: 1px solid #455867;
-  padding: 2% 0 2% 0
-}
-
-#twitter, #followers {
-  overflow-y: auto;
-}
-
-#twitter h3, #donations h3, #followers h3 {
-  margin-top: -5px;
-  margin-bottom: 5px;
-}
-
-#streamInfo {
-  position: absolute;
-  width: 360px;
-  top: 70px;
-  padding: 20px;
-  background-color: #282828;
-  left: 440px;
-}
-
-.adminPanel {
-  width: 360px;
-  background-color: #141414;
-  border: hidden;
-  color: #d4dbdd;
-  height: 30px;
-  padding-left: 10px;
-  box-shadow: 1px 1px gray;
-}
-
-.answerRes, #answers {
-  width: 250px;
-  padding-left: 10px;
-  border-left: 6px solid #731195;
-  background-color: transparent;
+  background-color: rgba(100, 65, 164, 0.4);
+  border-left: 5px solid #6441a4;
+  width: 200px;
 }
 
 #chart {
   float: right;
   position: absolute;
-  top: -110px;
-  left: 250px;
+  top: -20px;
+  right: 0px;
 }
 
-.vote {
-  height: 20px;
-  line-height: 0px;
-  background-color: #8849b9
-}
-
-.vote:hover {
-  background-color: #5c0b9a
-}
-
-.pollBtn {
-  position: relative;
-  float: right;
-}
-
-.pollItem {
-  position: relative;
-  top: 10px;
-  margin-right: 20px;
-  margin-bottom: -16px;
-  padding: 10px;
-  height: 40px;
-}
-
-.pollItem:nth-child(even) {
-    background-color: #1a1f21;
-}
-
-.pollItem:nth-child(odd) {
-    background-color: #212b2d;
-}
-
-.pollInput {
-  box-shadow: 2px 2px 2px black;
-  z-index: 2;
-  background: #4f5f64;
-  border: 1px solid black;
-  color: #d4dbdd;
-  padding-left: 10px;
-  padding-right: 10px;
-  box-shadow: 2px 2px 2px black;
-  width: 300px;
-  height: 40px;
-  color: #d4dbdd;
-}
-
-.commands {
-  border: 1px solid #2f3a3c;
-  padding-left: 20px;
-  margin-right: 20px;
-  position: relative;
-}
-
-.commandsDetails {
-  border: 1px solid #2f3a3c;
-  top: 20px;
-  padding-left: 20px;
-  margin-right: 20px;
-  position: relative;
-  background-color: #202629;
-}
-
-.commands:nth-child(odd) {
-    background-color: #212b2d;
-}
-
-.commands:nth-child(even) {
-    background-color: #1a1f21;
-}
-
-.testSounds tr:nth-child(even) {
-    background-color: #212b2d;
-}
-
-.testSounds tr:nth-child(odd) {
-    background-color: #1a1f21;
-}
-
-.testGifs tr:nth-child(even) {
-    background-color: #212b2d;
-}
-
-.testGifs tr:nth-child(odd) {
-    background-color: #1a1f21;
-}
-
-.twitch {
-  width: 1350px;
-  box-shadow: 5px 5px 5px black;
-}
-
-.allStreams {
-  width: 700px;
-  border: 3px solid #808080;
-  background-color: #384447;
-  margin-bottom: 20px;
-}
-
-.allClips {
-  position: relative;
-  height: 416px;
-  border: 3px solid #808080;
-  width: 640px;
-  background-color: #384447;
-}
-
-#selectDate {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-}
-
-.button {
-  background-color: #248d8a;
-  text-align: center;
-  padding-top: 20px;
-  vertical-align: middle;
-  right: 10px;
-  width: 150px;
-  height: 20px;
-  color: #d4dbdd;
-  padding-top: 20px;
-  line-height: 0px;
-}
-
-.videoTitle {
-  position: absolute;
-  height: 30px;
-  top: 20px;
-  left: 20px;
-  width: 1130px;
-  background-color: #1a2123;
-  padding: 10px 20px 20px 20px;
-}
-
-.queueLength {
-  position: absolute;
-  background-color: #22292b;
-  width: 188px;
-  height: 26px;
-  top: 80px;
-  left: 170px;
-  padding-left: 10px;
-  text-align: left;
-  padding-top: 12px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #2f3a3c;
-  font-size: 12px;
-}
-
-#previousVideo {
-  position: absolute;
-  width: 150px;
-  left: 20px;
-  top: 80px;
-  cursor: pointer
-}
-
-#skip {
-  position: absolute;
-  left: 396px;
-  top: 31px;
-  cursor: pointer
-}
-
-#skipVideo {
-  position: absolute;
-  left: 370px;
-  width: 150px;
-  top: 80px;
-  cursor: pointer
+.songController {
+  float: left;
+  width: 400px;
 }
 
 #player {
-  position: absolute;
-  left: 550px;
-  top: 100px;
-}
-
-#searchBarLogs {
-  box-shadow: 2px 2px 2px black;
-  z-index: 2;
-  background: #4f5f64;
-  border: none;
-  top: 30px;
-  right: 10px;
-  width: 300px;
-  height: 40px;
-  color: #d4dbdd;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-#searchBar {
-  box-shadow: 2px 2px 2px black;
-  z-index: 2;
-  background: transparent;
-  border: none;
-  top: 30px;
-  right: 10px;
-  width: 300px;
-  height: 40px;
-  color: #d4dbdd;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.search {
-  z-index: 2;
-  background-color: #4f5f64;
-  position: absolute;
-  top: 5px;
-  right: 30px;
-  width: 300px;
-  height: 40px;
+  float: right;
 }
 
 .songQueue {
-  position: absolute;
-  font-size: 14px;
-  top: 120px;
-  left: 20px;
-  bottom: 20px;
-  width: 460px;
-  background-color: #1a2123;
-  padding: 0px 20px 20px 20px;
-  overflow: auto;
-}
-
-.songQueueHistory {
-  position: absolute;
-  padding-top: 20px;
-  font-size: 14px;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
-  background-color: #1a2123;
-  padding: 0px 20px 20px 20px;
-  overflow-x: hidden;
-}
-
-#ytlink {
-  color: lightblue;
-}
-
-#played {
-  background-color: #3c2f33;
-}
-
-#playing {
-  background-color: #303c2f;
-}
-
-.songItemHistory {
-  border-style: solid;
-  border-width: 1px;
-  background-color: #253133;
-  margin-bottom: -49px;
-}
-
-.songItemInfoHistory {
-  position: relative;
-  bottom: 20px;
-  float: inherit;
-  left: 140px;
-  text-align: left;
+  float: left;
 }
 
 #songItem {
-  border-style: solid;
-  border-width: 1px;
-  background-color: #2f3a3c;
-  height: 90px;
-  padding-right: 20px;
+  width: 100%;
+  background-color: #c4c4c4;
+}
+
+#songItem:last-child {
+  margin-bottom: 20px;
+}
+
+#songItem {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  height: 91px;
+  border: 1px solid black;
 }
 
 #songItemInfo {
   position: relative;
-  padding-left: 140px;
-  bottom: 70px;
+  top: -80px;
+  left: 130px;
 }
 
-.top {
-  z-index: 1;
-  position:absolute;
-  left: 0px;
-  top: 0;
-  right:0;
-  line-height: 10px;
-  height: 50px;
-  padding-left: 55px;
-  background-color: #141b1d;
-  padding-top: 0px;
-  border-bottom-width: 1px;
-  border-bottom-color: gray;
-  border-bottom-style: solid;
-  box-shadow: 0px 5px 5px black;
-}
-
-.menu {
-  z-index: 2;
+.profile {
+  z-index: 5;
   position: absolute;
-  left: 0;
-  top: 51px;
-  bottom: 0px;
-  width: 190px;
-  background-color: #141b1d;
-  padding-left: 10px;
-  padding-right: 10px;
-  box-sizing: border-box;
-  box-shadow: 3px 5px 5px black;
-}
-
-.main {
-  position: absolute;
-  left: 190px;
-  top: 50px;
-  right:0;
-  bottom:0;
-  padding-left: 20px;
-  background-color: #292e2f;
-  overflow: auto;
-}
-
-.mainMenuClosed {
-  left: 0px;
-}
-
-#logMenu {
-  z-index: 3;
-  background-color: #22292b;;
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  border: 1px solid gray;
-  text-align: center;
-  box-shadow: 5px 5px 5px black;
-}
-
-#logMenu p {
-  width: 80px;
-  margin: 0px;
-}
-
-div.menu p:hover, div.login p:hover, div#logMenu p:hover {
-  background-color: #384447;
-  cursor: pointer;
-}
-
-div.menu p, .login p {
-  margin: 0px;
-}
-
-div.menu h3 {
-  margin: 5px;
-}
-
-#menuIconClosed, #menuIconOpen {
-  z-index: 3;
-  font-size: 40;
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  top: -5px;
-  cursor: pointer;
-}
-
-#name, .login {
-  z-index: 3;
-  font-size: 20;
-  position: absolute;
-  right: 340px;
-  top: 5px;
-  line-height: 35px;
-  text-align: right;
-  -webkit-user-select: none;
-}
-
-#name:hover {
-  color: #9eabaf;
-  cursor: pointer;
-}
-
-#pf {
-  border: 3px solid black;
-  float: left;
-  margin-right: 10px;
+  font-size: 16px;
+  right: 130px;
+  top: 40px;
+  width: 300px;
+  height: 90px;
+  border: groove #3c3e46;
+  background-color: #ffffff;
+  padding: 10px;
+  line-height: 20px;
+  user-select: none;
 }
 
 .profLeft {
@@ -534,81 +94,168 @@ div.menu h3 {
   padding-right: 10px;
 }
 
-.pfBtn {
-  margin-left: 10px;
-}
-
-#allLogBtn {
-  float: right;
-}
-
-#todayLog {
-  float: right;
-  margin-right: 10px;
-}
-
-.logs {
-  position: relative;
-  height: 20px;
-  top: 0px;
-  padding-bottom: 20px;
-  border: 1px solid #2f3a3c;
-  padding-left: 20px;
-  margin-right: 20px;
-  position: relative;
-  line-height: 10px;
-}
-
-.logs:nth-child(even) {
-  background-color: #181b1b;
-}
-
-.logs:nth-child(odd) {
-  background-color: #212325;
-}
-
-.profile {
-  z-index: 5;
-  position: absolute;
-  right: 330px;
-  top: 40px;
-  width: 300px;
-  height: 90px;
-  border: 3px solid #3c3e46;
-  background-color: #25262f;
-  padding-left: 20px;
-}
-
-#menu a:hover {
-  color: #5a6d73
-}
-
 .hidden {
   z-index: -1;
   display: "none";
 }
 
+.commText {
+  padding: 10px;
+}
+
+#dashboard, #twitter {
+  height: 770px;
+  background-color: #c9c9c9;
+  margin: 5px;
+  width: 350px;
+}
+
+#twitter {
+  overflow-y: auto;
+}
+
+#twitchChat {
+  top: 5px;
+  height: 770px;
+  margin-right: -10px;
+  margin-left: -10px;
+  width: 360px;
+}
+
+.adminPanel {
+  width: 100%;
+}
+
+#streamInfo {
+  margin-top: 10px;
+}
+
+#update {
+  float: right;
+}
+
+.tweet {
+  width: 100%;
+  border-bottom: 1px solid black
+}
+
+.tweet:last-child {
+  margin-bottom: 10px;
+}
+
+.follower {
+  margin-top: -1px;
+}
+
+#subMsg, #resubMsg {
+  width: 100%;
+}
+
+#logMenu {
+  float: right;
+  position: relative;
+  top: -88px;
+  right: 0px;
+  width: 100px;
+  height: 130px;
+  background-color: #a8a8a8;
+  border: 1px solid black;
+  text-align: center;
+  color: #ffffff;
+}
+
+#logMenu a {
+  color: #ffffff;
+}
+
+.logItem {
+  margin-bottom: -20px;
+}
+
+.logItem:hover {
+  width: 100%;
+  background-color: #868686;
+}
+
+.commandsAdmin {
+  padding: 10px;
+  background-color: #c9c9c9;
+  border: 1px solid black;
+}
+
+.create {
+  float: right;
+}
+
+.songItemHistory {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 91px;
+  border: 1px solid black
+}
+
+.songItemHistory p {
+  position: absolute;
+  top: 5px;
+  left: 130px;
+}
+
+#name, #nameShort {
+  user-select: none;
+  margin-top: -9px;
+  cursor: pointer;
+}
+
+.hover, #name:hover, #nameShort:hover {
+  background-color: lightgray;
+}
+
+#ytlink {
+  color: #6441A4;
+}
+
+#played {
+  background-color: rgba(177, 52, 52, 0.64);
+}
+
+#playing {
+  background-color: rgba(52, 177, 95, 0.64);
+}
+
 #showBox {
   display: none;
   z-index: 100;
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
   left: 0;
   top: 0;
-  background-color: rgba(0,0,0,0.7);
+  bottom: 0;
+  background-color: rgba(50, 50, 50, 0.7);
 }
 
 #showStuff {
-  width: 700px;
-  height: 400px;
-  background-color: #32434c;
+  width: 500px;
+  height: 450px;
+  background-color: #ffffff;
   margin: 0 auto;
   margin-top: 100px;
+  border-radius: 20px;
+}
+
+#showComms {
+  width: 500px;
+  height: 230px;
+  background-color: #ffffff;
+  margin: 0 auto;
+  margin-top: 100px;
+  border-radius: 20px;
 }
 
 #gifSpot {
   margin: 0 auto;
+  padding-top: 20px;
   width: 300px;
   height: 300px;
 }
@@ -620,85 +267,195 @@ div.menu h3 {
   line-height: 100px;
 }
 
-#loginBtn {
-  z-index: 3;
-  background-color: rgb(120, 55, 166);
+#bigMenuSearch {
   position: absolute;
-  right: 340px;
-  top: 5px;
+  font-size: 16px;
+  width: 200px;
+  top: 8px;
+  right: 20px;
+  height: 31px;
 }
 
-#loginBtn:hover {
-  background-color: rgb(87, 14, 138);
+#smallMenuSearch {
+  position: absolute;
+  font-size: 16px;
+  top: 6px;
+  right: 50px;
 }
 
-footer {
-  text-align: center;
-	position: absolute;
-	bottom: 10px;
+#loginBtn {
+  position: absolute;
+  top: 7px;
+  right: 230px;
 }
 
-footer u {
+#fullProfile {
+  position: absolute;
+  top: 10px;
+  right: 230px;
+}
+
+#fullProfileSmall {
+  position: absolute;
+  top: 10px;
+  right: 50px;
+}
+
+.pf {
+  border: 1px solid black;
+  float: left;
+  margin-right: 10px;
   cursor: pointer;
 }
 
-head {
-	position: relative;
-}
-
-body {
-  font-family: 'Helvetica Neue', sans-serif;
-  color: #d4dbdd;
-  background-color: #292e2f;
-  overflow: hidden;
-}
-
-.moduleTable td, th {
-  text-align: left;
-}
-
-.moduleTable tr:nth-child(even) {
-    background: #212b2d;
-}
-
-.moduleTable tr:nth-child(odd) {
-    background: #1a1f21;
-}
-
-th, td {
-  padding: 5px;
-}
-
-.menu a, #menu a, button a, #logMenu a {
-  color: #d4dbdd;
-  text-decoration: none;
-}
-
-a {
-  color: #4995c7;
-}
-
-.commDetails {
-  float: right;
+#xpBar {
   position: relative;
-  top: -10px;
-  left: -5px;
-}
-
-.commBtn {
-  margin-bottom: 20px;
-}
-
-button {
-  background-color: rgb(79, 89, 98);
-  padding: 10px;
-  border-radius: 5%;
-  transition-duration: 0.4s;
-  text-align: center;
-  color: #d4dbdd;
+  width: 155px;
+  height: 155px;
+  top: -150px;
+  left: 65px;
   cursor: pointer
 }
 
-button:hover {
-  background-color: #2f3a3c;
+#userPf {
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto;
+}
+
+#xpText {
+  margin-top: -150px;
+  font-size: 18px;
+}
+
+.userProfile {
+  text-align: center;
+}
+
+#logTop {
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #c9c9c9;
+}
+
+#allLogs {
+  margin-top: 10px;
+  background-color: #c9c9c9;
+}
+
+#logTop h3 {
+  margin-top: 0px;
+}
+
+.logs {
+  padding: 10px;
+  padding-bottom: 0px;
+  border-bottom: 1px solid black;
+}
+
+.logs:last-child {
+  margin-bottom: 20px;
+}
+
+#logDiv {
+  float: left;
+  width: 100%;
+}
+
+.userProfile h3 {
+  margin-top: -5px;
+  font-size: 26px;
+}
+
+.smallFull {
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 100%;
+  padding: 0 100em;
+  margin: 0 -100em;
+  background-color: rgba(255, 255, 255, 0.69);
+}
+
+.userProfile, .userInfo, .userRanks {
+  margin-top: 20px;
+  padding: 5px;
+  padding-left: 10px;
+  float: left;
+  margin-right: 33px; margin-left: 33px;
+  width: 300px;
+  height: 290px;
+  background-color: #c9c9c9;
+}
+
+#menu a:hover {
+  color: darkgray;
+}
+
+#loop {
+  position: absolute;
+  padding: 10px;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+}
+
+a, a:hover, a:focus {
+  color: gray;
+  text-decoration: none;
+}
+
+html {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 1370px) {
+  .short {
+    display: none;
+  }
+  .long {
+    display: inherit;
+  }
+  #smallMenu {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1370px) {
+  .short {
+    display: inherit;
+  }
+  .long {
+    display: none;
+  }
+  #smallMenu {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  #bigMenu {
+    display: none;
+  }
+  #smallMenu {
+    display: inherit;
+  }
+  .long {
+    display: none;
+  }
+  .short {
+    display: inherit;
+  }
+  .profile {
+    right: 0px;
+  }
+  #loginBtn {
+    position: absolute;
+    right: 50px;
+    top: 7px;
+  }
+  .songQueue {
+    width: 100%;
+  }
 }

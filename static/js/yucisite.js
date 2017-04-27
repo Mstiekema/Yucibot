@@ -1,48 +1,33 @@
-$("#searchBar").keyup(function(ev) {
+$(".searchBar").keyup(function(ev) {
   if (ev.which === 13) {
-    var name = $("input").val();
+    var name = document.getElementsByClassName('searchBar')[0].value + document.getElementsByClassName('searchBar')[1].value
     location.href = "/user/" + name;
   }
 });
 
-$("#menuIconOpen").hide();
-$("#menuIconClosed").click(function() {
-  $("#menuIconClosed").hide();
-  $(".menu").addClass('animated bounceOut');
-  $(".login").addClass('animated bounceOut');
-  $("#menuIconOpen").show();
-  setTimeout(function () { $(".main").addClass('mainMenuClosed'); }, 800);
-});
-
-$("#menuIconClosed").hover(function() {
-  $("#menuIconClosed").html("˟").css("font-size", 70).css("left", "15px");
-}, function() {
-  $("#menuIconClosed").html("☰").css("font-size", 40).css("left", "10px")
-});
-
-$("#menuIconOpen").click(function() {
-  $("#menuIconOpen").hide();
-  $(".main").removeClass('mainMenuClosed');
-  $(".menu").removeClass('animated bounceOut');
-  $(".login").removeClass('animated bounceOut');
-  $(".menu").addClass('animated bounceInLeft');
-  $(".login").addClass('animated bounceInLeft');
-  $(".menu").show();
-  $(".login").show();
-  $("#menuIconClosed").show();
-});
-
-$("#name").click(function() {
-  var classes = $(".profile").attr('class')
+$("#fullProfile").click(function() {
   $(".profile").toggleClass("hidden")
+  $("#name").toggleClass("hover")
 });
 
-$("#dark").click(function() {
-  localStorage.setItem("style", "dark")
-  window.location.reload()
+$("#fullProfileSmall").click(function() {
+  $(".profile").toggleClass("hidden")
+  $("#name").toggleClass("hover")
 });
 
-$("#light").click(function() {
-  localStorage.setItem("style", "light")
-  window.location.reload()
+$("#loop").click(function() {
+  $(".pure-menu-list").toggleClass("hidden")
+  $("#fullProfileSmall").toggleClass("hidden")
+  $("#smallMenuSearch").toggleClass("hidden")
 });
+
+document.onclick = function(event) {
+  if (event.target.id == "name" || $(event.target).attr('class') == "profile text-left" || event.target.id == "menu" || $(event.target).attr('class') == "fa fa-caret-down") {
+    return
+  } else if( $(event.target).attr('class') == "img-circle pf") {
+    window.location.href = "/user/" + event.target.id
+  } else {
+    $('.profile').addClass('hidden');
+    $("#name").removeClass("hover")
+  }
+}

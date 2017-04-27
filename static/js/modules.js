@@ -1,15 +1,15 @@
 var socket = io.connect();
 var moduleSetBtn = document.querySelector('.moduleBtn');
+var switches = document.getElementById('.moduleSwitch');
+$("[name='checkbox']").bootstrapSwitch();
 
-function disableModule(name) {
-  socket.emit('disableModule', name)
-  setTimeout(function() {window.location.reload(true)}, 100);
-}
-
-function enableModule(name) {
-  socket.emit('enableModule', name)
-  setTimeout(function() {window.location.reload(true)}, 100);
-}
+$('.moduleSwitch').on('switchChange.bootstrapSwitch', function (event, state) {
+  if (state == true) {
+    socket.emit('enableModule', this.id)
+  } else {
+    socket.emit('disableModule', this.id)
+  }
+});
 
 function restartBot() {
   socket.emit('restartBot')
@@ -25,7 +25,7 @@ if (moduleSetBtn) {
 
 var socket = io.connect()
 socket.on("success", function() {
-  $("#showText").html("Succesfully updated the module!").css("color", "green")
+  $("#succesMsg").removeClass("hidden")
 })
 
 var modChange = document.getElementById("modChange")
@@ -45,3 +45,9 @@ if (modChange) {
     socket.emit('updateModule', newValues)
   }, false);
 }
+
+$(document).ready( function() {
+  $('.close').click( function() {
+    $(this).parent().fadeOut();
+  });
+});

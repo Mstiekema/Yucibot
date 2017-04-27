@@ -1,0 +1,156 @@
+<script>
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag 	= document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+var socket = io.connect('<%= locals.website %>');
+
+function getVideos() {
+	socket.on('pushSonglist', function (data) {
+		videos.length = 0
+		queueVids.length = 0
+		songIds.length = 0
+		for (a = 0; a < data.length; a++) {
+			var songArr = data[a]
+			var length = data[a].length
+			videos.push(songArr)
+			queueVids.push(data[a].id)
+			songIds.push(data[a].songid)
+			lengths.push(length)
+		}
+	})
+}
+
+socket.emit('refreshData')
+getVideos()
+
+var lengths = new Array;
+var videos = new Array;
+var queueVids = new Array;
+var songIds = new Array;
+var player;
+
+function onYouTubeIframeAPIReady() {
+	setTimeout(function() {
+		player = new YT.Player('player', {
+			height: '360',
+			width: '640',
+			videoId: songIds[0],
+			events: {
+				'onReady': onPlayerReady,
+				'onStateChange': onPlayerStateChange
+			}
+		});
+	}, 100);
+}
+
+socket.on('nextSong', function (data) {
+	socket.emit('refreshData');
+	nextVideo();
+})
+
+var skipFirstOnTooLong = setTimeout(function (event) {
+	socket.emit('endSong', songIds[0])
+	socket.on('nextSong', function (data) {
+		socket.emit('refreshData');
+		nextVideo();
+	})
+}, (<%= srMaxLength %> * 1000) + 300);
+
+function onPlayerReady(event) {
+	event.target.playVideo();
+}
+
+function previousVideo() {
+	socket.emit('prevSong')
+	socket.on('nextSong', function (data) {
+		socket.emit('refreshData');
+		nextVideo();
+	})
+}
+
+socket.on('setVolume', function(vol) {
+	var volume = parseInt(vol.volume)
+	player.setVolume(volume)
+})
+
+socket.on('getVolume', function() {
+	var vol = player.getVolume()
+	socket.emit('returnVolume', {"volume": vol})
+})
+
+function skipVideo() {
+	socket.emit('endSong', songIds[0])
+	socket.on('nextSong', function (data) {
+		socket.emit('refreshData');
+		nextVideo();
+	})
+}
+
+function nextVideo() {
+	setTimeout(function() {
+		clearTimeout(skipFirstOnTooLong);
+		player.loadVideoById({
+			'videoId': songIds[0],
+			'startSeconds': 0,
+			'endSeconds': <%= srMaxLength %>,
+			'suggestedQuality': 'large'
+		});
+	}, 200);
+}
+
+function getSongName() {
+	title = videos[0].title
+	user = videos[0].name
+	$(".videoTitle").html("<b>Current song</b>: " + title + "<br>" + "<b>Requested by</b>: " + user);
+}
+
+function onPlayerStateChange(event) {
+	if (event.data == YT.PlayerState.ENDED) {
+		socket.emit('endSong', songIds[0])
+		socket.on('nextSong', function (data) {
+			socket.emit('refreshData');
+			nextVideo();
+			event.target.playVideo();
+		})
+	}
+	if (event.data == -1) {
+		socket.emit('refreshData')
+		event.target.playVideo();
+		getSongName();
+	}
+}
+
+var yucibot = angular.module('yucibot',[]);
+yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
+	$scope.getVideos = function() {
+		var vids = videos
+		var total = 0;
+	  for(count = 0; count < vids.length; count++){
+	  	if (vids[count].length < 600) {
+	  		total += vids[count].length
+	  	} else {
+	  		total += 600
+	  	}
+	  }
+		var h = Math.floor(total / 3600);
+		var m = Math.floor(total % 3600 / 60);
+		var s = Math.floor(total % 3600 % 60);
+	  $scope.length = (h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s
+		if(videos[0]) {
+			if(queueVids[0] == videos[0].id) {
+				vids.shift()
+			} else {
+				return
+			}
+			$scope.allSongs = vids
+		}
+	}
+	$scope.skip = function(id) {
+		socket.emit('removeSong', id)
+		socket.emit('refreshData')
+	}
+	$scope.getVideos()
+	$interval($scope.getVideos, 1000);
+})
+</script>

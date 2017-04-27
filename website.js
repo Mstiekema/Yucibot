@@ -65,33 +65,6 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-app.all('*', function(req, res, next) {
-  res.locals.website = options.identity.websiteUrl
-  res.locals.botName = options.identity.username
-  res.locals.streamer = options.channels[0]
-  res.locals.date = date
-  if (req.user) {
-    func.connection.query('select * from user where name = ?', req.user, function(err, result) {
-      if (result == undefined || result[0] == undefined) {
-        return
-      } else {
-        if (result[0].isMod == 1) {
-          res.locals.login = true,
-          res.locals.mod = true,
-          res.locals.name = req.user
-        } else {
-          res.locals.login = true,
-          res.locals.mod = false,
-          res.locals.name = req.user
-        }
-      };
-    });
-  } else {
-    res.locals.login = false
-  }
-  next()
-});
-
 clr.on("message", function(data) {
   io.emit('message', { "message": data.message, "user": data.user })
 })
@@ -296,19 +269,26 @@ app.all('*', function(req, res, next) {
       };
     });
   } else {
-    res.locals.login = false
+    res.locals.login = false,
+    res.locals.mod = false
   }
   next()
 });
 
 app.get('/', function(req, res) {
-  var info = {
-    url: 'https://api.twitch.tv/kraken/streams/' + JSON.stringify(options.channels).slice(2, -2),
+  var info1 = {
+    url: 'https://api.twitch.tv/kraken/users/' + JSON.stringify(options.channels).slice(3, -2),
     headers: {
       'Client-ID': clientID
     }
   }
-  request(info, function (error, response, body) {
+  var info2 = {
+    url: 'https://api.twitch.tv/kraken/streams/' + JSON.stringify(options.channels).slice(3, -2),
+    headers: {
+      'Client-ID': clientID
+    }
+  }
+  request(info2, function (error, response, body) {
     if (JSON.parse(body).stream != undefined) {
       var base = JSON.parse(body).stream
       var streamid = base._id
@@ -365,27 +345,27 @@ app.use('/user/:id', function(req, res) {
     var timeOnlineIndex;
     var timeOfflineIndex;
     for(var i = 0; i < points.length; i++) {
-      if(points[i]["name"] === req.params.id) {
+      if(points[i]["name"] === req.params.id.toLowerCase()) {
         pointIndex = i + 1
       }
     }
     for(var i = 0; i < xp.length; i++) {
-      if(xp[i]["name"] === req.params.id) {
+      if(xp[i]["name"] === req.params.id.toLowerCase()) {
         xpIndex = i + 1
       }
     }
     for(var i = 0; i < lines.length; i++) {
-      if(lines[i]["name"] === req.params.id) {
+      if(lines[i]["name"] === req.params.id.toLowerCase()) {
         linesIndex = i + 1
       }
     }
     for(var i = 0; i < timeOnline.length; i++) {
-      if(timeOnline[i]["name"] === req.params.id) {
+      if(timeOnline[i]["name"] === req.params.id.toLowerCase()) {
         timeOnlineIndex = i + 1
       }
     }
     for(var i = 0; i < timeOffline.length; i++) {
-      if(timeOffline[i]["name"] === req.params.id) {
+      if(timeOffline[i]["name"] === req.params.id.toLowerCase()) {
         timeOfflineIndex = i + 1
       }
     }
@@ -414,7 +394,7 @@ app.use('/user/:id', function(req, res) {
           var offH = Math.floor(userObj.timeOffline / 60);
           var onM = Math.floor(userObj.timeOnline % 60);
           var offM = Math.floor(userObj.timeOffline % 60);
-          var timeOnline = (onH > 0 ? onH + " houts " + (onM < 10 ? "0" : "") : "") + onM + " minutes"
+          var timeOnline = (onH > 0 ? onH + " hours " + (onM < 10 ? "0" : "") : "") + onM + " minutes"
           var timeOffline = (offH > 0 ? offH + " hours " + (offM < 10 ? "0" : "") : "") + offM + " minutes"
           if (url.split("/")[3] != undefined) {res.locals.logDate = url.split("/")[3]} else {res.locals.logDate = date}
           request("https://api.rtainc.co/twitch/channels/" + options.channels[0].substring(1) + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
@@ -468,15 +448,6 @@ app.get('/commands/clr', function(req, res) {
   });
 });
 
-app.get('/commands/:id', function(req, res) {
-  var comm = "!" + req.params.id
-  func.connection.query('select * from commands where commName = ?', comm, function(err, result) {
-    res.render('commandDetails.html', {
-      commands: result
-    })
-  });
-});
-
 app.get('/stats', function(req, res) {
   func.connection.query('select * from user', function(err, result) {
     request({
@@ -489,7 +460,6 @@ app.get('/stats', function(req, res) {
       var info = JSON.parse(body)
       io.emit('sendClips', body)
     });
-    var streams = result.length
     func.connection.query('select * from chatlogs', function(err, result) {
       var numLines = result.length
       func.connection.query('select * from user ORDER BY points DESC', function(err, result) {
@@ -512,7 +482,6 @@ app.get('/stats', function(req, res) {
                   lines: numLines,
                   user: user,
                   songrequest: songrequest,
-                  stream: streams,
                   timeout: allTimeouts,
                   ban: allBans,
                   toppoints: toppoints,
@@ -610,9 +579,6 @@ app.get('/poll/:id/result', function(req, res) {
 app.get('/admin', function(req, res) {
   var tweetArr = new Array;
   var followArr = new Array;
-  function getFollowers() {
-
-  }
   function getMentions() {
     var client = new Twitter({
       consumer_key: options.apiKeys.twitter_consumer_key,
@@ -630,70 +596,84 @@ app.get('/admin', function(req, res) {
     });
   }
   func.connection.query('select * from user where name = ?', JSON.stringify(options.channels).slice(3, -2), function(err, result) {
-    var info = {
-      url: 'https://api.twitch.tv/kraken/streams/' + result[0].userId,
-      headers: {
-        'Client-ID': clientID,
-        'Accept': 'application/vnd.twitchtv.v5+json'
-      }
-    }
-    var info2 = {
-      url: 'https://api.twitch.tv/kraken/channels/' + result[0].userId,
-      headers: {
-        'Client-ID': clientID,
-        'Accept': 'application/vnd.twitchtv.v5+json'
-      }
-    }
-    request(info, function (error, response, body) {
-      getMentions()
-      var follow = {
-        url: 'https://api.twitch.tv/kraken/channels/' + options.channels[0].substring(1) + '/follows',
+    if(res.locals.mod != true) {
+      res.render('error403.html');
+    } else {
+      var info = {
+        url: 'https://api.twitch.tv/kraken/streams/' + result[0].userId,
         headers: {
           'Client-ID': clientID,
-          'Accept': 'application/vnd.twitchtv.v3+json'
+          'Accept': 'application/vnd.twitchtv.v5+json'
         }
       }
-      request(follow, function (error, response, body) {
-        var base = JSON.parse(body).follows
-        for (key in base) {
-          var user = base[key].user.display_name
-          var since = base[key].created_at
-          var toPush = {"time": since, "user": user}
-          followArr.push(toPush)
+      var info2 = {
+        url: 'https://api.twitch.tv/kraken/channels/' + result[0].userId,
+        headers: {
+          'Client-ID': clientID,
+          'Accept': 'application/vnd.twitchtv.v5+json'
         }
-        if (JSON.parse(body).stream != undefined) {
-          var base = JSON.parse(body).stream
-          res.render('admin/home.html', {
-            status: "ONLINE",
-            game: base.game,
-            viewers: base.viewers,
-            title: base.channel.status,
-            streamer: base.channel.name,
-            views: base.channel.views,
-            followers: base.channel.followers,
-            tweets: tweetArr,
-            newFollowers: followArr
-          })
-        } else {
-          request(info2, function (error, response, body) {
-            var base = JSON.parse(body)
+      }
+      request(info, function (error, response, body) {
+        getMentions()
+        var follow = {
+          url: 'https://api.twitch.tv/kraken/channels/' + options.channels[0].substring(1) + '/follows',
+          headers: {
+            'Client-ID': clientID,
+            'Accept': 'application/vnd.twitchtv.v3+json'
+          }
+        }
+        request(follow, function (error, response, body) {
+          var base = JSON.parse(body).follows
+          for (key in base) {
+            var user = base[key].user.display_name
+            var since = base[key].created_at
+            var toPush = {"time": since, "user": user}
+            followArr.push(toPush)
+          }
+          if (JSON.parse(body).stream != undefined) {
+            var base = JSON.parse(body).stream
             res.render('admin/home.html', {
-              status: "OFFLINE",
+              status: "ONLINE",
               game: base.game,
-              viewers: 0,
-              title: base.status,
-              streamer: base.name,
-              views: base.views,
-              followers: base.followers,
+              viewers: base.viewers,
+              title: base.channel.status,
+              streamer: base.channel.name,
+              views: base.channel.views,
+              followers: base.channel.followers,
               tweets: tweetArr,
               newFollowers: followArr
             })
-          })
-        }
-      })
-    });
+          } else {
+            request(info2, function (error, response, body) {
+              var base = JSON.parse(body)
+              res.render('admin/home.html', {
+                status: "OFFLINE",
+                game: base.game,
+                viewers: 0,
+                title: base.status,
+                streamer: base.name,
+                views: base.views,
+                followers: base.followers,
+                tweets: tweetArr,
+                newFollowers: followArr
+              })
+            })
+          }
+        })
+      });
+    }
   });
 });
+
+app.get('/admin/*', function(req, res, next) {
+  func.connection.query('SELECT * FROM user', function(err, result) {
+    if(res.locals.mod != true) {
+      res.render('error403.html');
+    } else {
+      next()
+    }
+  })
+})
 
 app.get('/admin/poll', function(req, res) {
   func.connection.query('SELECT * FROM pollquestions', function(err, result) {
@@ -723,7 +703,7 @@ app.get('/admin/songlist', function(req, res) {
 });
 
 app.get('/admin/logs', function(req, res) {
-  func.connection.query('select * from adminlogs', function(err, result) {
+  func.connection.query('select * from adminlogs LIMIT 100', function(err, result) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
         log: false,

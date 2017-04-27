@@ -28,13 +28,16 @@ for (var i = 0; i < edit.length; i++) {
 
 if (update) {
   update.addEventListener('click', function() {
+    var points = document.getElementById('points').value;
+    var level = document.getElementById('level').value;
+    if (points != 0) {level = 110}
     var updatedComm = {
       commName: window.location.href.split("/").pop(),
       response: document.getElementById('response').value,
-      level: document.getElementById('level').value,
+      level: level,
       cdType: document.getElementById('cdType').value,
       cd: document.getElementById('cd').value,
-      points: document.getElementById('points').value
+      points: points
     }
     socket.emit('updateComm', updatedComm)
     window.location.href = "/admin/commands"

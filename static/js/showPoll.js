@@ -67,7 +67,7 @@ function makeGraph() {
       backgroundColor: { fill:'transparent' },
       fontName: "Roboto",
       width: 600,
-      height: 500,
+      height: 400,
       legend: {textStyle: { color: "#7b6bb8"}, alignment: 'center', position: 'left'}
     };
     var chart = new google.visualization.PieChart(document.getElementById('chart'));

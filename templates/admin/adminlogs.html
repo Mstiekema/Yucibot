@@ -1,6 +1,6 @@
-<% include adminheader.ejs %>
-<div class="top"><h2>Admin logs</h2></div>
+<% include ../header.ejs %>
 <div class="main">
+<h2>Admin logs</h2>
 <% if(!type) { %>
 <div id="logTop"><h3>Couldn't find a record of these logs</h3> <button id="allLogBtn"><a href="/user/<%= name %>/logs">All logs</a></button>
 <% } else if(type == "all") { %>
@@ -11,12 +11,12 @@
 <p>Search logs: <input id="searchBarLogs" type="text" placeholder="Chat log">
 </div>
 <div id="logMenu">
-<u>Log menu</u>
-<p><a href='/admin/logs'>All</a></p>
-<p><a href='/admin/logs/points'>Points</a></p>
-<p><a href='/admin/logs/timeout'>Timeout</a></p>
-<p><a href='/admin/logs/sub'>Subs</a></p>
-<p><a href='/admin/logs/login'>Login</a></p>
+<u>Log menu</u><br>
+<p class="logItem"><a href='/admin/logs'>All</a></p><br>
+<p class="logItem"><a href='/admin/logs/points'>Points</a></p><br>
+<p class="logItem"><a href='/admin/logs/timeout'>Timeout</a></p><br>
+<p class="logItem"><a href='/admin/logs/sub'>Subs</a></p><br>
+<p class="logItem"><a href='/admin/logs/login'>Login</a></p><br>
 </div>
 
 <% if (log != false) { %>

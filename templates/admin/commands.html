@@ -1,9 +1,8 @@
-<% include adminheader.ejs %>
-<div class="top"><h2>Manage commands</h2></div>
+<% include ../header.ejs %>
 <div class="main">
-<p><button class="create">Create command</button></p>
+<h2>Manage commands<small><button class="create">Create command</button></small></h2>
 <% commands.forEach(function(commands) { %>
-  <div class="commands"><p>
+  <div class="commandsAdmin">
     <b>Command:</b> <%= commands.commName %> <br>
     <% if (commands.commDesc != null) { %> <b>Description:</b> <%= commands.commDesc %> <br> <% } %>
     <% if (commands.response != null) { %><b>Response:</b> <%= commands.response %> <br> <% } %>
@@ -11,9 +10,9 @@
     <b>Cooldown type:</b> <%= commands.cdType %> <br>
     <b>Cooldown:</b> <%= commands.cd %> seconds <br>
     <b>User level:</b> <%= commands.level %> <br>
-    <% if (commands.points != 0) { %> <b>Point cost:</b> <%= commands.points %> points <br><br> <% } %>
+    <% if (commands.points != 0) { %> <b>Point cost:</b> <%= commands.points %> points <br> <% } %>
     <button class="remove" id=<%= commands.commName %>>Remove command</button> <button class="edit" id=<%= commands.commName %>>Edit command</button>
-  </p></div>
+  </div>
 <% }) %>
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>

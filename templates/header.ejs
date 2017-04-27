@@ -1,49 +1,114 @@
+<!DOCTYPE html>
 <html>
 <head>
 <link rel="shortcut icon" href="/../img/favicon.ico" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/../css/yucibot.css" id="css">
-<link rel="stylesheet" type="text/css" href="/../css/button.css" id="css">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
-<script>
-if(localStorage.style == undefined || localStorage.style == "undefined") {
-  localStorage.setItem("style", "dark")
-  $('#css').attr('href','/../css/yucibot.css');
-} else if (localStorage.style == "light") {
-  $('#css').attr('href','/../css/yucibotLight.css');
-} else {
-  $('#css').attr('href','/../css/yucibot.css');
-}
-</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap2/bootstrap-switch.css">
+<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="/../css/yucibot.css" id="css">
 <script src="/socket.io/socket.io.js"></script>
-<meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
-<meta http-equiv="expires" content="Sat, 31 Oct 2014 00:00:00 GMT">
-<meta http-equiv="pragma" content="no-cache">
+<script>
+$(document).ready(function () {
+	var loc = $('.pure-menu-item').find('a').attr('href');
+	var url = location.href.split('/')
+	var urlEnd = "/" + url[3]
+	var div = $('a[href^="'+urlEnd+'"]')[0];
+  $(".pure-menu-item a").removeClass("active");
+  $(div).addClass('active');
+});
+</script>
 <title>Yucibot</title>
 </head>
 <body>
-<% if (locals.login == true) { %>
-<div id="name"><%= locals.name %> &#9660;</div>
-<div class="profile hidden">
-  <p id="menu">
-    <img src="<%= locals.profile_pic %>" id="pf" width="50" height="50">
-    <u>Hey there <%= locals.name %>!</u><br>
-    <a href='/user/<%= locals.name %>'>User page</a> <span class="profLeft">Points: <%= locals.prof_points %></span> <br>
-    <a href='/logout'>Logout</a> <span class="profLeft">Lines: <%= locals.num_lines %></span>
-  </p>
+<div class="pure-menu pure-menu-horizontal menu">
+	<div id="bigMenu">
+  <a href="http://www.yucibot.nl" target="_blank"><span class="pure-menu-disabled left"><b>Yucibot</b></span></a>
+  <ul class="pure-menu-list">
+    <li class="pure-menu-item"><a class="pure-menu-link" href="/">Home</a></li>
+    <li class="pure-menu-item"><a class="pure-menu-link" href="/commands">Commands</a></li>
+    <li class="pure-menu-item"><a class="pure-menu-link" href="/stats">Stats</a></li>
+    <li class="pure-menu-item"><a class="pure-menu-link" href="/poll">Recent poll</a></li>
+    <li class="pure-menu-item"><a class="pure-menu-link" href="/history">Songlist History</a></li>
+    <% if (locals.mod == true) { %>
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+      <a href="/admin" class="pure-menu-link">Admin</a>
+        <ul class="pure-menu-children">
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/admin/songlist">Songlist</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/admin/commands">Command manager</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/admin/poll">Poll management</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/admin/logs">Admin logs</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/admin/modules">Modules</a></li>
+        </ul>
+      </li>
+    <% } %>
+  </ul>
+	<% if (locals.login == true) { %>
+	<div id="fullProfile">
+		<div class="pure-menu-link long" id="name">Profile <i class="fa fa-caret-down" aria-hidden="true"></i></div>
+		<div class="pure-menu-link short" id="name"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+	</div>
+	<div class="profile hidden text-left">
+	  <p id="menu">
+	    <img src="<%= locals.profile_pic %>" class="img-circle pf" id="<%= locals.name %>" width="65" height="65">
+	    <u>Hey there <%= locals.name %>!</u><br>
+	    <a href='/user/<%= locals.name %>'>User page</a> <span class="profLeft">Points: <%= locals.prof_points %></span><br>
+	    <a href='/logout'>Logout</a> <span class="profLeft">Lines: <%= locals.num_lines %></span>
+	  </p>
+	</div>
+	<% } else { %>
+	<a class="btn btn-default" id="loginBtn" href="/login">Login</a>
+	<% } %>
+	<form class="pure-form"><input id="bigMenuSearch" class="searchBar" type="text" class="form-control" placeholder="Username"></form>
+	</div>
+	<div class="pure-menu pure-menu-horizontal testMenu" id="smallMenu">
+		<div class="pure-menu pure-menu-horizontal">
+		  <ul class="pure-menu-list">
+		    <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+		      <a class="pure-menu-link pure-menu-disabled">Yucibot</a>
+		      <ul class="pure-menu-children smallFull">
+						<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/">Home</a></li>
+						<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/commands">Commands</a></li>
+						<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/stats">Stats</a></li>
+						<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/poll">Recent poll</a></li>
+						<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/history">Songlist History</a></li>
+						<% if (locals.mod == true) { %>
+							<li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+								<a href="/admin" class="pure-menu-link smallFull">Admin</a>
+								<ul class="pure-menu-children smallFull" style="left:-10px;">
+									<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/admin/songlist">Songlist</a></li>
+									<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/admin/commands">Command manager</a></li>
+									<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/admin/poll">Poll management</a></li>
+									<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/admin/logs">Admin logs</a></li>
+									<li class="pure-menu-item"><a class="pure-menu-link smallFull" href="/admin/modules">Modules</a></li>
+								</ul>
+							</li>
+						<% } %>
+		      </ul>
+		    </li>
+		  </ul>
+		</div>
+		<% if (locals.login == true) { %>
+		<div id="fullProfileSmall"><div class="pure-menu-link short" id="name"><i class="fa fa-caret-down" aria-hidden="true"></i></div></div>
+		<div class="profile hidden text-left">
+			<p id="menu">
+				<img src="<%= locals.profile_pic %>" class="img-circle pf" id="<%= locals.name %>" width="65" height="65">
+				<u>Hey there <%= locals.name %>!</u><br>
+				<a href='/user/<%= locals.name %>'>User page</a> <span class="profLeft">Points: <%= locals.prof_points %></span><br>
+				<a href='/logout'>Logout</a> <span class="profLeft">Lines: <%= locals.num_lines %></span>
+			</p>
+		</div>
+		<% } else { %>
+		<a class="btn btn-default btn-right" id="loginBtn" href="/login">Login</a>
+		<% } %>
+		<i class="fa fa-search" id="loop" aria-hidden="true"></i>
+		<form class="pure-form"><input id="smallMenuSearch" class="hidden searchBar" type="text" class="form-control" placeholder="Username"></form>
+	</div>
 </div>
-<% } else { %>
-<a href="/login"><button id="loginBtn">Login</button></a>
-<% } %>
-<div id="menuIconClosed">&#9776;</div>
-<div id="menuIconOpen">&#9776;</div>
-<div class="search"><input id="searchBar" type="text" placeholder="Username"></div>
-<div>
-<% if (locals.mod == true) { %>
-<% include ../static/html/adminmenu.htm %>
-<% } else { %>
-<% include ../static/html/menu.htm %>
-<% } %>
-</div>
+<div class="hidden" id="easyUsernameFetcher"><%= locals.name %></div>
+<div class="container">

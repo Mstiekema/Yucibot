@@ -6,13 +6,13 @@ function change() {
     window.location.href = "/history/" + currentVal;
 }
 </script>
-<div class="top"><h2>Songlist history</h2></div>
 <div class="main">
 <div class="songQueueHistory">
-
 <h2>Songlist of <%= listDate %> </h2>
+
 <% if (currSong[0].songid != undefined) { %>
-<p>Current song: <%= currSong[0].title %><br>Requested by: <%= currSong[0].name %> <a href="https://www.youtube.com/watch?v=<%= currSong[0].name %>">YouTube link</a>
+<p><a href="#playing"><i class="fa fa-link" aria-hidden="true"></i>
+Current song: <%= currSong[0].title %></a><br>Requested by: <%= currSong[0].name %> <a href="https://www.youtube.com/watch?v=<%= currSong[0].songid %>" target="_blank" id="ytlink">YouTube link</a>
 <% } %>
 <div id="selectDate"><label>Select stream date</label>
 <input type="date" id="myDate" onchange="change()" value="<%= listDate %>"></div>
@@ -20,20 +20,20 @@ function change() {
 	<% songInfo.forEach(function(songInfo) { %>
 		<% if (songInfo.title == currSong[0].title) { %>
 			<div class="songItemHistory" id="playing">
-			<img src="<%= songInfo.thumb %>"></div><div class="songItemInfoHistory"><%= songInfo.title %> requested by: <%= songInfo.name %>
+			<img src="<%= songInfo.thumb %>"><p><%= songInfo.title %><bR> Requested by: <%= songInfo.name %>
 			<br><a href="https://www.youtube.com/watch?v=<%= songInfo.songid %>" target="_blank" id="ytlink">YouTube link</a><br>
-      ID: <%= songInfo.songid %></div>
+      ID: <%= songInfo.songid %></p></div>
 		<% } else if (songInfo.playState == 0) { %>
 			<div class="songItemHistory">
-			<img src="<%= songInfo.thumb %>"></div><div class="songItemInfoHistory"><%= songInfo.title %> requested by: <%= songInfo.name %>
+			<img src="<%= songInfo.thumb %>"><p><%= songInfo.title %><br> Requested by: <%= songInfo.name %>
 			<br><a href="https://www.youtube.com/watch?v=<%= songInfo.songid %>" target="_blank" id="ytlink">YouTube link</a><br>
-      ID: <%= songInfo.songid %></div>
+      ID: <%= songInfo.songid %></p></div>
 		<% } else if (songInfo.playState == 2) { %>
 		<% } else { %>
 			<div class="songItemHistory" id="played">
-			<img src="<%= songInfo.thumb %>"></div><div class="songItemInfoHistory"><%= songInfo.title %> requested by: <%= songInfo.name %>
+			<img src="<%= songInfo.thumb %>"><p><%= songInfo.title %><br> Requested by: <%= songInfo.name %>
 			<br><a href="https://www.youtube.com/watch?v=<%= songInfo.songid %>" target="_blank" id="ytlink">YouTube link</a><br>
-      ID: <%= songInfo.songid %></div>
+      ID: <%= songInfo.songid %></p></div>
 		<% } %>
 	<% }); %>
 <% } else { %>

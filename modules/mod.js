@@ -84,12 +84,11 @@ module.exports = {
 	commandManagement: function(channel, user, message, self) {
 		if (user.mod || user.username == channel.substring(1)) {
 			if(message[0] == ("!addcommand")) {
-				var info = message.split(" ")
-				var commName = info[1]
-				info.splice(0, 2)
+				var commName = message[1]
+				message.splice(0, 2)
 				var commInfo = {
 					commName: commName,
-					response: info.join(" "),
+					response: message.join(" "),
 					cdType: "global",
 					cd: 10,
 				}
@@ -97,8 +96,7 @@ module.exports = {
 				bot.whisper(user.username, "Succesfully added the new command " + commName)
 			}
 			if(message[0] == "!removecommand") {
-				var info = message.split(" ")
-				var commName = info[1]
+				var commName = message[1]
 				func.connection.query('delete from commands where commName = ?', commName, function (err, result) {
 					if (err) {
 						bot.whisper(user.username, "Couldn't find the command you were looking for")

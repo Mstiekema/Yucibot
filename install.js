@@ -13,7 +13,7 @@ connection = mysql.createConnection({
 connection.query(
 	'CREATE TABLE user (' +
 	'name VARCHAR(30) PRIMARY KEY,' +
-	'userId INT,' +
+	'userId VARCHAR(36),' +
 	'accToken VARCHAR(30),' +
 	'points INT,' +
 	'xp INT DEFAULT 0,' +
@@ -22,7 +22,8 @@ connection.query(
 	'timeOnline INT DEFAULT 0,' +
 	'timeOffline INT DEFAULT 0,' +
 	'profile_pic VARCHAR(200),' +
-	'isMod BOOL DEFAULT FALSE)',
+	'isMod BOOL DEFAULT FALSE,' +
+	'UNIQUE (name))',
 	function (err, result) {if (err) {return}}
 )
 
@@ -270,7 +271,7 @@ var standardCommands = [
 	["!rq", null, "Returns a random recorded quote from the current user", "user", 30, 100, null, 0],
 	["!points", null, "Bot whispers your amount of points", "global", 5, 100, null, 0],
 	["!lines", null, "Returns the amount of lines the user has typed", "global", 20, 100, null, 0],
-	["!clr", null, "Commands from the CLR module", "global", 10, 100, null, 1000],
+	["!clr", null, "Commands from the CLR module", "global", 10, 110, null, 1000],
 	["!totallines", null, "Returns the total recorded lines in chat", "global", 30, 100, null, 0],
 	["!currentsong", null, "Returns the song that's currently playing", "global", 1, 100, null, 0],
 	["!songrequest", null, "Allows subs to request songs in chat", "global", 10, 150, "!songrequest Enjoy the silence - Depeche Mode | \

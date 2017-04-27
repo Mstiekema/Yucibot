@@ -1,165 +1,24 @@
-<% include adminheader.ejs %>
-<script>
-var tag 			= document.createElement('script');
-tag.src 			= "https://www.youtube.com/iframe_api";
-var firstScriptTag 	= document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-var socket = io.connect('<%= locals.website %>');
-
-function getVideos() {
-	socket.on('pushSonglist', function (data) {
-		videos.length = 0
-		for (a = 0; a < data.length; a++) {
-			var songArr = data[a]
-			var length = data[a].length
-			videos.push(songArr)
-			lengths.push(length)
-		}
-	})
-}
-
-socket.emit('refreshData')
-getVideos()
-
-var lengths = new Array;
-var videos = new Array;
-var player;
-
-function onYouTubeIframeAPIReady() {
-	setTimeout(function() {
-		player = new YT.Player('player', {
-			height: '360',
-			width: '640',
-			videoId: videos[0].songid,
-			events: {
-				'onReady': onPlayerReady,
-				'onStateChange': onPlayerStateChange
-			}
-		});
-	}, 100);
-}
-
-socket.on('nextSong', function (data) {
-	socket.emit('refreshData');
-	nextVideo();
-})
-
-var skipFirstOnTooLong = setTimeout(function (event) {
-	socket.emit('endSong', videos[0].songid)
-	socket.on('nextSong', function (data) {
-		socket.emit('refreshData');
-		nextVideo();
-	})
-}, (<%= srMaxLength %> * 1000) + 300);
-
-function onPlayerReady(event) {
-	event.target.playVideo();
-}
-
-function previousVideo() {
-	socket.emit('prevSong')
-	socket.on('nextSong', function (data) {
-		socket.emit('refreshData');
-		nextVideo();
-	})
-}
-
-socket.on('setVolume', function(vol) {
-	var volume = parseInt(vol.volume)
-	player.setVolume(volume)
-})
-
-socket.on('getVolume', function() {
-	var vol = player.getVolume()
-	socket.emit('returnVolume', {"volume": vol})
-})
-
-function skipVideo() {
-	socket.emit('endSong', videos[0].songid)
-	socket.on('nextSong', function (data) {
-		socket.emit('refreshData');
-		nextVideo();
-	})
-}
-
-function nextVideo() {
-	setTimeout(function() {
-		clearTimeout(skipFirstOnTooLong);
-		player.loadVideoById({
-			'videoId': videos[0].songid,
-			'startSeconds': 0,
-			'endSeconds': <%= srMaxLength %>,
-			'suggestedQuality': 'large'
-		});
-	}, 200);
-}
-
-function getSongName() {
-	title = videos[0].title
-	user = videos[0].name
-	$(".videoTitle").html("Current song: " + title + "<br>" + "Requested by: " + user);
-}
-
-function onPlayerStateChange(event) {
-	if (event.data == YT.PlayerState.ENDED) {
-		socket.emit('endSong', videos[0].songid)
-		socket.on('nextSong', function (data) {
-			socket.emit('refreshData');
-			nextVideo();
-			event.target.playVideo();
-		})
-	}
-	if (event.data == -1) {
-		socket.emit('refreshData')
-		event.target.playVideo();
-		getSongName();
-	}
-}
-
-var yucibot = angular.module('yucibot',[]);
-yucibot.controller('songQueue', function($scope, $http, $log, $interval) {
-	$scope.getVideos = function() {
-		var vids = videos
-		var total = 0;
-	    for(count = 0; count < vids.length; count++){
-	        if (vids[count].length < 600) {
-	        	total += vids[count].length
-	        } else {
-	        	total += 600
-	        }
-	    }
-		var h = Math.floor(total / 3600);
-		var m = Math.floor(total % 3600 / 60);
-		var s = Math.floor(total % 3600 % 60);
-	    $scope.length = (h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s
-		$scope.allSongs = vids
-	}
-	$scope.skip = function(id) {
-		socket.emit('removeSong', id)
-		socket.emit('refreshData')
-	}
-	$scope.getVideos()
-	$interval($scope.getVideos, 1000);
-})
-
-</script>
-<div class="top"><h2>Songlist</h2></div>
+<% include ../header.ejs %>
+<% include ../../static/js/songlist.ejs %>
 <div class="main" ng-app="yucibot" ng-controller="songQueue">
-<div class="videoTitle"></div>
+<h2>Songlist <small>Queue length: {{ length }}</small></h2>
+<% if(songs == true) { %>
+<div class="songController">
+	<button type="button" class="btn btn-warning" onclick="previousVideo()">Previous video</button> <button type="button" class="btn btn-danger" onclick="skipVideo()">Skip video</button><br><Br>
+	<div class="videoTitle"></div>
+</div>
 <div id="player"></div>
 <div class="songQueue">
-<% if(songs == true) { %>
-<h2>Songlist queue</h2>
+<h2>Queue</h2>
 <div id="songItem" ng-repeat="x in allSongs">
-	<div><img ng-src={{x.thumb}}></div><div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.title }} <br> Requested by: <b>{{ x.name }}</b> <br><button ng-click="skip(x.songid)" id="skip">Delete</button></div>
+	<div><img ng-src={{x.thumb}}></div>
+	<div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.title }} <br> Requested by: <b>{{ x.name }}</b> <br>
+	<button type="button" class="btn btn-default" ng-click="skip(x.songid)" id="skip">Delete</button></div>
+</div>
 </div>
 <% } else { %>
 <h3>No songs have been requested so far</h3>
 <p>Refresh if people have requested something</p>
 <% } %>
-</div>
-<div class="queueLength">Queue length: {{ length }}</div>
-<div class="button" id="skipVideo" onclick="skipVideo()">Skip video</div>
-<div class="button" id="previousVideo" onclick="previousVideo()">Previous video</div>
 <script type="text/javascript" src="../js/yucisite.js"></script>
 </body>

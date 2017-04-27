@@ -1,41 +1,45 @@
 <% include header.ejs %>
-<div class="top"><h2>CLR Information</h2></div>
 <div class="main">
+<h2>CLR Information</h2>
 
 <p>
-  CLR commands are a fun way to interact with the stream. Each of the CLR commands cost <b>1000 points</b>.<br>
-  You have to buy the clr command each time you want to play or show something on stream. It's not a one time purchase.
+  CLR commands are a fun way to interact witd tde stream. Each of tde CLR commands cost <b>1000 points</b>.<br>
+  You have to buy tde clr command each time you want to play or show sometding on stream. It's not a one time purchase.
 </p>
 
 <p><b>!clr msg [message]</b><br>
-  Shows your message after the command call. Displays it on a random spot on the screen.
+  Shows your message after tde command call. Displays it on a random spot on tde screen.
 </p>
 
 <p><b>!clr emote [emote]</b><br>
-  Shows the emote you send in. Currently only works with: Twitch global emotes, BTTV channel and global emotes, FFZ channel and global emotes.
+  Shows tde emote you send in. Currently only works witd: Twitch global emotes, BTTV channel and global emotes, FFZ channel and global emotes.
 </p>
 
 <p><b>!clr sound [sound]</b><br>
-  Plays one of the sounds listed below. <br><br>
-  <table class="testSounds">
-    <tr><th>Beer </th><th><button class="sound" id="beer">Play</button></th></tr>
-    <tr><th>Bottle </th><th><button class="sound" id="bottle">Play</button></th></tr>
-    <tr><th>Echo </th><th><button class="sound" id="echo">Play</button></th></tr>
-    <tr><th>Datboi </th><th><button class="sound" id="datboi">Play</button></th></tr>
-    <tr><th>Fuckyou </th><th><button class="sound" id="fuckyou">Play</button></th></tr>
-    <tr><th>Zelda </th><th><button class="sound" id="zelda">Play</button></th></tr>
-    <tr><th>Harro </th><th><button class="sound" id="harro">Play</button></th></tr>
-    <tr><th>Bedankt </th><th><button class="sound" id="bedankt">Play</button></th></tr>
+  Plays one of tde sounds listed below. <br><br>
+  <table class="pure-table testSounds">
+    <thead><tr><th>Sound</th><th>Example</th></tr></thead><tbody>
+    <tr class="pure-table-odd"><td>Beer </td><td><button class="pure-button sound" id="beer">Play</button></td></tr>
+    <tr><td>Bottle </td><td><button class="pure-button sound" id="bottle">Play</button></td></tr>
+    <tr class="pure-table-odd"><td>Echo </td><td><button class="pure-button sound" id="echo">Play</button></td></tr>
+    <tr><td>Datboi </td><td><button class="pure-button sound" id="datboi">Play</button></td></tr>
+    <tr class="pure-table-odd"><td>Fuckyou </td><td><button class="pure-button sound" id="fuckyou">Play</button></td></tr>
+    <tr><td>Zelda </td><td><button class="pure-button sound" id="zelda">Play</button></td></tr>
+    <tr class="pure-table-odd"><td>Harro </td><td><button class="pure-button sound" id="harro">Play</button></td></tr>
+    <tr><td>Bedankt </td><td><button class="pure-button sound" id="bedankt">Play</button></td></tr>
+    </tbody>
   </table>
   <br>
 </p>
 
 <p><b>!clr gif [gif]</b><br>
-  Plays one of the following GIFs listed below. <br><br>
-  <table class="testGifs">
-    <tr><th>Pepe </th><th><button class="gif" id="pepe">Play</button></th></tr>
-    <tr><th>Billy </th><th><button class="gif" id="billy">Play</button></th></tr>
-    <tr><th>Kappa </th><th><button class="gif" id="kappa">Play</button></th></tr>
+  Plays one of tde following GIFs listed below. <br>
+  <table class="pure-table testGifs">
+    <thead><tr><th>Sound</th><th>Example</th></tr></thead><tbody>
+    <tr class="pure-table-odd"><td>Pepe </td><td><button class="pure-button gif" id="pepe">Play</button></td></tr>
+    <tr><td>Billy </td><td><button class="pure-button gif" id="billy">Play</button></td></tr>
+    <tr class="pure-table-odd"><td>Kappa </td><td><button class="pure-button gif" id="kappa">Play</button></td></tr>
+    </tbody>
   </table>
   <br>
 </p>
@@ -43,13 +47,17 @@
 </div>
 <div id="showBox">
   <div id="showStuff">
+    <div class="modal-header">
+      <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 id="modalTitle">CLR preview</h4>
+    </div>
     <div id="gifSpot"></div>
     <div id="showText">
       <% if (locals.login == true) { %>
         Click the button to buy the CLR command online! &nbsp;
-        <button id="buyThing">Buy</button>
+        <button class="btn btn-default" id="buyThing">Buy</button>
       <% } else { %>
-        Login and buy this CLR command online!
+        Login and buy tdis CLR command online!
       <% } %>
   </div>
   </div>

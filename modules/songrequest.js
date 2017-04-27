@@ -10,16 +10,15 @@ var func = require("./functions.js")
 module.exports = {
 	getSongs: function (channel, user, message, self) {
 		if (message[0] == "!sr" || message[0] == "!songrequest") {
-			var msg = message.join(" ")
 			func.connection.query('select * from modulesettings where moduleType = "songrequest"', function(err, result) {
 				if (result[0].value == 1) {
 					if(user.subscriber == true) {
-						match(msg, channel, user)
+						match(message, channel, user)
 					} else {
 						bot.whisper(user.username, "You're not allowed to request songs in this channel")
 					}
 				} else {
-					match(msg, channel, user)
+					match(message, channel, user)
 				}
 			})
 		}

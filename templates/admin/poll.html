@@ -1,12 +1,23 @@
-<% include adminheader.ejs %>
-<div class="top"><h1>Polls</h1></div>
+<% include ../header.ejs %>
 <div class="main">
-<p><button><a href = "/admin/poll/create">Create poll</a></button></p>
-<% if (polls != undefined) { %>
-  <% polls.forEach(function(polls) { %>
-    <p class="pollItem" id="<%= polls.id %>"><%= polls.question %> <button class="pollBtn goPoll">Poll result</button><button class="pollBtn remPoll">Remove poll</button></p>
-  <% }); %>
-<% } %>
+<h2>Polls</h2>
+<p><a href = "/admin/poll/create"><button class="pure-button">Create poll</button></a></p>
+<table class="table">
+  <thead><tr>
+    <th>Question</th>
+    <th>Manage</th>
+  </tr></thead>
+  <tbody>
+    <% if (polls != undefined) { %>
+      <% polls.forEach(function(polls) { %>
+        <tr><p class="pollItem" id="<%= polls.id %>">
+          <td><%= polls.question %></td>
+          <td><button class="pure-button pollBtn goPoll">Poll result</button> <button class="pure-button pollBtn remPoll">Remove poll</button></td>
+        </p></tr>
+      <% }); %>
+    <% } %>
+  </tbody>
+</table>
 </div>
 <script type="text/javascript" src="/../js/yucisite.js"></script>
 <script type="text/javascript" src="/../js/poll.js"></script>
