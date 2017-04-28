@@ -69,7 +69,6 @@ module.exports = {
 				function (error, response, body) {
   				bot.say(channel, body)
 				});
-				request("", getViewers)
 			}
 			func.cooldown("followage", "global", user.username, 10, followage)
 		}
