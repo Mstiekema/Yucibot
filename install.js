@@ -262,8 +262,11 @@ var standardCommands = [
 	["!google", null, "Makes a google search for you", "global", 10, 100, "!google Where can I download more ram?", 0],
 	["!lmgtfy", null, "Makes a let me Google that for you search", "global", 10, 100, "!lmgtfy Where can I find the nearest KFC?", 0],
 	["!viewers", null, "Returns the current viewcount if the stream is live", "global", 10, 100, null, 0],
+	["!followage", null, "Shows the followage of a user", "global", 10, 100, null, 0],
 	["!game", null, "Returns the current game if the stream is live", "global", 10, 100, null, 0],
 	["!title", null, "Returns the current title if the stream is live", "global", 10, 100, null, 0],
+	["!uptime", null, "Shows how long the stream has been live for", "global", 10, 100, null, 0],
+	["!topemotes", null, "Returns the top 5 most used emotes in chat", "global", 120, 100, null, 0],
 	["!owrank", null, "Returns the streamer's or the user's OW rank", "global", 10, 100, "!owrank Mstiekema#2237", 0],
 	["!roulette", null, "Fun point minigame where you can gamble with your points", "user", 300, 100, "!roulette 12345", 0],
 	["!slot", null, "Fun point minigame where you can gamble with your points", "user", 300, 100, null, 0],
@@ -271,19 +274,24 @@ var standardCommands = [
 	["!rq", null, "Returns a random recorded quote from the current user", "user", 30, 100, null, 0],
 	["!points", null, "Bot whispers your amount of points", "global", 5, 100, null, 0],
 	["!lines", null, "Returns the amount of lines the user has typed", "global", 20, 100, null, 0],
-	["!clr", null, "Commands from the CLR module", "global", 10, 110, null, 1000],
 	["!totallines", null, "Returns the total recorded lines in chat", "global", 30, 100, null, 0],
+	["!clr", null, "Commands from the CLR module", "global", 10, 110, null, 1000],
 	["!currentsong", null, "Returns the song that's currently playing", "global", 1, 100, null, 0],
 	["!songrequest", null, "Allows subs to request songs in chat", "global", 10, 150, "!songrequest Enjoy the silence - Depeche Mode | \
 	!songrequest https://www.youtube.com/watch?v=aGSKrC7dGcY | !songrequest aGSKrC7dGcY", 0],
 	["!resetpoints", null, "Resets the points of the target", "global", 10, 300, "!resetpoints Mstiekema", 0],
+	["!emoteupdate", null, "Updates all the trackable emotes", "global", 1, 300, null, 0],
 	["!addpoints", null, "Adds points to the target", "user", 1,300, "!addpoints kimodaptyl 12345", 0],
 	["!addcommand", null, "Adds a command to the bot", "user", 1, 300, "!addcommand !test This is a testing command :)", 0],
 	["!removecommand", null, "Removes a command from the bot", "global", 10, 300, "!remove command !test", 0],
 	["!addpurge", null, "Adds a purge word to the banlist", "user", 1, 300, "!addpurge fuck", 0],
 	["!addtimeout", null, "Adds a timeout word to the banlist", "user", 1, 300, "!addtimeout fuck", 0],
 	["!addban", null, "Adds a ban word to the banlist", "user", 1, 300, "!addtimeout fuck", 0],
-	["1quit", null, "Makes the bot quit", "user", 1, 300, null, 0]
+	["!skip", null, "Skips the song that's currently playing", "global", 10, 300, null, 0],
+	["!removesong", null, "Removes a song that's in the queue", "global", 10, 300, "!removesong YT-ID", 0],
+	["!volume", null, "Returns the volume of the songlist player", "global", 1, 300, null, 0],
+	["!setvolume", null, "Sets the volume to a certain number between 0-100", "global", 1, 300, "!setvolume 69", 0],
+	["!quit", null, "Makes the bot quit", "user", 1, 300, null, 0]
 ]
 
 connection.query('select * from commands', function (err, result) {

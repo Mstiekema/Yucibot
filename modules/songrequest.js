@@ -100,11 +100,14 @@ module.exports = {
 				if(result[0] == undefined) {
 					bot.whisper(user.username, "There's no song currently playing :/")
 				} else {
-					var id = result[0].id
-					io.emit('skipSong');
-					func.connection.query('delete from songrequest where id = "'+id+'" AND playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
-						bot.say(channel, "Succesfully removed the current song.")
-					});
+					function skipTheSong() {
+						var id = result[0].id
+						io.emit('skipSong');
+						func.connection.query('delete from songrequest where id = "'+id+'" AND playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), 	function(err,result){
+							bot.say(channel, "Succesfully removed the current song.")
+						});
+					}
+					func.cooldown("skipTheSong", global, user.username, 10, skipTheSong)
 				}
 			});
 		}}

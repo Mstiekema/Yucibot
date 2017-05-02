@@ -45,7 +45,7 @@ exp.commands = function(channel, user, message, self) {
 			if (result[26].state == 1) { clr.emotes(channel, user, msg, self) }
 		}
 	})
-	if (msg[0] == "1quit") {
+	if (msg[0] == "!quit") {
 		if (user.mod === true || user.username == channel.substring(1)) {
 			bot.say(channel, "Shutting down Yucibot MrDestructoid")
 			bot.disconnect()

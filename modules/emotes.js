@@ -20,15 +20,18 @@ module.exports = {
   },
 	getStats: function(channel, user, message, self) {
 		if (message[0] == "!topemotes") {
-			func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId where emotes.type = "twitch" \
-			ORDER BY emotestats.uses DESC LIMIT 5', function (err, result) {
-				bot.say(channel, "Top 5 Twitch emotes: " +
-				"1. " + result[0].name + "  " + result[0].uses + "x | " +
-				"2. " + result[1].name + "  " + result[1].uses + "x | " +
-				"3. " + result[2].name + "  " + result[2].uses + "x | " +
-				"4. " + result[3].name + "  " + result[3].uses + "x | " +
-				"5. " + result[4].name + "  " + result[4].uses + "x")
-			})
+			function getTopEmotes() {
+				func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId where emotes.type = "twitch" \
+				ORDER BY emotestats.uses DESC LIMIT 5', function (err, result) {
+					bot.say(channel, "Top 5 Twitch emotes: " +
+					"1. " + result[0].name + "  " + result[0].uses + "x | " +
+					"2. " + result[1].name + "  " + result[1].uses + "x | " +
+					"3. " + result[2].name + "  " + result[2].uses + "x | " +
+					"4. " + result[3].name + "  " + result[3].uses + "x | " +
+					"5. " + result[4].name + "  " + result[4].uses + "x")
+				})
+			}
+			func.cooldown("getTopEmotes", global, user.username, 60, getTopEmotes)
 		}
 	}
  }
