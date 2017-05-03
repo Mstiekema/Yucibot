@@ -420,6 +420,9 @@ html {
   #smallMenu {
     display: none;
   }
+  .songQueue {
+    width: 440px;
+  }
 }
 
 @media screen and (max-width: 1370px) {
@@ -431,6 +434,9 @@ html {
   }
   #smallMenu {
     display: none;
+  }
+  .songQueue {
+    width: 440px;
   }
 }
 

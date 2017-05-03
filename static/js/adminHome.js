@@ -7,10 +7,8 @@ var update = document.getElementById("update")
 var restart = document.getElementById("restart")
 
 setInterval(function () {
-  // twitchInfo.load(document.URL + ' #twitchInfo')
   twitter.load(document.URL + ' #twitter')
-  // followers.load(document.URL + ' #followers')
-}, 20000);
+}, 60000);
 
 restart.addEventListener("click", function() {
   socket.emit('restartBot')

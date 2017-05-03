@@ -29,7 +29,7 @@ module.exports = {
 		twitter_access_token_key: 'example',
 		twitter_access_token_secret: 'example',
 		// Get Twitter auth over at https://apps.twitter.com/
-	}
+	},
 	mysql: {
 		user: 'username',
 		password: 'password',

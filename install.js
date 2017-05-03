@@ -123,7 +123,7 @@ connection.query(
 )
 
 connection.query(
-	'CREATE TABLE moduleSettings (' +
+	'CREATE TABLE modulesettings (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'moduleType VARCHAR(30),' +
 	'settingName VARCHAR(30),' +
@@ -134,14 +134,14 @@ connection.query(
 )
 
 connection.query(
-	'CREATE TABLE pollQuestions (' +
+	'CREATE TABLE pollquestions (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'question VARCHAR(500))',
 	function (err, result) {if (err) {return}}
 )
 
 connection.query(
-	'CREATE TABLE pollAnswers (' +
+	'CREATE TABLE pollanswers (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'pollId VARCHAR(500),' +
 	'answers VARCHAR(500))',
@@ -149,7 +149,7 @@ connection.query(
 )
 
 connection.query(
-	'CREATE TABLE pollVoted (' +
+	'CREATE TABLE pollvoted (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'ip VARCHAR(500),' +
 	'pollId VARCHAR(500),' +
@@ -218,10 +218,10 @@ var moduleSettings = [
 	[null, "dungeonActive", "Dungeon", false, null],
 	["Basic features", "basic", "Some basic commands and features", true, "main"],
 	["Fun commands", "fun", "A few fun commands for in the chat", false, "main"],
-	["Point commands", "point", "Point gambling commands", true, "main"],
+	["Point commands", "points", "Point gambling commands", true, "main"],
 	["Profile", "profile", "Point system and creates profile for each user in the stream", true, "main"],
 	["Events", "events", "Different events that trigger in chat", true, "main"],
-	["Moderation", "moderation", "Adds moderation to the bot", true, "main"],
+	["Moderation", "mod", "Adds moderation to the bot", true, "main"],
 	["CLR", "clr", "Features that enables chat interaction through CLR browser", true, "main"],
 	// Sub modules
 	["Info commands", "info", "Commands with info about the stream", true, "basic"],
@@ -287,6 +287,7 @@ var standardCommands = [
 	["!addpurge", null, "Adds a purge word to the banlist", "user", 1, 300, "!addpurge fuck", 0],
 	["!addtimeout", null, "Adds a timeout word to the banlist", "user", 1, 300, "!addtimeout fuck", 0],
 	["!addban", null, "Adds a ban word to the banlist", "user", 1, 300, "!addtimeout fuck", 0],
+	["!permit", null, "Allows a user to post a link in chat for 30 seconds", "global", 1, 300, "!permit mstiekema", 0],
 	["!skip", null, "Skips the song that's currently playing", "global", 10, 300, null, 0],
 	["!removesong", null, "Removes a song that's in the queue", "global", 10, 300, "!removesong YT-ID", 0],
 	["!volume", null, "Returns the volume of the songlist player", "global", 1, 300, null, 0],
@@ -334,7 +335,7 @@ request('https://api.betterttv.net/2/channels/' + chnl, function (error, respons
 request('http://api.frankerfacez.com/v1/room/' + chnl, function (error, response, body) {
 	var base = JSON.parse(body)
 	if (!base["room"]) return
-	var roomid = base["room"]["_id"]
+	var roomid = base["room"]["set"]
 	var emoteBase = base["sets"][roomid].emoticons
 	for(var key in emoteBase) {
 		var emote = emoteBase[key].name

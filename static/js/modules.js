@@ -1,5 +1,6 @@
 var socket = io.connect();
 var moduleSetBtn = document.querySelector('.moduleBtn');
+var restart = document.getElementById("restart")
 var switches = document.getElementById('.moduleSwitch');
 $("[name='checkbox']").bootstrapSwitch();
 
@@ -11,9 +12,9 @@ $('.moduleSwitch').on('switchChange.bootstrapSwitch', function (event, state) {
   }
 });
 
-function restartBot() {
+restart.addEventListener("click", function() {
   socket.emit('restartBot')
-}
+})
 
 if (moduleSetBtn) {
   for (var x = 0; x < moduleSetBtn.length; x++) {
