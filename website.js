@@ -397,7 +397,7 @@ app.use('/user/:id', function(req, res) {
           var timeOnline = (onH > 0 ? onH + " hours " + (onM < 10 ? "0" : "") : "") + onM + " minutes"
           var timeOffline = (offH > 0 ? offH + " hours " + (offM < 10 ? "0" : "") : "") + offM + " minutes"
           if (url.split("/")[3] != undefined) {res.locals.logDate = url.split("/")[3]} else {res.locals.logDate = date}
-          request("https://api.rtainc.co/twitch/channels/" + options.channels[0].substring(1) + "/followers/" + req.params.id + "?format=[2]", function (error, response, body) {
+          request("http://mcgamesdot.net/followage.php?channel=" + options.channels[0].substring(1) + "&user=" + req.params.id, function (error, response, body) {
             res.render('user.html', {
               age: age,
               days: days,

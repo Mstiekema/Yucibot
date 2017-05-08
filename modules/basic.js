@@ -65,12 +65,25 @@ module.exports = {
 				var chnl = channel.substring(1)
 				if (message[1]) usr = message[1]
 				if (message[2]) chnl = message[2]
-				request('https://api.rtainc.co/twitch/channels/'+chnl+'/followers/'+usr+'?format=%5B1%5D+has+been+following+%5B0%5D+for+%5B2%5D',
+				request('http://mcgamesdot.net/followage.php?channel='+chnl+'&user='+usr,
 				function (error, response, body) {
-  				bot.say(channel, body)
+  				bot.say(channel, usr + " has been following " + chnl + " for " + body)
 				});
 			}
 			func.cooldown("followage", "global", user.username, 10, followage)
+		}
+		else if(message[0] == "!followsince") {
+			function followsince() {
+				var usr = user.username
+				var chnl = channel.substring(1)
+				if (message[1]) usr = message[1]
+				if (message[2]) chnl = message[2]
+				request('http://api.newtimenow.com/follow-length/?channel='+chnl+'&user='+usr,
+				function (error, response, body) {
+					bot.say(channel, usr + " has been following " + chnl + " since " + body)
+				});
+			}
+			func.cooldown("followsince", "global", user.username, 10, followsince)
 		}
 		else if(message[0] == ("!game")) {
 			function getGame(error, response, body) {
@@ -102,20 +115,20 @@ module.exports = {
 			function title() {request(info, getTitle)}
 			func.cooldown("title", "global", user.username, 10, title)
 		}
-		else if(message[0] == "!uptime") {
-			function getUptime(error, response, body) {
-				if (!error && response.statusCode == 200) {
-				  if(!body.includes("is not streaming")) {
-						bot.say(channel, channel.substring(1) + " has been live for " + body + "!")
-				  }
-				  else {
-				  	bot.say(channel, channel.substring(1) + " is offline")
-				  }
-				}
-			}
-			function uptime() {request("https://api.rtainc.co/twitch/uptime?channel=" + channel.substring(1), getUptime)}
-			func.cooldown("uptime", "global", user.username, 10, uptime)
-		}
+		// else if(message[0] == "!uptime") {
+		// 	function getUptime(error, response, body) {
+		// 		if (!error && response.statusCode == 200) {
+		// 		  if(!body.includes("is not streaming")) {
+		// 				bot.say(channel, channel.substring(1) + " has been live for " + body + "!")
+		// 		  }
+		// 		  else {
+		// 		  	bot.say(channel, channel.substring(1) + " is offline")
+		// 		  }
+		// 		}
+		// 	}
+		// 	function uptime() {request("https://api.rtainc.co/twitch/uptime?channel=" + channel.substring(1), getUptime)}
+		// 	func.cooldown("uptime", "global", user.username, 10, uptime)
+		// }
 	},
 	owCommands: function (channel, user, message, self) {
 		if(message[0] == "!owrank") {

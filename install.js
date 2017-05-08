@@ -263,6 +263,7 @@ var standardCommands = [
 	["!lmgtfy", null, "Makes a let me Google that for you search", "global", 10, 100, "!lmgtfy Where can I find the nearest KFC?", 0],
 	["!viewers", null, "Returns the current viewcount if the stream is live", "global", 10, 100, null, 0],
 	["!followage", null, "Shows the followage of a user", "global", 10, 100, null, 0],
+	["!followage", null, "Shows the age of following of a user", "global", 10, 100, null, 0],
 	["!game", null, "Returns the current game if the stream is live", "global", 10, 100, null, 0],
 	["!title", null, "Returns the current title if the stream is live", "global", 10, 100, null, 0],
 	["!uptime", null, "Shows how long the stream has been live for", "global", 10, 100, null, 0],
