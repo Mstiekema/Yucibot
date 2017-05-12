@@ -20,7 +20,8 @@ module.exports = {
 	google: function (channel, user, message, self) {
 		if (message[0] == "!google") {
 			function google() {
-			var q = message.substring(message.indexOf(" ") + 1);
+			var msg = message.join(" ")
+			var q = msg.substring(msg.indexOf(" ") + 1);
 			var question = q.split(' ').join('+');
 			var base = "https://www.google.nl/search?q=";
 			var link = base + question
@@ -29,7 +30,8 @@ module.exports = {
 		}
 		else if (message[0] == "!lmgtfy") {
 			function lmgtfy() {
-			var q = message.substring(message.indexOf(" ") + 1);
+			var msg = message.join(" ")
+			var q = msg.substring(msg.indexOf(" ") + 1);
 			var question = q.split(' ').join('+');
 			var base = "https://lmgtfy.com/?q=";
 			var link = base + question
