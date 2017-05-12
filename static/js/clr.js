@@ -1,9 +1,10 @@
 var socket = io.connect()
-var soundEl =document.querySelectorAll('.sound');
-var button =document.querySelectorAll('button');
+var soundEl = document.querySelectorAll('.sound');
+var button = document.querySelectorAll('button');
 var popup = document.getElementById('showBox');
 var buy = document.getElementById('buyThing');
 var close = document.getElementById('close');
+var memes = document.querySelectorAll('.memes');
 var sounds = {
   "echo": 'https://puu.sh/tNZm7/6fd06f6b2f.mp3',
   "datboi": 'https://puu.sh/rk6dH/5ba8a259f8.mp3',
@@ -20,6 +21,16 @@ var gifs = {
   "kappa": 'http://i.imgur.com/8TRbWHM.gif',
   "sound": 'https://www.clammr.com/Content/images/webapp/animated-sound.gif'
 }
+var memes = [
+  "http://puu.sh/vNR7E/32ac03a631.mp4",
+  "http://puu.sh/vNWvP/a8ea63181c.mp4",
+  "http://puu.sh/vNWx3/287ab583fc.mp4",
+  "http://puu.sh/vNWxC/9f1ce6d63b.mp4",
+  "http://puu.sh/vNWzd/2a43408c50.mp4",
+  "http://puu.sh/vNWzK/acb2ce8b40.mp4",
+  "http://puu.sh/vNWA2/1b4455d81d.mp4",
+  "http://puu.sh/vNWAx/040a4dfc2b.mp4"
+]
 
 window.onclick = function(event) {
   if (event.target == popup) {
@@ -60,11 +71,16 @@ socket.on("failure", function() {
 if (button) {
   for (var x = 0; x < button.length; x++) {
     button[x].addEventListener('click', function() {
+      var type = $(this).attr("class")
       if(this.id == "loginBtn") return
+      if (type == "pure-button memes") {
+        var length = memes.length
+        var ranN = Math.floor(Math.random() * length)
+        return socket.emit("meme", {"meme": memes[ranN]})
+      }
       $('#showStuff').removeClass('animated bounceOutUp');
       $('#showStuff').addClass('animated bounceInDown');
       popup.style.display = "block";
-      var type = $(this).attr("class")
       if (type == "pure-button gif") {
         $("#gifSpot").addClass(this.id)
         $("#gifSpot").addClass("gif")

@@ -133,6 +133,9 @@ io.on('connection', function (socket) {
       }
     })
   })
+  socket.on('meme', function (data) {
+    io.emit('meme', {"meme": data.meme});
+  })
   socket.on('endSong', function (data) {
     func.connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
     socket.emit('nextSong');
@@ -672,6 +675,12 @@ app.get('/admin/*', function(req, res, next) {
     } else {
       next()
     }
+  })
+})
+
+app.get('/admin/clr', function(req, res) {
+  func.connection.query('SELECT * FROM user', function(err, result) {
+    res.render('admin/clrAdmin.html')
   })
 })
 

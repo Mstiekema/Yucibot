@@ -4,6 +4,16 @@
 <script type="text/javascript" src="../js/clr.js"></script>
 <script>
   var socket = io.connect('<% locals.website %>');
+  socket.on('meme', function(data) {
+    var src = document.getElementsByTagName('source')[0]
+    var video = document.getElementsByTagName('video')[0]
+    src.setAttribute("src", data.meme)
+    video.load();
+    video.play();
+    video.volume = 0.1;
+    $(video).fadeIn(100);
+    document.getElementsByTagName('video')[0].addEventListener('ended', function() {$("#meme").fadeOut(500);})
+  });
   socket.on('message', function (data) {
     console.log("Showed message: " + data.message)
     var id = "id" + (String(Math.floor(Math.random() * 1000000)))
@@ -78,7 +88,19 @@ p {
   left: 50%;
   margin: -100px 0 0 -150px;
 }
+
+#meme {
+  position: absolute;
+  width: 640px;
+  height: 360px;
+  top: 25%;
+  left: 50%;
+  margin: -100px 0 0 -320px;
+}
 </style>
 <body>
+<video id="meme" width="640" height="360" autoplay="true">
+  <source src="test" type="video/mp4">
+</video>
 <div class="gif"></div>
 </body>
