@@ -50,9 +50,7 @@ if (button) {
       var type = $(this).attr("class")
       if(this.id == "loginBtn") return
       if (type == "btn btn-danger memes") {
-        var length = memes.length
-        var ranN = Math.floor(Math.random() * length)
-        return socket.emit("meme", {"meme": memes[ranN]})
+        return socket.emit("meme")
       }
       if (type.indexOf("btn btn-warning rem") != -1) {
         var id = type.slice(19)

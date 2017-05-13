@@ -134,7 +134,11 @@ io.on('connection', function (socket) {
     })
   })
   socket.on('meme', function (data) {
-    io.emit('meme', {"meme": data.meme});
+    func.connection.query('select * from clr where type = "meme"', function(err,result){
+      var length = result.length
+      var ranN = Math.floor(Math.random() * length)
+      io.emit('meme', {"meme": result[ranN].url});
+    })
   })
   socket.on('removeCLR', function (data) {
     console.log(data)
