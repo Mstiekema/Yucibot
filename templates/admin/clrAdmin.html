@@ -1,7 +1,50 @@
 <% include ../header.ejs %>
 <div class="main">
 <h2>CLR Management</h2>
-<button class="pure-button memes" id="go">Random meme</button>
+
+<h4>Meme button</h4>
+<button class="btn btn-danger memes">Random meme</button><br><br>
+
+<h4>Add own samples</h4>
+<form class="pure-form pure-form-aligned">
+<div class="pure-control-group">Name: <input type="text" name="name"> <small>No spaces, caps etc.</small><br></div>
+<div class="pure-control-group">Sample url: <input type="text" name="url"> <small>i.e. puush url</small><br></div>
+<div class="pure-control-group">Type: 
+<select name="type">
+  <option value="sound">Sound</option>
+  <option value="gif">GIF</option>
+  <option value="meme">Meme</option>
+</select><br></div></form>
+<button class="btn btn-primary">Submit</button><br><br>
+
+<h3>Manage samples</h3>
+
+<table align="center" class="table table-hover">
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>URL</th>
+    <th>Delete</th>
+  </tr>
+<% clr.forEach(function(clr) { %>
+  <tr>
+    <td><%= clr.name %></td>
+    <td><%= clr.type %></td>
+    <td><button class="btn btn-success clrSamples <%= clr.type %>" id="<%= clr.url %>">Test sample</button></td>
+    <td><button class="btn btn-warning rem <%= clr.id %>" id="<%= clr.name %>">Remove</button></td>
+  </tr>
+<% }); %>
+</table>
+</div>
+<div id="showBox">
+  <div id="showStuff">
+    <div class="modal-header">
+      <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 id="modalTitle">CLR sample preview</h4>
+    </div>
+    <div id="gifSpot"></div>
+    <div id="showText"></div>
+  </div>
 </div>
 <script type="text/javascript" src="/../js/clr.js"></script>
 <script type="text/javascript" src="/../js/yucisite.js"></script>

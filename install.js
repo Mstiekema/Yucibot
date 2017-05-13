@@ -51,6 +51,15 @@ connection.query(
 )
 
 connection.query(
+	'CREATE TABLE clr (' +
+	'id INT AUTO_INCREMENT PRIMARY KEY,' +
+	'name VARCHAR(30),' +
+	'url VARCHAR(2083),' +
+	'type VARCHAR(30))',
+	function (err, result) {if (err) {return}}
+)
+
+connection.query(
 	'CREATE TABLE commands (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'commName VARCHAR(50),' +
@@ -184,6 +193,37 @@ connection.query('select * from user', function (err, result) {
 		}
 	} else {
 		console.log("[DEBUG] Didn't add users, already in table")
+	}
+})
+
+var sql5 = "insert into clr (name, url, type) values ?"
+var clrSamples = [
+	["beer", "http://puu.sh/tXc6X/d75fb7a875.mp3", "sound"],
+	["bottle", "http://puu.sh/tX9R5/4ce2a001f0.mp3", "sound"],
+	["echo", "https://puu.sh/tNZm7/6fd06f6b2f.mp3", "sound"],
+	["datboi", "https://puu.sh/rk6dH/5ba8a259f8.mp3", "sound"],
+	["fuckyou", "http://puu.sh/tXc6X/d75fb7a875.mp3", "sound"],
+	["zelda", "http://puu.sh/u0pld/34c6c39a2d.mp3", "sound"],
+	["harro", "https://puu.sh/uf3iH/5fbf1d4b4f.mp3", "sound"],
+	["bedankt", "https://puu.sh/ufdBg/b25699a14e.mp3", "sound"],
+	["pepe", "https://media.giphy.com/media/FHCHRtwAZgGFq/giphy.gif", "gif"],
+	["billy", "http://x3.wykop.pl/cdn/c3201142/comment_SbwUMF1MFEXwgaUpuZBAFuXbl5g6ZcYy.gif", "gif"],
+	["kappa", "http://i.imgur.com/8TRbWHM.gif", "gif"],
+	["go", "http://puu.sh/vNR7E/32ac03a631.mp4", "meme"],
+	["skrt", "http://puu.sh/vNWvP/a8ea63181c.mp4", "meme"],
+	["violin", "http://puu.sh/vNWx3/287ab583fc.mp4", "meme"],
+	["hahahaha", "http://puu.sh/vNWxC/9f1ce6d63b.mp4", "meme"],
+	["reeee", "http://puu.sh/vNWzd/2a43408c50.mp4", "meme"],
+	["lemons", "http://puu.sh/vNWzK/acb2ce8b40.mp4", "meme"],
+	["aaaaa", "http://puu.sh/vNWA2/1b4455d81d.mp4", "meme"],
+	["dog", "http://puu.sh/vNWAx/040a4dfc2b.mp4", "meme"]
+]
+
+connection.query('select * from clr', function (err, result) {
+	if (result[0] == undefined) {
+		connection.query(sql5, [clrSamples], function (err, result) {console.log("[DEBUG] Added all CLR samples")})
+	} else {
+		console.log("[DEBUG] Didn't add CLR samples, already in table")
 	}
 })
 

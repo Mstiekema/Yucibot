@@ -117,12 +117,12 @@ io.on('connection', function (socket) {
       var points = result[0].points
       if (points >= 1000) {
         if (data.type == "sound") {
-          function clrS() {io.emit('sound', { "sound": data.item }); bot.whisper(data.user, "Succesfully played your sound " + data.item);}
+          function clrS() {io.emit('sound', {"sound": data.item, "url": data.url }); bot.whisper(data.user, "Succesfully played your sound " + data.item);}
           func.pointCd("CLR_Sound_Web", global, data.user, 10, clrS, 1000)
           socket.emit("success")
         }
         else if (data.type == "gif") {
-          function clrG() {io.emit('gif', { "gif": data.item }); bot.whisper(data.user, "Succesfully showed your gif " + data.item);}
+          function clrG() {io.emit('gif', {"gif": data.item, "url": data.url}); bot.whisper(data.user, "Succesfully showed your gif " + data.item);}
           func.pointCd("CLR_GIF_Web", global, data.user, 10, clrG, 1000)
           socket.emit("success")
         } else {
@@ -135,6 +135,10 @@ io.on('connection', function (socket) {
   })
   socket.on('meme', function (data) {
     io.emit('meme', {"meme": data.meme});
+  })
+  socket.on('removeCLR', function (data) {
+    console.log(data)
+    func.connection.query('delete from clr where id = ?', data.id, function(err, result) {})
   })
   socket.on('endSong', function (data) {
     func.connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
@@ -446,8 +450,10 @@ app.get('/commands', function(req, res) {
 });
 
 app.get('/commands/clr', function(req, res) {
-  func.connection.query('select * from commands where commName = ?', "!clr", function(err, result) {
-    res.render('clrInfo.html')
+  func.connection.query('select * from clr', function(err, result) {
+    res.render('clrInfo.html', {
+      clr: result
+    })
   });
 });
 
@@ -679,8 +685,10 @@ app.get('/admin/*', function(req, res, next) {
 })
 
 app.get('/admin/clr', function(req, res) {
-  func.connection.query('SELECT * FROM user', function(err, result) {
-    res.render('admin/clrAdmin.html')
+  func.connection.query('SELECT * FROM clr', function(err, result) {
+    res.render('admin/clrAdmin.html', {
+      clr: result
+    })
   })
 })
 

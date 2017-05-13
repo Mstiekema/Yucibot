@@ -42,13 +42,13 @@
   });
   socket.on('sound', function (data) {
     console.log("Played sound: " + data.sound)
-    var sound = new Audio(sounds[data.sound]);
+    var sound = new Audio(data.url);
     sound.play();
   });
   socket.on('gif', function (data) {
     console.log("Played gif: " + data.gif)
     var id = "id" + (String(Math.floor(Math.random() * 1000000)))
-    $(".gif").append("<img style='width='300'; height='300';' id="+id+" src="+gifs[data.gif]+" align='middle'><br>")
+    $(".gif").append("<img style='width='300'; height='300';' id="+id+" src="+data.url+" align='middle'><br>")
     $("#" + id).hide()
     $("#" + id).fadeIn(1000)
     setTimeout(function () { $("#" + id).fadeOut(1000); }, 7000);
