@@ -72,10 +72,10 @@ clr.on("emote", function(data) {
   io.emit('emote', { "url": data.url, "emote": data.emote })
 })
 clr.on("sound", function(data) {
-  io.emit('sound', { "sound": data.sound })
+  io.emit('sound', { "sound": data.sound, "url": data.url })
 })
 clr.on("gif", function(data) {
-  io.emit('gif', { "gif": data.gif })
+  io.emit('gif', { "gif": data.gif, "url": data.url })
 })
 clr.on("chatEmote", function(data) {
   io.emit('chatEmote', { "emote": data.url })
@@ -139,6 +139,9 @@ io.on('connection', function (socket) {
   socket.on('removeCLR', function (data) {
     console.log(data)
     func.connection.query('delete from clr where id = ?', data.id, function(err, result) {})
+  })
+  socket.on('addSample', function (data) {
+    func.connection.query('insert into clr set ?', data, function (err, result) {})
   })
   socket.on('endSong', function (data) {
     func.connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})

@@ -64,6 +64,15 @@ if (button) {
         }
         return
       }
+      if (type.indexOf("submitNewSample") != -1) {
+        var newSample = {
+          name: document.getElementById('id').value,
+          url: document.getElementById('url').value,
+          type: document.getElementById('type').value
+        }      
+        socket.emit('addSample', newSample)
+        return window.location.reload()
+      }
       $('#showStuff').removeClass('animated bounceOutUp');
       $('#showStuff').addClass('animated bounceInDown');
       popup.style.display = "block";
@@ -93,6 +102,8 @@ if (button) {
           $("#gifSpot").addClass(this.id)
           $("#gifSpot").addClass("meme")
           $("#gifSpot").html("<video style='margin='auto'; width='300'; height='300';' id='meme' width='640' height='360' align='middle' autoplay='true'><source src='"+this.id+"'type='video/mp4'></video>")
+        } else {
+          return
         }
       }
     })

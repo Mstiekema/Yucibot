@@ -41,7 +41,7 @@ exp.commands = function(channel, user, message, self) {
 			if (result[24].state == 1) { mod.link(channel, user, msg, self); }
 		}
 		if (result[7].state == 1) {
-			if (result[25].state == 1) { clr.clrComm(channel, user, msg, self); }
+			if (result[25].state == 1) { clr.clrComm(channel, user, msg, self, message); }
 			if (result[26].state == 1) { clr.emotes(channel, user, msg, self) }
 		}
 	})

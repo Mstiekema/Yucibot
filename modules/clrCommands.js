@@ -6,7 +6,7 @@ var func = require("./functions.js")
 var bot = connect.bot
 
 module.exports = {
-  clrComm: function(channel, user, message, self) {
+  clrComm: function(channel, user, message, self, msg) {
     func.connection.query('select * from modulesettings where moduleType = "clrComm"', function(err, result) {
       if(message[0] != ("!clr")) return
       var cost = result[0].value
@@ -14,12 +14,13 @@ module.exports = {
       if(message[1] == "message") {
         function clrM() {
           io.emit('message', { "message": message.join(" ").substring(12), "user": user['display-name'] });
-          bot.whisper(user.username, "Succesfully showed your message " + message.substring(8));
+          bot.whisper(user.username, "Succesfully showed your message " + message.join(" ").substring(8));
         }
         func.pointCd("CLR_Message", global, user.username, cd, clrM, cost)
       }
       if (message[1] == "emote") {
-        func.connection.query('select * from emotes WHERE name = ?', message[2], function(err, result) {
+        var emote = msg.split(" ")
+        func.connection.query('select * from emotes WHERE name = ?', emote[2], function(err, result) {
           if(result[0] == undefined) return
           var url = result[0].url
           function clrE() {io.emit('emote', { "url": url, "emote": message[2] }); bot.whisper(user.username, "Succesfully showed your emote " + message[2]);}
@@ -27,16 +28,37 @@ module.exports = {
         })
       }
       if (message[1] == "sound") {
-        var sounds = ["echo", "datboi", "fuckyou", "bottle", "beer", "zelda", "harro", "bedankt"]
-        if (sounds.indexOf(message[2]) == -1) return bot.whisper(user.username, "This is not a valid sound. Please try again.");
-        function clrS() {io.emit('sound', { "sound": message[2] }); bot.whisper(user.username, "Succesfully played your sound " + message[2]);}
-        func.pointCd("CLR_Sound", global, user.username, cd, clrS, cost)
+        func.connection.query('select * from clr where type = "sound"', function(err, result) {
+          var sounds = new Array;
+          for (var i = 0; i < result.length; i++) {
+            sounds.push(result[i].name)
+          }
+          if (sounds.indexOf(message[2]) == -1) {
+            return bot.whisper(user.username, "This is not a valid sound. Please try again.");
+          } else {
+            var i = sounds.indexOf(message[2])
+            var url = result[i].url
+            console.log(url)
+            function clrS() {io.emit('sound', {"sound": message[2], url: url}); bot.whisper(user.username, "Succesfully played your sound " + message[2]);}
+            func.pointCd("CLR_Sound", global, user.username, cd, clrS, cost)  
+          }
+        })
       }
       if (message[1] == "gif") {
-        var sounds = ["pepe", "billy", "kappa"]
-        if (sounds.indexOf(message[2]) == -1) return bot.whisper(user.username, "This is not a valid gif. Please try again.");
-        function clrG() {io.emit('gif', { "gif": message[2] }); bot.whisper(user.username, "Succesfully showed your gif " + message[2]);}
-        func.pointCd("CLR_GIF", global, user.username, cd, clrG, cost)
+        func.connection.query('select * from clr where type = "gif"', function(err, result) {
+          var gifs = new Array;
+          for (var i = 0; i < result.length; i++) {
+            gifs.push(result[i].name)
+          }
+          if (gifs.indexOf(message[2]) == -1) {
+            return bot.whisper(user.username, "This is not a valid gif. Please try again.");
+          } else {
+            var i = gifs.indexOf(message[2])
+            var url = result[i].url
+            function clrG() {io.emit('gif', {gif: message[2], url: url}); bot.whisper(user.username, "Succesfully showed your gif " + message[2]);}
+            func.pointCd("CLR_GIF", global, user.username, cd, clrG, cost)  
+          }
+        })
       }
     })
   },
