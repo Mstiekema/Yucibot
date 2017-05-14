@@ -7,7 +7,42 @@ var func = require("./functions.js")
 
 module.exports = {
 	track: function (channel, user, message, self, msg) {
-		func.connection.query('select * from emotes', function(err, result) {
+		if(user.emotes) {
+			var emotes = user.emotes
+			for (key in emotes) {
+				for(var i = 0; i < emotes[key].length; i++) {
+					getEmoteId(emotes, key, msg, i)
+				}
+			}
+			function getEmoteId(emotes, key, msg, i) {
+				var loc = emotes[key][i].split("-")
+				var addToEmoteDatabase = {
+					emoteId: key,
+					name: msg.substring(loc[0], (parseInt(loc[1]) + 1)),
+					type: 'twitch',
+					url: 'https://static-cdn.jtvnw.net/emoticons/v1/'+key+'/3.0'
+				}
+				var addEmoteStat = {
+					id: key,
+					name: msg.substring(loc[0], (parseInt(loc[1]) + 1)),
+					type: 'twitch'
+				}
+				func.connection.query('select * from emotes where type = "twitch" AND emoteId = ?', key, function(err, result) {
+					if (!result[0]) {
+						func.connection.query('insert into emotes set ?', addToEmoteDatabase, function(err, result) {if (err) {return}})
+					}
+					func.connection.query('select * from emotestats where id = ?', key, function(err, result) {
+						if (result[0] == undefined) {
+							func.connection.query('insert into emotestats set ?', addEmoteStat, function (err, result) {if (err) {return}})
+						} else {
+							func.connection.query('update emotestats set uses = uses + 1 where id = ?', key, function (err, result) {if (err) {return}})
+						}
+					})
+				})
+			}
+			var emote = user.emotes
+		}
+		func.connection.query('select * from emotes where type != "twitch"', function(err, result) {
 			var mesg = msg.split(" ")
 			for (msg in mesg) {
 				for (emote in result) {
@@ -23,7 +58,6 @@ module.exports = {
 					type: result[emote].type
 				}
 				func.connection.query('select * from emotestats where id = ?', addEmoteStat.id, function(err, result) {
-					console.log(addEmoteStat)
 					if (result[0] == undefined) {
 						func.connection.query('insert into emotestats set ?', addEmoteStat, function (err, result) {if (err) {return}})
 					} else {
