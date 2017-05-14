@@ -483,8 +483,7 @@ app.get('/stats', function(req, res) {
         var toppoints = result
         func.connection.query('select * from user ORDER BY num_lines DESC', function(err, result) {
           var toplines = result
-          func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId where emotes.type = "twitch" \
-    			ORDER BY emotestats.uses DESC LIMIT 5', function(err, result) {
+          func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId ORDER BY emotestats.uses DESC LIMIT 5', function(err, result) {
             var topemotes = result
             func.connection.query('select title from songrequest', function(err, result) {
               var songrequest = result.length

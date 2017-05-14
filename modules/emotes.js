@@ -36,8 +36,7 @@ module.exports = {
 	getStats: function(channel, user, message, self) {
 		if (message[0] == "!topemotes") {
 			function getTopEmotes() {
-				func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId where emotes.type = "twitch" \
-				ORDER BY emotestats.uses DESC LIMIT 5', function (err, result) {
+				func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId ORDER BY emotestats.uses DESC LIMIT 5', function (err, result) {
 					bot.say(channel, "Top 5 Twitch emotes: " +
 					"1. " + result[0].name + "  " + result[0].uses + "x | " +
 					"2. " + result[1].name + "  " + result[1].uses + "x | " +

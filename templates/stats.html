@@ -30,11 +30,16 @@ yucibot.controller('clips', function($scope, $interval, $log, $timeout) {
 <div class="col-lg-3 col-sm-6">
 <h4>Top 5 Twitch emotes</h4>
 <p>
-<% if(topemotes[0]) { %> #1 <img src="<%= (topemotes[0].url).slice(0, -4) %>/1.0"> <%= topemotes[0].name %> - <%= topemotes[0].uses %>x used<br> <% } %>
-<% if(topemotes[1]) { %> #2 <img src="<%= (topemotes[1].url).slice(0, -4) %>/1.0"> <%= topemotes[1].name %> - <%= topemotes[1].uses %>x used<br> <% } %>
-<% if(topemotes[2]) { %> #3 <img src="<%= (topemotes[2].url).slice(0, -4) %>/1.0"> <%= topemotes[2].name %> - <%= topemotes[2].uses %>x used<br> <% } %>
-<% if(topemotes[3]) { %> #4 <img src="<%= (topemotes[3].url).slice(0, -4) %>/1.0"> <%= topemotes[3].name %> - <%= topemotes[3].uses %>x used<br> <% } %>
-<% if(topemotes[4]) { %> #5 <img src="<%= (topemotes[4].url).slice(0, -4) %>/1.0"> <%= topemotes[4].name %> - <%= topemotes[4].uses %>x used<br> <% } %>
+
+<% if(topemotes[0]) { %> #1 <img src="<% if(topemotes[0].type == 'twitch') { %> <%= (topemotes[0].url).slice(0, -4) %>/1.0 <% } else if(topemotes[0].type == 'bttv') { %> <%= (topemotes[0].url).slice(0, -3) %>/1x <% } else if(topemotes[0].type == 'ffz') { %> <%= (topemotes[0].url).slice(0, -2) %>/1 <% } %>"> <%= topemotes[0].name %> - <%= topemotes[0].uses %>x used<br> <% } %>
+
+<% if(topemotes[1]) { %> #2 <img src="<% if(topemotes[1].type == 'twitch') { %> <%= (topemotes[1].url).slice(0, -4) %>/1.0 <% } else if(topemotes[1].type == 'bttv') { %> <%= (topemotes[1].url).slice(0, -3) %>/1x <% } else if(topemotes[1].type == 'ffz') { %> <%= (topemotes[1].url).slice(0, -2) %>/1 <% } %>"> <%= topemotes[1].name %> - <%= topemotes[1].uses %>x used<br> <% } %>
+
+<% if(topemotes[2]) { %> #3 <img src="<% if(topemotes[2].type == 'twitch') { %> <%= (topemotes[2].url).slice(0, -4) %>/1.0 <% } else if(topemotes[2].type == 'bttv') { %> <%= (topemotes[2].url).slice(0, -3) %>/1x <% } else if(topemotes[2].type == 'ffz') { %> <%= (topemotes[2].url).slice(0, -2) %>/1 <% } %>"> <%= topemotes[2].name %> - <%= topemotes[2].uses %>x used<br> <% } %>
+
+<% if(topemotes[3]) { %> #4 <img src="<% if(topemotes[3].type == 'twitch') { %> <%= (topemotes[3].url).slice(0, -4) %>/1.0 <% } else if(topemotes[3].type == 'bttv') { %> <%= (topemotes[3].url).slice(0, -3) %>/1x <% } else if(topemotes[3].type == 'ffz') { %> <%= (topemotes[3].url).slice(0, -2) %>/1 <% } %>"> <%= topemotes[3].name %> - <%= topemotes[3].uses %>x used<br> <% } %>
+
+<% if(topemotes[4]) { %> #5 <img src="<% if(topemotes[4].type == 'twitch') { %> <%= (topemotes[4].url).slice(0, -4) %>/1.0 <% } else if(topemotes[4].type == 'bttv') { %> <%= (topemotes[4].url).slice(0, -3) %>/1x <% } else if(topemotes[4].type == 'ffz') { %> <%= (topemotes[4].url).slice(0, -2) %>/1 <% } %>"> <%= topemotes[4].name %> - <%= topemotes[4].uses %>x used<br> <% } %>
 </p>
 </div>
 
