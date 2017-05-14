@@ -43,7 +43,7 @@ connection.query(
 
 connection.query(
 	'CREATE TABLE emotestats (' +
-	'id INT PRIMARY KEY,' +
+	'id VARCHAR(50) PRIMARY KEY,' +
 	'name VARCHAR(30),' +
 	'type VARCHAR(30),' +
 	'uses INT DEFAULT 1)',
@@ -227,7 +227,7 @@ connection.query('select * from clr', function (err, result) {
 	}
 })
 
-var sql4 = "insert into moduleSettings (moduleType, settingName, shortName, value, message) values ?"
+var sql4 = "insert into modulesettings (moduleType, settingName, shortName, value, message) values ?"
 var moduleSettingsPreset = [
 	["songrequest", "srSub", "Sub-only songrequest", 1, null],
 	["songrequest", "srMaxSong", "Max songs in queue", 3, null],
@@ -244,7 +244,7 @@ var moduleSettingsPreset = [
 	["clrComm", "clrCd", "Cooldown (in seconds)", 120, null]
 ]
 
-connection.query('select * from moduleSettings', function (err, result) {
+connection.query('select * from modulesettings', function (err, result) {
 	if (result[0] == undefined) {
 		connection.query(sql4, [moduleSettingsPreset], function (err, result) {console.log("[DEBUG] Added all module settings")})
 	} else {

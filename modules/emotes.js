@@ -6,17 +6,32 @@ var request = require("request");
 var func = require("./functions.js")
 
 module.exports = {
-	track: function (channel, user, message, self) {
-    if (user.emotes == null) return
-		Object.keys(user.emotes).forEach(function(emote) {
-      func.connection.query('select * from emotestats where id = ?', emote, function(err, result) {
-        if (result[0] == undefined) {
-          func.connection.query('insert into emotestats set id = ?', emote, function (err, result) {if (err) {return}})
-        } else {
-          func.connection.query('update emotestats set uses = uses + 1 where id = ?', emote, function (err, result) {if (err) {return}})
-        }
-		 	})
-    })
+	track: function (channel, user, message, self, msg) {
+		func.connection.query('select * from emotes', function(err, result) {
+			var mesg = msg.split(" ")
+			for (msg in mesg) {
+				for (emote in result) {
+					if(result[emote].name == mesg[msg]) {
+						addToEmoteStats(result, emote)
+					}
+				}
+			}
+			function addToEmoteStats(result, emote) {
+				var addEmoteStat = {
+					id: result[emote].emoteId,
+					name: result[emote].name,
+					type: result[emote].type
+				}
+				func.connection.query('select * from emotestats where id = ?', addEmoteStat.id, function(err, result) {
+					console.log(addEmoteStat)
+					if (result[0] == undefined) {
+						func.connection.query('insert into emotestats set ?', addEmoteStat, function (err, result) {if (err) {return}})
+					} else {
+						func.connection.query('update emotestats set uses = uses + 1 where id = ?', addEmoteStat.id, function (err, result) {if (err) {return}})
+					}
+				})
+			}
+		})
   },
 	getStats: function(channel, user, message, self) {
 		if (message[0] == "!topemotes") {

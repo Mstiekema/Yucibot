@@ -114,11 +114,11 @@ module.exports = {
 		if (message[0] == "!removesong") { if (user.mod === true || user.username == channel.substring(1)) {
 			func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
 				if(result[0] == undefined) {
-					bot.whisper(user.username, "There's no song currently playing :/")
+					bot.whisper(channel, "There's no song currently playing :/")
 				} else {
 					var id = message[1]
 					func.connection.query('delete from songrequest where songid = "'+id+'" AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
-						bot.say(user.username, "Succesfully removed the song.")
+						bot.say(channel, "Succesfully removed the song.")
 					});
 				}
 			});

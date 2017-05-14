@@ -20,7 +20,7 @@ exp.commands = function(channel, user, message, self) {
 			if (result[9].state == 1) { basic.customCommands(channel, user, msg, self); }
 			if (result[9].state == 1) { mod.commandManagement(channel, user, message.split(" "), self); }
 			if (result[10].state == 1) { songrequest.getSongs(channel, user, message.split(" "), self); }
-			if (result[11].state == 1) { emotes.track(channel, user, msg, self) }
+			if (result[11].state == 1) { emotes.track(channel, user, msg, self, message) }
 			if (result[11].state == 1) { emotes.getStats(channel, user, msg, self) }
 		}
 		if (result[2].state == 1) {
