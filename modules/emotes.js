@@ -81,5 +81,14 @@ module.exports = {
 			}
 			func.cooldown("getTopEmotes", global, user.username, 60, getTopEmotes)
 		}
+		if (message[0] == "!usage") {
+			function getEmoteUsage() {
+				func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId WHERE emotestats.name = ?', message[1], function (err, result) {
+					if (!result || !result[0]) return
+					bot.say(channel, "The emote " + result[0].name + " has been used " + result[0].uses + " times." )
+				})
+			}
+			func.cooldown("getEmoteUsage", global, user.username, 10, getEmoteUsage)
+		}
 	}
  }

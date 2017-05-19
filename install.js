@@ -314,6 +314,7 @@ var standardCommands = [
 	["!enter", null, "Joins the dungeon queue, if one is active", "user", 1, 100, null, 0],
 	["!rq", null, "Returns a random recorded quote from the current user", "user", 30, 100, null, 0],
 	["!points", null, "Bot whispers your amount of points", "global", 5, 100, null, 0],
+	["!usage", null, "Shows you how many times an emote has been used", "global", 20, 100, "!usage EMOTE", 0],
 	["!lines", null, "Returns the amount of lines the user has typed", "global", 20, 100, null, 0],
 	["!totallines", null, "Returns the total recorded lines in chat", "global", 30, 100, null, 0],
 	["!clr", null, "Commands from the CLR module", "global", 10, 110, null, 1000],
