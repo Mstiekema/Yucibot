@@ -9,18 +9,29 @@ var func = require("./functions.js")
 module.exports = {
 	sub: function () {
 		func.connection.query('select * from modulesettings where moduleType = "subNotif"', function(err, result) {
-			bot.on("resub", function (channel, username, months, message) {
-				var prePreResubMsg = result[1].message
-				var preResubMsg = prePreResubMsg.replace("[username]", username); var resubMsg = preResubMsg.replace("[months]", months);
+			bot.on("resub", function (channel, username, months, message, userstate, method) {
+				var resubMsg = result[1].message
+				var plan;
+				if(method.plan == 1000) plan = '4,99 euro'
+				if(method.plan == 2000) plan = '9,99 euro'
+				if(method.plan == 3000) plan = '24,99 euro'
+				if(method.prime == true) plan = "Prime"
+				resubMsg = resubMsg.replace("[username]", username).replace("[months]", months).replace("[plan]", plan);
 				bot.say(channel, resubMsg);
-		  	var newLog = {type: "sub", log: username + " resubbed for " + months + " months to " + channel + " with the following message: " + message}
+				var newLog = {type: "sub", log: username + " resubbed for " + months + " months using a " + plan + " sub with the following message: " + message}
 				func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 			});
-			bot.on("subscription", function (channel, username, method) {
-				var preSubMsg = result[1].message
-				var subMsg = preSubMsg.replace("[username]", username)
+			
+			bot.on("subscription", function (channel, username, method, message, userstate) {
+				var subMsg = result[0].message
+				var plan;
+				if(method.plan == 1000) plan = '4,99 euro'
+				if(method.plan == 2000) plan = '9,99 euro'
+				if(method.plan == 3000) plan = '24,99 euro'
+				if(method.prime == true) plan = "Prime"
+				subMsg = subMsg.replace("[username]", username).replace("[plan]", plan);
 				bot.say(channel, subMsg);
-				var newLog = {type: "sub", log: username + " subbed to " + channel}
+				var newLog = {type: "sub", log: username + " subbed to " + channel + " with a " + plan + " sub."}
 				func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 			});
 		})
@@ -39,8 +50,6 @@ module.exports = {
 		var channel = JSON.stringify(options.channels).slice(2, -2);
 		var job = new CronJob('00 20 16 * * *', function() {
 			console.log("[DEBUG] 4:20 Timer initiated"),
-			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
-			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
 			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
 			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
 			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip")

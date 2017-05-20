@@ -12,9 +12,11 @@ $('.moduleSwitch').on('switchChange.bootstrapSwitch', function (event, state) {
   }
 });
 
-restart.addEventListener("click", function() {
-  socket.emit('restartBot')
-})
+if (restart) {
+  restart.addEventListener("click", function() {
+    socket.emit('restartBot')
+  })
+}
 
 if (moduleSetBtn) {
   for (var x = 0; x < moduleSetBtn.length; x++) {

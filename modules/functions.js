@@ -199,7 +199,7 @@ module.exports = {
     	}
     });
     setTimeout(function () { module.exports.connection.query(sql, [emotes], function (err, result) {
-      console.log("Updated all emotes")
+      bot.say(channel, "Updated all emotes MrDestructoid")
     })}, 7000);
   },
   command: function(channel, user, message, command, cdtype, cooldown, botSay, remPoints) {
