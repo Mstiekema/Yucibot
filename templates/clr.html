@@ -44,6 +44,7 @@
     console.log("Played sound: " + data.sound)
     var sound = new Audio(data.url);
     sound.play();
+    sound.volume = 0.1;
   });
   socket.on('gif', function (data) {
     console.log("Played gif: " + data.gif)
