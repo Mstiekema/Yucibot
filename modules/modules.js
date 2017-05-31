@@ -7,12 +7,15 @@ var events = require('./events.js')
 var func = require("./functions.js")
 var clr = require("./clrCommands.js")
 var emotes = require("./emotes.js")
+var quotes = require("./quotes.js")
 var connect = require('../app.js')
 var bot = connect.bot
 var exp = module.exports = {}
 
 exp.commands = function(channel, user, message, self) {
 	var msg = message.toLowerCase().split(" ")
+	quotes.addQuote(channel, user, msg, self, message);
+	quotes.getQuotes(channel, user, msg, self);
 
 	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
@@ -47,7 +50,7 @@ exp.commands = function(channel, user, message, self) {
 	})
 	if (msg[0] == "!quit") {
 		if (user.mod === true || user.username == channel.substring(1)) {
-			bot.say(channel, "Shutting down Yucibot MrDestructoid")
+			// bot.say(channel, "Shutting down Yucibot MrDestructoid")
 			bot.disconnect()
 			process.exit(1)
 		}

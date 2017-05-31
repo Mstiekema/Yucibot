@@ -51,6 +51,14 @@ connection.query(
 )
 
 connection.query(
+	'CREATE TABLE quotes (' +
+	'id INT AUTO_INCREMENT PRIMARY KEY,' +
+	'name VARCHAR(30),' +
+	'quote VARCHAR(500))',
+	function (err, result) {if (err) {return}}
+)
+
+connection.query(
 	'CREATE TABLE clr (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
 	'name VARCHAR(30),' +
@@ -317,6 +325,10 @@ var standardCommands = [
 	["!usage", null, "Shows you how many times an emote has been used", "global", 20, 100, "!usage EMOTE", 0],
 	["!lines", null, "Returns the amount of lines the user has typed", "global", 20, 100, null, 0],
 	["!totallines", null, "Returns the total recorded lines in chat", "global", 30, 100, null, 0],
+	["!addquote", null, "Adds a new quote to the database", "global", 10, 100, null, 0],
+	["!quote", null, "Returns a quote with a certain ID", "global", 10, 100, "!quote #ID", 0],
+	["!randomquote", null, "Returns a random quote from the database", "global", 10, 100, null, 0],
+	["!delquote", null, "Returns a random quote from the database", "global", 1, 300, null, 0],
 	["!clr", null, "Commands from the CLR module", "global", 10, 110, null, 1000],
 	["!currentsong", null, "Returns the song that's currently playing", "global", 1, 100, null, 0],
 	["!songrequest", null, "Allows subs to request songs in chat", "global", 10, 150, "!songrequest Enjoy the silence - Depeche Mode | \
