@@ -14,7 +14,6 @@ var passport        = require("passport");
 var session         = require('express-session')
 var twitchStrategy  = require("passport-twitch").Strategy;
 var func            = require("./modules/functions.js")
-var date            = new Date().toISOString().substr(0, 10)
 var options         = require('./config.js')
 var clientID        = options.identity.clientId
 var secret          = options.identity.clientSecret
@@ -148,11 +147,11 @@ io.on('connection', function (socket) {
     func.connection.query('insert into clr set ?', data, function (err, result) {})
   })
   socket.on('endSong', function (data) {
-    func.connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {})
+    func.connection.query('update songrequest set playState = 1 where DATE_FORMAT(time,"%Y-%m-%d") = "' + new Date().toISOString().substr(0, 10) + '" AND songid = ?', data, function(err, result) {})
     socket.emit('nextSong');
   })
   socket.on('removeSong', function (data) {
-    func.connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + date + '" AND songid = ?', data, function(err, result) {
+    func.connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + new Date().toISOString().substr(0, 10) + '" AND songid = ?', data, function(err, result) {
       socket.emit('nextSong');
     })
   })
@@ -410,7 +409,7 @@ app.use('/user/:id', function(req, res) {
           var offM = Math.floor(userObj.timeOffline % 60);
           var timeOnline = (onH > 0 ? onH + " hours " + (onM < 10 ? "0" : "") : "") + onM + " minutes"
           var timeOffline = (offH > 0 ? offH + " hours " + (offM < 10 ? "0" : "") : "") + offM + " minutes"
-          if (url.split("/")[3] != undefined) {res.locals.logDate = url.split("/")[3]} else {res.locals.logDate = date}
+          if (url.split("/")[3] != undefined) {res.locals.logDate = url.split("/")[3]} else {res.locals.logDate = new Date().toISOString().substr(0, 10)}
           request("http://mcgamesdot.net/followage.php?channel=" + options.channels[0].substring(1) + "&user=" + req.params.id, function (error, response, body) {
             res.render('user.html', {
               age: age,
@@ -542,7 +541,7 @@ app.get('/history/:id', function(req, res) {
 });
 
 app.get('/history', function(req, res) {
-  res.redirect('/history/'+ date);
+  res.redirect('/history/'+ new Date().toISOString().substr(0, 10));
 });
 
 app.get('/poll', function(req, res) {
@@ -713,7 +712,7 @@ app.get('/admin/poll/create', function(req, res) {
 });
 
 app.get('/admin/songlist', function(req, res) {
-  func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+  func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
     func.connection.query('select * from modulesettings where moduleType = "songrequest"', function(err, modSet) {
       if (result == undefined || result[0] == undefined) {
         res.render('admin/songlist.html', {songs: false, srMaxLength: 0})
@@ -730,13 +729,13 @@ app.get('/admin/logs', function(req, res) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
         log: false,
-        date: date,
+        date: new Date().toISOString().substr(0, 10),
         type: undefined
       });
     } else {
       res.render('admin/adminlogs.html', {
         log: result,
-        date: date,
+        date: new Date().toISOString().substr(0, 10),
         type: "all"
       });
     };
@@ -748,13 +747,13 @@ app.get('/admin/logs/:page/', function(req, res) {
     if (result[0] == undefined) {
       res.render("admin/adminlogs.html", {
         log: false,
-        date: date,
+        date: new Date().toISOString().substr(0, 10),
         type: undefined
       });
     } else {
       res.render('admin/adminlogs.html', {
         log: result,
-        date: date,
+        date: new Date().toISOString().substr(0, 10),
         type: req.params.page
       });
     };
