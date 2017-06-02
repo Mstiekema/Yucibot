@@ -14,8 +14,6 @@ var exp = module.exports = {}
 
 exp.commands = function(channel, user, message, self) {
 	var msg = message.toLowerCase().split(" ")
-	quotes.addQuote(channel, user, msg, self, message);
-	quotes.getQuotes(channel, user, msg, self);
 
 	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
@@ -29,6 +27,8 @@ exp.commands = function(channel, user, message, self) {
 		if (result[2].state == 1) {
 			if (result[12].state == 1) { basic.google(channel, user, msg, self); }
 			if (result[13].state == 1) { basic.owCommands(channel, user, msg, self); }
+			if (result[27].state == 1) { quotes.addQuote(channel, user, msg, self, message); }
+			if (result[27].state == 1) { quotes.getQuotes(channel, user, msg, self); }
 		}
 		if (result[3].state == 1) {
 			if (result[14].state == 1) { points.roulette(channel, user, msg, self); }
@@ -50,7 +50,7 @@ exp.commands = function(channel, user, message, self) {
 	})
 	if (msg[0] == "!quit") {
 		if (user.mod === true || user.username == channel.substring(1)) {
-			// bot.say(channel, "Shutting down Yucibot MrDestructoid")
+			bot.say(channel, "Shutting down Yucibot MrDestructoid")
 			bot.disconnect()
 			process.exit(1)
 		}

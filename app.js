@@ -10,7 +10,7 @@ bot.connect();
 
 bot.on('connected', function (channel, user, message, self) {
 	console.log("[DEBUG] Bot connected to channel")
-	// setTimeout(function () { bot.say(JSON.stringify(options.channels).slice(2, -2), "Yucibot is now running MrDestructoid") }, 500);
+	setTimeout(function () { bot.say(JSON.stringify(options.channels).slice(2, -2), "Yucibot is now running MrDestructoid") }, 500);
 });
 
 process.on('uncaughtException', function(err) {

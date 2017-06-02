@@ -329,10 +329,6 @@ app.get('/clr', function(req, res) {
   });
 });
 
-app.get('/support', function(req, res) {
-  func.connection.query('select * from user', function(err, result) {res.render('support.html')});
-});
-
 app.get("/login", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
   res.redirect('/user/' + req.user);
 });
@@ -587,6 +583,20 @@ app.get('/poll/:id/result', function(req, res) {
       question: undefined
     })
   }
+  });
+});
+
+app.get('/quotes', function(req, res) {
+  func.connection.query('select * from quotes', function(err, result) {
+    if(result[0] != undefined) {
+      res.render('quotes.html', {
+        quotes: result
+      })
+    } else {
+      res.render('quotes.html', {
+        quotes: null
+      })
+    }
   });
 });
 

@@ -292,7 +292,8 @@ var moduleSettings = [
 	["CLR Commands", "clrComm", "Commands that triggers CLR sounds or images / GIFS", true, "clr"],
 	["Chat emotes", "clrComm", "Sends every emote said in chat to the CLR", false, "clr"],
 	["Meme button", "clrMeme", "Meme button for CLR", false, "clr"],
-	["Clr sub notifier", "clrSub", "Sub alert on CLR", false, "clr"]
+	["Clr sub notifier", "clrSub", "Sub alert on CLR", false, "clr"],
+	["Quotes", "quote", "Let viewers add quotes in the chat", true, "fun"]
 ];
 
 connection.query('select * from module', function (err, result) {

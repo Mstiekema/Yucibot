@@ -410,7 +410,7 @@ html {
   overflow-x: hidden;
 }
 
-@media screen and (min-width: 1370px) {
+@media screen and (min-width: 1420px) {
   .short {
     display: none;
   }
@@ -425,7 +425,7 @@ html {
   }
 }
 
-@media screen and (max-width: 1370px) {
+@media screen and (max-width: 1420px) {
   .short {
     display: inherit;
   }
@@ -440,7 +440,7 @@ html {
   }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1300px) {
   #bigMenu {
     display: none;
   }
