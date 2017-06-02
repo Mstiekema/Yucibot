@@ -204,7 +204,6 @@ connection.query('select * from user', function (err, result) {
 	}
 })
 
-var sql5 = "insert into clr (name, url, type) values ?"
 var clrSamples = [
 	["beer", "http://puu.sh/tXc6X/d75fb7a875.mp3", "sound"],
 	["bottle", "http://puu.sh/tX9R5/4ce2a001f0.mp3", "sound"],
@@ -227,15 +226,16 @@ var clrSamples = [
 	["dog", "http://puu.sh/vNWAx/040a4dfc2b.mp4", "meme"]
 ]
 
-connection.query('select * from clr', function (err, result) {
-	if (result[0] == undefined) {
-		connection.query(sql5, [clrSamples], function (err, result) {console.log("[DEBUG] Added all CLR samples")})
-	} else {
-		console.log("[DEBUG] Didn't add CLR samples, already in table")
+connection.query('select * from clr order by name', function (err, result) {
+	clrSamples.sort();
+	for(var i = 0; i < clrSamples.length ; i++) {
+		if(result[i] && result.indexOf(clrSamples[i][1]) == -1) {} else {
+			var sql = "insert into clr (name, url, type) values ("+"'" + clrSamples[i].join('\',\'') + "'"+")";
+			connection.query(sql, function (err, result) {if (err) {console.log(err)} else console.log("Added a new CLR Sample")})
+		}
 	}
 })
 
-var sql4 = "insert into modulesettings (moduleType, settingName, shortName, value, message) values ?"
 var moduleSettingsPreset = [
 	["songrequest", "srSub", "Sub-only songrequest", 1, null],
 	["songrequest", "srMaxSong", "Max songs in queue", 3, null],
@@ -252,15 +252,16 @@ var moduleSettingsPreset = [
 	["clrComm", "clrCd", "Cooldown (in seconds)", 120, null]
 ]
 
-connection.query('select * from modulesettings', function (err, result) {
-	if (result[0] == undefined) {
-		connection.query(sql4, [moduleSettingsPreset], function (err, result) {console.log("[DEBUG] Added all module settings")})
-	} else {
-		console.log("[DEBUG] Didn't add moduele settings, already in table")
+connection.query('select * from modulesettings order by settingName', function (err, result) {
+	moduleSettingsPreset.sort();
+	for(var i = 0; i < moduleSettingsPreset.length ; i++) {
+		if(result[i] && result.indexOf(moduleSettingsPreset[i][1]) == -1) {} else {
+			var sql = "insert into modulesettings (moduleType, settingName, shortName, value, message) values ("+"'" + moduleSettingsPreset[i].join('\',\'') + "'"+")";
+			connection.query(sql, function (err, result) {if (err) {console.log(err)} else console.log("Added a new module setting")})
+		}
 	}
 })
 
-var sql = "insert into module (shortName, moduleName, moduleDescription, state, type) values ?";
 var moduleSettings = [
 	// Main modules
 	[null, "dungeonActive", "Dungeon", false, null],
@@ -284,27 +285,28 @@ var moduleSettings = [
 	["Chat logger", "logger", "Log every message in chat", true, "profile"],
 	["Point system", "updatePoints", "Point system ", true, "profile"],
 	["Profile commands", "profileComm", "Enables commands to retrieve profile info", true, "profile"],
-	["Sub notifier", "subNotif", "Notifies when there's a new sub in chat", true, "events"],
+	["Sub notifier", "subNotif", "Notifies when there is a new sub in chat", true, "events"],
 	["420 timer", "fourTwenty", "Pushes messages to chat at 16:20", false, "events"],
 	["Twitter timer", "twitter", "Pushes your Twitter to chat every 20 min", false, "events"],
 	["Ban words", "banWords", "Enables the banning of words", false, "mod"],
 	["Link moderation", "linkMod", "Disallow links from non subs", true, "mod"],
 	["CLR Commands", "clrComm", "Commands that triggers CLR sounds or images / GIFS", true, "clr"],
-	["Chat emotes", "clrComm", "Sends every emote said in chat to the CLR", false, "clr"],
+	["Chat emotes", "clrChatEmote", "Sends every emote said in chat to the CLR", false, "clr"],
 	["Meme button", "clrMeme", "Meme button for CLR", false, "clr"],
 	["Clr sub notifier", "clrSub", "Sub alert on CLR", false, "clr"],
 	["Quotes", "quote", "Let viewers add quotes in the chat", true, "fun"]
 ];
 
-connection.query('select * from module', function (err, result) {
-	if (result[0] == undefined) {
-		connection.query(sql, [moduleSettings], function (err, result) {console.log("[DEBUG] Added all modules")})
-	} else {
-		console.log("[DEBUG] Didn't add modules, already in table")
+connection.query('select * from module order by moduleName', function (err, result) {
+	moduleSettings.sort();
+	for(var i = 0; i < moduleSettings.length ; i++) {
+		if(result[i] && result.indexOf(moduleSettings[i][1]) == -1) {} else {
+			var sql = "insert into module (shortName, moduleName, moduleDescription, state, type) values ("+"'" + moduleSettings[i].join('\',\'') + "'"+")";
+			connection.query(sql, function (err, result) {if (err) {console.log(err)} else console.log("Added a new module")})
+		}
 	}
 })
 
-var sql2 = "insert into commands (commName, response, commDesc, cdType, cd, level, commUse, points) values ?"
 var standardCommands = [
 	["!test", "This is a command xD", null, "user", 10, 100, null, 0],
 	["!repo", "You can find the GitHub repo for the bot over at https://github.com/Mstiekema/Yucibot", null, "user", 10, 100, null, 0],
@@ -317,7 +319,7 @@ var standardCommands = [
 	["!title", null, "Returns the current title if the stream is live", "global", 10, 100, null, 0],
 	["!uptime", null, "Shows how long the stream has been live for", "global", 10, 100, null, 0],
 	["!topemotes", null, "Returns the top 5 most used emotes in chat", "global", 120, 100, null, 0],
-	["!owrank", null, "Returns the streamer's or the user's OW rank", "global", 10, 100, "!owrank Mstiekema#2237", 0],
+	["!owrank", null, "Returns the streamer\\'s or the user\\'s OW rank", "global", 10, 100, "!owrank Mstiekema#2237", 0],
 	["!roulette", null, "Fun point minigame where you can gamble with your points", "user", 300, 100, "!roulette 12345", 0],
 	["!slot", null, "Fun point minigame where you can gamble with your points", "user", 300, 100, null, 0],
 	["!enter", null, "Joins the dungeon queue, if one is active", "user", 1, 100, null, 0],
@@ -331,7 +333,7 @@ var standardCommands = [
 	["!randomquote", null, "Returns a random quote from the database", "global", 10, 100, null, 0],
 	["!delquote", null, "Returns a random quote from the database", "global", 1, 300, null, 0],
 	["!clr", null, "Commands from the CLR module", "global", 10, 110, null, 1000],
-	["!currentsong", null, "Returns the song that's currently playing", "global", 1, 100, null, 0],
+	["!currentsong", null, "Returns the song that\\'s currently playing", "global", 1, 100, null, 0],
 	["!songrequest", null, "Allows subs to request songs in chat", "global", 10, 150, "!songrequest Enjoy the silence - Depeche Mode | \
 	!songrequest https://www.youtube.com/watch?v=aGSKrC7dGcY | !songrequest aGSKrC7dGcY", 0],
 	["!resetpoints", null, "Resets the points of the target", "global", 10, 300, "!resetpoints Mstiekema", 0],
@@ -343,18 +345,20 @@ var standardCommands = [
 	["!addtimeout", null, "Adds a timeout word to the banlist", "user", 1, 300, "!addtimeout fuck", 0],
 	["!addban", null, "Adds a ban word to the banlist", "user", 1, 300, "!addtimeout fuck", 0],
 	["!permit", null, "Allows a user to post a link in chat for 30 seconds", "global", 1, 300, "!permit mstiekema", 0],
-	["!skip", null, "Skips the song that's currently playing", "global", 10, 300, null, 0],
-	["!removesong", null, "Removes a song that's in the queue", "global", 10, 300, "!removesong YT-ID", 0],
+	["!skip", null, "Skips the song that\\'s currently playing", "global", 10, 300, null, 0],
+	["!removesong", null, "Removes a song that\\'s in the queue", "global", 10, 300, "!removesong YT-ID", 0],
 	["!volume", null, "Returns the volume of the songlist player", "global", 1, 300, null, 0],
 	["!setvolume", null, "Sets the volume to a certain number between 0-100", "global", 1, 300, "!setvolume 69", 0],
 	["!quit", null, "Makes the bot quit", "user", 1, 300, null, 0]
 ]
 
-connection.query('select * from commands', function (err, result) {
-	if (result[0] == undefined) {
-		connection.query(sql2, [standardCommands], function (err, result) {console.log("[DEBUG] Added all commands")})
-	} else {
-		console.log("[DEBUG] Didn't add commands, already in table")
+connection.query('select * from commands order by commName', function (err, result) {
+	standardCommands.sort();
+	for(var i = 0; i < standardCommands.length ; i++) {
+		if(result[i] && result.indexOf(standardCommands[i][1]) == -1) {} else {
+			var sql = "insert into commands (commName, response, commDesc, cdType, cd, level, commUse, points) values ("+"'" + standardCommands[i].join('\',\'') + "'"+")"
+			connection.query(sql, function (err, result) {if (err) {console.log(err)} else console.log("Added a new command")})
+		}
 	}
 })
 

@@ -1,0 +1,33 @@
+<% include header.ejs %>
+<div class="main">
+<h2>Quotes</h2>
+<p>This page conatins all of the quotes that have been added in the chat. You can add your own and show the quotes by using the following commands:<br>
+"<b>!addquote</b> QUOTE" - With this command you can add your own quotes. <br>
+"<b>!quote</b> ID" - Returns a quote with the given ID. <br>
+"<b>!randomquote</b>" - Returns a random quote from the database. <br><br>
+
+<% if (quotes == null) { %>
+  No quotes have been added so far.
+<% } else { %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Quote</th>
+        <th>Added by</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% quotes.forEach(function(quotes) { %>
+      <tr class="quotes">
+        <td><%= quotes.id %></td>
+        <td><%= quotes.quote %></td>
+        <td><%= quotes.name %></td>
+      </tr>
+    <% }) %>
+    </tbody>
+  </table>
+<% } %>
+</div>
+<script type="text/javascript" src="../js/yucisite.js"></script>
+</body>
