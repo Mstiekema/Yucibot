@@ -99,7 +99,7 @@ io.on('connection', function (socket) {
     bot.say(JSON.stringify(options.channels).slice(2, -2), "The current volume is: " + data.volume)
   })
   socket.on('refreshData', function (data) {
-    func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', date, function(err,result){
+    func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
       socket.emit('pushSonglist', result);
     })
   })

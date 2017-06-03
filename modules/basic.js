@@ -9,6 +9,7 @@ var clientID 	= options.identity.clientId
 module.exports = {
 	customCommands: function(channel, user, message, self) {
 		func.connection.query('select * from commands WHERE commDesc IS NULL', function(err, result) {
+			if (result[0] == undefined) return
 			var commands = result.map(function(a) {return a.commName;})
 			var check = new RegExp(commands.join("|")).test(message[0])
 			if (check != false) {
