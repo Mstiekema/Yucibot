@@ -22,8 +22,9 @@ var io              = require('socket.io')(server);
 var connect         = require('./app.js')
 var bot             = connect.bot
 var cio             = require('socket.io-client');
-var clr             = cio.connect('http://localhost:2345');
-var sr              = cio.connect('http://localhost:2346');
+var port            = options.identity.port
+var clr             = cio.connect('http://localhost:' + (port + 1));
+var sr              = cio.connect('http://localhost:' + (port + 2));
 var Twitter         = require('twitter');
 
 app.use(express.static(path.join(__dirname, 'static')));
@@ -841,6 +842,6 @@ app.all('*', function(req, res, next) {
 
 console.log("[DEBUG] Started website")
 
-server.listen(3000);
+server.listen(port);
 
 }}

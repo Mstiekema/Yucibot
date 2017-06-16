@@ -1,5 +1,5 @@
-var io = require('socket.io')(2345);
 var options = require('../config.js')
+var io = require('socket.io')(options.identity.port + 1);
 var request = require("request");
 var connect = require('../app.js')
 var func = require("./functions.js")

@@ -1,6 +1,6 @@
-var io = require('socket.io')(2346);
-var tmi = require('tmi.js');
 var options = require('../config.js')
+var io = require('socket.io')(options.identity.port + 2);
+var tmi = require('tmi.js');
 var connect = require('../app.js')
 var bot = connect.bot
 var ytApiKey = options.apiKeys.ytApiKey
