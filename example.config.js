@@ -20,6 +20,8 @@ module.exports = {
 		redirectUrl: 'http://localhost:3000/login',
 		// Get these at https://www.twitch.tv/kraken/oauth2/clients/new
 		websiteUrl: 'http://localhost:3000',
+		port: 3000
+		// If you host multiple bots on one server, then you should change this for every bot.
 	},
 	apiKeys: {
 		ytApiKey: 'apikey',
