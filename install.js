@@ -84,7 +84,7 @@ connection.query(
 connection.query(
 	'CREATE TABLE chatlogs (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
-	'time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
+	'time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
 	'userId INT,' +
 	'log VARCHAR(500))',
 	function (err, result) {if (err) {return}}
@@ -93,7 +93,7 @@ connection.query(
 connection.query(
 	'CREATE TABLE adminlogs (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
-	'time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
+	'time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
 	'type VARCHAR(10),' +
 	'log VARCHAR(500))',
 	function (err, result) {if (err) {return}}
@@ -102,7 +102,7 @@ connection.query(
 connection.query(
 	'CREATE TABLE songrequest (' +
 	'id INT AUTO_INCREMENT PRIMARY KEY,' +
-	'time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
+	'time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
 	'name VARCHAR(30),' +
 	'title VARCHAR(100),' +
 	'thumb VARCHAR(250),' +
