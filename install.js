@@ -302,7 +302,8 @@ var moduleSettings = [
 	["Chat emotes", "clrChatEmote", "Sends every emote said in chat to the CLR", 0, "clr"],
 	["Meme button", "clrMeme", "Meme button for CLR", 0, "clr"],
 	["Clr sub notifier", "clrSub", "Sub alert on CLR", 0, "clr"],
-	["Quotes", "quote", "Let viewers add quotes in the chat", 1, "fun"]
+	["Quotes", "quote", "Let viewers add quotes in the chat", 1, "fun"],
+	["Raffles", "raffle", "Users can participate in raffles for points.", 1, "points"]
 ];
 
 connection.query('select * from module order by moduleName', function (err, result) {

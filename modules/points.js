@@ -5,6 +5,11 @@ var connect = require('../app.js')
 var bot = connect.bot
 var request = require("request");
 var CronJob = require('cron').CronJob;
+var participants = new Array;
+var winArr = new Array;
+var rafState = false;
+var time = 30 * 1000;
+var points;
 
 module.exports = {
 	roulette: function (channel, user, message, self) {
@@ -230,6 +235,48 @@ module.exports = {
 					bot.whisper(user.username, "There's no dungeon currently active :/")
 				}
 			})
+		}
+	},
+	raffle: function (channel, user, message, self) {
+		if ((user.mod || user.username == channel.substring(1)) && (message[0] == "!raffle" && rafState == false)) {
+			points = parseInt(message[1])
+			if(message[2]) {time = parseInt(message[2] * 1000)}
+			rafState = true
+			participants.length = 0
+			
+			bot.say(channel, "A raffle has started! Type !join to join the raffle for " + points + " points!")
+			setTimeout(function () {
+				bot.say(channel, "Type !join to join the raffle for " + points + " points! You have " + (time * 0.75) / 1000 + " seconds left!")
+			}, time * 0.25);
+			setTimeout(function () {
+				bot.say(channel, "Type !join to join the raffle for " + points + " points! You have " + (time * 0.5) / 1000 + " seconds left!")
+			}, time * 0.5);
+			setTimeout(function () {
+				bot.say(channel, "Type !join to join the raffle for " + points + " points! You have " + (time * 0.25) / 1000 + " seconds left!")
+			}, time * 0.75);
+			setTimeout(function () {
+				if (participants.length == 0) return bot.say(channel, "No one joined the raffle FeelsBadMan")
+				winArr.length = 0
+				var winP = ((participants.length * Math.random()) * 30)
+				var winners = Math.floor(winP / 110) + 1
+				var wPoints = Math.floor(points / winners)
+				for(x = 0; x < winners; ++x) {
+					var i = Math.floor(Math.random() * participants.length);
+					var winner = participants[i]
+					func.connection.query('update user set points = points + ' + parseInt(wPoints) + ' where name = ?', winner, function (err, result) {if (err) {console.log(err)}})
+					winArr.push(winner)
+				}
+				bot.say(channel, "The raffle is over! " + winners + " users won " + wPoints + "! The winners are: " + winArr)
+				rafState = false
+			}, time);
+		}
+		
+		if (message[0] == "!join") {
+			if ((user.username.indexOf(participants) == -1 || participants[0] == undefined) && rafState == true) {
+				participants.push(user.username)
+			} else {
+				return
+			}
 		}
 	}
 }

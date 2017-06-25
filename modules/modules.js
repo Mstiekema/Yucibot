@@ -27,13 +27,14 @@ exp.commands = function(channel, user, message, self) {
 		if (result[2].state == 1) {
 			if (result[12].state == 1) { basic.google(channel, user, msg, self); }
 			if (result[13].state == 1) { basic.owCommands(channel, user, msg, self); }
-			if (result[27].state == 1) { quotes.addQuote(channel, user, msg, self, message); }
-			if (result[27].state == 1) { quotes.getQuotes(channel, user, msg, self); }
+			if (result[29].state == 1) { quotes.addQuote(channel, user, msg, self, message); }
+			if (result[29].state == 1) { quotes.getQuotes(channel, user, msg, self); }
 		}
 		if (result[3].state == 1) {
 			if (result[14].state == 1) { points.roulette(channel, user, msg, self); }
 			if (result[15].state == 1) { points.slot(channel, user, msg, self); }
 			if (result[16].state == 1) { points.dungeon(channel, user, msg, self); }
+			if (result[30].state == 1) { points.raffle(channel, user, msg, self); }
 		}
 		if (result[4].state == 1) {
 			if (result[17].state == 1) { profile.updateLines(channel, user, message, self); }
