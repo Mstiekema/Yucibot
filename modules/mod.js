@@ -95,6 +95,17 @@ module.exports = {
 				func.connection.query('insert into commands set ?', commInfo, function (err, result) {if (err) {return}})
 				bot.whisper(user.username, "Succesfully added the new command " + commName)
 			}
+			if(message[0] == ("!editcommand")) {
+				var commName = message[1]
+				message.splice(0, 2)
+				func.connection.query('update commands set response = "' + message.join(" ") + '" where commName = ?', commName, function (err, result) {
+					if (result.changedRows == 0) {
+						bot.whisper(user.username, "Something went wrong while editing " + commName)
+					} else {
+						bot.whisper(user.username, "Succesfully edited " + commName)
+					}
+				})
+			}
 			if(message[0] == "!removecommand") {
 				var commName = message[1]
 				func.connection.query('delete from commands where commName = ?', commName, function (err, result) {
