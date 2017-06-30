@@ -37,9 +37,10 @@ module.exports = {
 							func.addStats(user['user-id'], "roul", "Loss", "-"+bet)
 							func.connection.query('insert into adminlogs set ?', newLog, function (err, result) {if (err) {console.log(err)}})
 						}
-					}
-					else {
-						bot.say(channel, user.username + ", You can't do roulette's with more points than you have")
+					} else if (0 >= oldPoints) {
+						bot.whisper(user.username, "You can't roulette with negative points")
+					}	else {
+						bot.whisper(user.username, "You can't roulette with more points than you currently have")
 					}
 				}
 				else if(bet === "all" || bet === "allin") {
