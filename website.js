@@ -379,35 +379,63 @@ app.use('/user/:id', function(req, res) {
         timeOfflineIndex = i + 1
       }
     }
-    if (userO[0] == undefined) {
-      res.render("error404.html");
-    } else {
-      func.connection.query('select * from chatlogs where userId = ?', userO[0].userId, function(err, result) {
-        var info = {
-          url: 'https://api.twitch.tv/kraken/users/' + req.params.id,
-          headers: {
-            'Client-ID': clientID
-          }
+    func.connection.query('select * from chatlogs where name = ?', req.params.id, function(err, result) {
+      var info = {
+        url: 'https://api.twitch.tv/kraken/users/' + req.params.id,
+        headers: {
+          'Client-ID': clientID
         }
-        request(info, function (error, response, body) {
-          var userObj = userO[0]
-          var reqBody = JSON.parse(body)
-          var userPf = reqBody.logo
-          func.connection.query('update user set profile_pic = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
-          var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
-          var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
-          var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
-          var level = Math.ceil(userObj.xp / 100)
-          var perc = Math.ceil(String(userObj.xp).slice(-2))
-          var url = req.originalUrl
-          var onH = Math.floor(userObj.timeOnline / 60);
-          var offH = Math.floor(userObj.timeOffline / 60);
-          var onM = Math.floor(userObj.timeOnline % 60);
-          var offM = Math.floor(userObj.timeOffline % 60);
-          var timeOnline = (onH > 0 ? onH + " hours " + (onM < 10 ? "0" : "") : "") + onM + " minutes"
-          var timeOffline = (offH > 0 ? offH + " hours " + (offM < 10 ? "0" : "") : "") + offM + " minutes"
-          if (url.split("/")[3] != undefined) {res.locals.logDate = url.split("/")[3]} else {res.locals.logDate = new Date().toISOString().substr(0, 10)}
-          request("http://mcgamesdot.net/followage.php?channel=" + options.channels[0].substring(1) + "&user=" + req.params.id, function (error, response, body) {
+      }
+      request(info, function (error, response, body) {
+        var reqBody = JSON.parse(body)
+        var userPf = reqBody.logo
+        func.connection.query('update user set profile_pic = "' + userPf + '" where name = ?', reqBody.name, function(err, result) {})
+        var getAge = JSON.stringify(new Date(reqBody.created_at)).substring(1, 20)
+        var age = getAge.substring(0, 10) + " / " + getAge.substring(11, 20)
+        var days = Math.round(Math.abs((new Date(reqBody.created_at).getTime() - new Date().getTime())/(24*60*60*1000)));
+        var url = req.originalUrl
+        if (url.split("/")[3] != undefined) {res.locals.logDate = url.split("/")[3]} else {res.locals.logDate = new Date().toISOString().substr(0, 10)}
+        request("http://api.yucibot.nl/followage/" + req.params.id + "/" + options.channels[0].substring(1), function (error, response, body) {
+          if (userO[0] == undefined) {
+            res.render('user.html', {
+              age: age,
+              days: days,
+              followAge: body,
+              level: 0,
+              perc: 0,
+              xp: 0,
+              user: reqBody.name,
+              points: 0,
+              lines: 0,
+              online: 0,
+              offline: 0,
+              profile_pic_page: userPf,
+              log: null,
+              date: res.locals.logDate,
+              pointIndex: 0,
+              xpIndex: 0,
+              linesIndex: 0,
+              timeOnlineIndex: 0,
+              timeOfflineIndex: 0,
+              slotWin: 0,
+              slotLoss: 0,
+              slotProfit: 0,
+              roulWin: 0,
+              roulLoss: 0,
+              roulProfit: 0,
+              dungWin: 0,
+              dungProfit: 0
+            });
+          } else {
+            var userObj = userO[0]
+            var level = Math.ceil(userObj.xp / 100)
+            var perc = Math.ceil(String(userObj.xp).slice(-2))
+            var onH = Math.floor(userObj.timeOnline / 60);
+            var offH = Math.floor(userObj.timeOffline / 60);
+            var onM = Math.floor(userObj.timeOnline % 60);
+            var offM = Math.floor(userObj.timeOffline % 60);
+            var timeOnline = (onH > 0 ? onH + " hours " + (onM < 10 ? "0" : "") : "") + onM + " minutes"
+            var timeOffline = (offH > 0 ? offH + " hours " + (offM < 10 ? "0" : "") : "") + offM + " minutes"
             res.render('user.html', {
               age: age,
               days: days,
@@ -437,10 +465,10 @@ app.use('/user/:id', function(req, res) {
               dungWin: userObj.dungWin,
               dungProfit: userObj.dungProfit
             });
-          });
+          }
         });
       });
-    };
+    });
   });});});});});});
 });
 
