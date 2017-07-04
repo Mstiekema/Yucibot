@@ -507,25 +507,33 @@ app.get('/stats', function(req, res) {
         var toppoints = result
         func.connection.query('select * from user ORDER BY num_lines DESC', function(err, result) {
           var toplines = result
-          func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId ORDER BY emotestats.uses DESC LIMIT 5', function(err, result) {
-            var topemotes = result
-            func.connection.query('select title from songrequest', function(err, result) {
-              var songrequest = result.length
-              func.connection.query('select type from adminlogs', function(err, result) {
-                var types = result.map(function(a) {return a.type;})
-                var timeouts = types.filter(function(b) {return b == "timeout"});
-                var bans = types.filter(function(b) {return b == "ban"});
-                var allTimeouts = timeouts.length;
-                var allBans = bans.length;
-                res.render('stats.html', {
-                  lines: numLines,
-                  user: user,
-                  songrequest: songrequest,
-                  timeout: allTimeouts,
-                  ban: allBans,
-                  toppoints: toppoints,
-                  toplines: toplines,
-                  topemotes: topemotes
+          func.connection.query('select * from user ORDER BY timeOnline DESC', function(err, result) {
+            var toponline = result
+            func.connection.query('select * from user ORDER BY timeOffline DESC', function(err, result) {
+              var topoffline = result
+              func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId ORDER BY emotestats.uses DESC LIMIT 5', function(err, result) {
+                var topemotes = result
+                func.connection.query('select title from songrequest', function(err, result) {
+                  var songrequest = result.length
+                  func.connection.query('select type from adminlogs', function(err, result) {
+                    var types = result.map(function(a) {return a.type;})
+                    var timeouts = types.filter(function(b) {return b == "timeout"});
+                    var bans = types.filter(function(b) {return b == "ban"});
+                    var allTimeouts = timeouts.length;
+                    var allBans = bans.length;
+                    res.render('stats.html', {
+                      lines: numLines,
+                      user: user,
+                      songrequest: songrequest,
+                      timeout: allTimeouts,
+                      ban: allBans,
+                      toppoints: toppoints,
+                      toplines: toplines,
+                      topemotes: topemotes,
+                      toponline: toponline,
+                      topoffline: topoffline
+                    });
+                  });
                 });
               });
             });

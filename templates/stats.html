@@ -64,6 +64,38 @@ yucibot.controller('clips', function($scope, $interval, $log, $timeout) {
 <% if(toplines[4]) { %> #5 <%= toplines[4].name %> - <%= toplines[4].num_lines %> lines<br> <% } %>
 </p>
 </div>
+
+
+<!--  
+var onH = Math.floor(toponline.timeOnline / 60);
+var offH = Math.floor(topoffline.timeOffline / 60);
+var onM = Math.floor(toponline.timeOnline % 60);
+var offM = Math.floor(topoffline.timeOffline % 60);
+var timeOnline = (onH > 0 ? Math.floor(toponline.timeOnline / 60) + " hours " + (Math.floor(toponline.timeOnline % 60) < 10 ? "0" : "") : "") + Math.floor(toponline.timeOnline % 60) + " minutes"
+var timeOffline = (offH > 0 ? offH + " hours " + (offM < 10 ? "0" : "") : "") + offM + " minutes"
+-->
+
+<div class="col-lg-3 col-sm-6">
+<h4>Top 5 online viewers</h4>
+<p>
+<% if(toponline[0]) { %> #1 <%= toponline[0].name %> - <%= (Math.floor(toponline[0].timeOnline / 60) > 0 ? Math.floor(toponline[0].timeOnline / 60) + " hours " + (Math.floor(toponline[0].timeOnline % 60) < 10 ? "0" : "") : "") + Math.floor(toponline[0].timeOnline % 60) + " minutes" %><br> <% } %>
+<% if(toponline[1]) { %> #2 <%= toponline[1].name %> - <%= (Math.floor(toponline[1].timeOnline / 60) > 0 ? Math.floor(toponline[1].timeOnline / 60) + " hours " + (Math.floor(toponline[1].timeOnline % 60) < 10 ? "0" : "") : "") + Math.floor(toponline[1].timeOnline % 60) + " minutes" %><br> <% } %>
+<% if(toponline[2]) { %> #3 <%= toponline[2].name %> - <%= (Math.floor(toponline[2].timeOnline / 60) > 0 ? Math.floor(toponline[2].timeOnline / 60) + " hours " + (Math.floor(toponline[2].timeOnline % 60) < 10 ? "0" : "") : "") + Math.floor(toponline[2].timeOnline % 60) + " minutes" %><br> <% } %>
+<% if(toponline[3]) { %> #4 <%= toponline[3].name %> - <%= (Math.floor(toponline[3].timeOnline / 60) > 0 ? Math.floor(toponline[3].timeOnline / 60) + " hours " + (Math.floor(toponline[3].timeOnline % 60) < 10 ? "0" : "") : "") + Math.floor(toponline[3].timeOnline % 60) + " minutes" %><br> <% } %>
+<% if(toponline[4]) { %> #5 <%= toponline[4].name %> - <%= (Math.floor(toponline[4].timeOnline / 60) > 0 ? Math.floor(toponline[4].timeOnline / 60) + " hours " + (Math.floor(toponline[4].timeOnline % 60) < 10 ? "0" : "") : "") + Math.floor(toponline[4].timeOnline % 60) + " minutes" %><br> <% } %>
+</p>
+</div>
+
+<div class="col-lg-3 col-sm-6">
+<h4>Top 5 offline viewers</h4>
+<p>
+	<% if(topoffline[0]) { %> #1 <%= topoffline[0].name %> - <%= (Math.floor(topoffline[0].timeOffline / 60) > 0 ? Math.floor(topoffline[0].timeOffline / 60) + " hours " + (Math.floor(topoffline[0].timeOffline % 60) < 10 ? "0" : "") : "") + Math.floor(topoffline[0].timeOffline % 60) + " minutes" %><br> <% } %>
+	<% if(topoffline[1]) { %> #2 <%= topoffline[1].name %> - <%= (Math.floor(topoffline[1].timeOffline / 60) > 0 ? Math.floor(topoffline[1].timeOffline / 60) + " hours " + (Math.floor(topoffline[1].timeOffline % 60) < 10 ? "0" : "") : "") + Math.floor(topoffline[1].timeOffline % 60) + " minutes" %><br> <% } %>
+	<% if(topoffline[2]) { %> #3 <%= topoffline[2].name %> - <%= (Math.floor(topoffline[2].timeOffline / 60) > 0 ? Math.floor(topoffline[2].timeOffline / 60) + " hours " + (Math.floor(topoffline[2].timeOffline % 60) < 10 ? "0" : "") : "") + Math.floor(topoffline[2].timeOffline % 60) + " minutes" %><br> <% } %>
+	<% if(topoffline[3]) { %> #4 <%= topoffline[3].name %> - <%= (Math.floor(topoffline[3].timeOffline / 60) > 0 ? Math.floor(topoffline[3].timeOffline / 60) + " hours " + (Math.floor(topoffline[3].timeOffline % 60) < 10 ? "0" : "") : "") + Math.floor(topoffline[3].timeOffline % 60) + " minutes" %><br> <% } %>
+	<% if(topoffline[4]) { %> #5 <%= topoffline[4].name %> - <%= (Math.floor(topoffline[4].timeOffline / 60) > 0 ? Math.floor(topoffline[4].timeOffline / 60) + " hours " + (Math.floor(topoffline[4].timeOffline % 60) < 10 ? "0" : "") : "") + Math.floor(topoffline[4].timeOffline % 60) + " minutes" %><br> <% } %>
+</p>
+</div>
 </div>
 
 <div class="col-md-8">
