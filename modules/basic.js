@@ -68,8 +68,9 @@ module.exports = {
 				var chnl = channel.substring(1)
 				if (message[1]) usr = message[1]
 				if (message[2]) chnl = message[2]
-				request('http://mcgamesdot.net/followage.php?channel='+chnl+'&user='+usr,
+				request('http://api.yucibot.nl/followage/'+usr+'/'+chnl,
 				function (error, response, body) {
+					if(body.includes("is not following")) return bot.say(channel, body)
   				bot.say(channel, usr + " has been following " + chnl + " for " + body)
 				});
 			}
@@ -81,9 +82,10 @@ module.exports = {
 				var chnl = channel.substring(1)
 				if (message[1]) usr = message[1]
 				if (message[2]) chnl = message[2]
-				request('http://api.newtimenow.com/follow-length/?channel='+chnl+'&user='+usr,
+				request('http://api.yucibot.nl/followsince/'+usr+'/'+chnl,
 				function (error, response, body) {
-					bot.say(channel, usr + " has been following " + chnl + " since " + body)
+					if(body.includes("is not following")) return bot.say(channel, body)
+					bot.say(channel, body)
 				});
 			}
 			func.cooldown("followsince", "global", user.username, 10, followsince)
@@ -118,20 +120,20 @@ module.exports = {
 			function title() {request(info, getTitle)}
 			func.cooldown("title", "global", user.username, 10, title)
 		}
-		// else if(message[0] == "!uptime") {
-		// 	function getUptime(error, response, body) {
-		// 		if (!error && response.statusCode == 200) {
-		// 		  if(!body.includes("is not streaming")) {
-		// 				bot.say(channel, channel.substring(1) + " has been live for " + body + "!")
-		// 		  }
-		// 		  else {
-		// 		  	bot.say(channel, channel.substring(1) + " is offline")
-		// 		  }
-		// 		}
-		// 	}
-		// 	function uptime() {request("https://api.rtainc.co/twitch/uptime?channel=" + channel.substring(1), getUptime)}
-		// 	func.cooldown("uptime", "global", user.username, 10, uptime)
-		// }
+		else if(message[0] == "!uptime") {
+			function getUptime(error, response, body) {
+				if (!error && response.statusCode == 200) {
+				  if(!body.includes("is not live")) {
+						bot.say(channel, channel.substring(1) + " has been live for " + body + "!")
+				  }
+				  else {
+				  	bot.say(channel, channel.substring(1) + " is offline")
+				  }
+				}
+			}
+			function uptime() {request("http://api.yucibot.nl/user/uptime/" + channel.substring(1), getUptime)}
+			func.cooldown("uptime", "global", user.username, 10, uptime)
+		}
 	},
 	owCommands: function (channel, user, message, self) {
 		if(message[0] == "!owrank") {
