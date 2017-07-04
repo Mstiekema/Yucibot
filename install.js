@@ -176,8 +176,7 @@ connection.query(
 
 connection.query(
 	'CREATE TABLE emotes (' +
-	'id INT AUTO_INCREMENT PRIMARY KEY,' +
-	'emoteId VARCHAR(30),' +
+	'emoteId VARCHAR(30) PRIMARY KEY,' +
 	'name VARCHAR(50),' +
 	'type VARCHAR(10),' +
 	'url VARCHAR(500))',
