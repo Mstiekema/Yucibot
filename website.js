@@ -544,6 +544,12 @@ app.get('/stats', function(req, res) {
   });
 });
 
+app.get('/stats/emotes', function(req, res) {
+  func.connection.query('SELECT * FROM emotestats INNER JOIN emotes ON emotestats.id = emotes.emoteId ORDER BY emotestats.uses DESC', function(err, result) {
+    res.render('emotestats.html', { emotes: result });
+  })
+})
+
 app.get('/history/:id', function(req, res) {
   func.connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
     var songInfo = result

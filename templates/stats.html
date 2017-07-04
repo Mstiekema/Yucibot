@@ -40,6 +40,7 @@ yucibot.controller('clips', function($scope, $interval, $log, $timeout) {
 <% if(topemotes[3]) { %> #4 <img src="<% if(topemotes[3].type == 'twitch') { %> <%= (topemotes[3].url).slice(0, -4) %>/1.0 <% } else if(topemotes[3].type == 'bttv') { %> <%= (topemotes[3].url).slice(0, -3) %>/1x <% } else if(topemotes[3].type == 'ffz') { %> <%= (topemotes[3].url).slice(0, -2) %>/1 <% } %>"> <%= topemotes[3].name %> - <%= topemotes[3].uses %>x used<br> <% } %>
 
 <% if(topemotes[4]) { %> #5 <img src="<% if(topemotes[4].type == 'twitch') { %> <%= (topemotes[4].url).slice(0, -4) %>/1.0 <% } else if(topemotes[4].type == 'bttv') { %> <%= (topemotes[4].url).slice(0, -3) %>/1x <% } else if(topemotes[4].type == 'ffz') { %> <%= (topemotes[4].url).slice(0, -2) %>/1 <% } %>"> <%= topemotes[4].name %> - <%= topemotes[4].uses %>x used<br> <% } %>
+<br><a href="/stats/emotes">Click here</a> for the full emote leaderboard.
 </p>
 </div>
 
@@ -64,16 +65,6 @@ yucibot.controller('clips', function($scope, $interval, $log, $timeout) {
 <% if(toplines[4]) { %> #5 <%= toplines[4].name %> - <%= toplines[4].num_lines %> lines<br> <% } %>
 </p>
 </div>
-
-
-<!--  
-var onH = Math.floor(toponline.timeOnline / 60);
-var offH = Math.floor(topoffline.timeOffline / 60);
-var onM = Math.floor(toponline.timeOnline % 60);
-var offM = Math.floor(topoffline.timeOffline % 60);
-var timeOnline = (onH > 0 ? Math.floor(toponline.timeOnline / 60) + " hours " + (Math.floor(toponline.timeOnline % 60) < 10 ? "0" : "") : "") + Math.floor(toponline.timeOnline % 60) + " minutes"
-var timeOffline = (offH > 0 ? offH + " hours " + (offM < 10 ? "0" : "") : "") + offM + " minutes"
--->
 
 <div class="col-lg-3 col-sm-6">
 <h4>Top 5 online viewers</h4>

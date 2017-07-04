@@ -1,0 +1,17 @@
+<% include header.ejs %>
+<div class="container" style="text-align: center;">
+<div class="main">
+<h2>Twitch emote leaderboard</h2>
+<div class="row">
+<p>
+
+<% emotes.forEach(function(e, i) { %>
+
+#<%= i + 1 %> <img src="<% if(e.type == 'twitch') { %> <%= (e.url).slice(0, -4) %>/1.0 <% } else if(e.type == 'bttv') { %> <%= (e.url).slice(0, -3) %>/1x <% } else if(e.type == 'ffz') { %> <%= (e.url).slice(0, -2) %>/1 <% } %>"> <%= e.name %> - <%= e.uses %>x used<br>
+
+<% }) %>
+
+</p>
+</div>
+<script type="text/javascript" src="../js/yucisite.js"></script>
+</body>
