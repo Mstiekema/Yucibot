@@ -70,6 +70,7 @@ module.exports = {
 				if (message[2]) chnl = message[2]
 				request('http://api.yucibot.nl/followage/'+usr+'/'+chnl,
 				function (error, response, body) {
+					if(body.includes("<html>")) return
 					if(body.includes("is not following")) return bot.say(channel, body)
   				bot.say(channel, usr + " has been following " + chnl + " for " + body)
 				});
@@ -84,6 +85,7 @@ module.exports = {
 				if (message[2]) chnl = message[2]
 				request('http://api.yucibot.nl/followsince/'+usr+'/'+chnl,
 				function (error, response, body) {
+					if(body.includes("<html>")) return
 					if(body.includes("is not following")) return bot.say(channel, body)
 					bot.say(channel, body)
 				});

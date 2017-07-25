@@ -1,4 +1,5 @@
 var tmi = require('tmi.js');
+var Twitter = require('twitter');
 var options = require('../config.js')
 var connect = require('../app.js')
 var bot = connect.bot
@@ -57,8 +58,22 @@ module.exports = {
 	},
 	twitter: function () {
 		var channel = JSON.stringify(options.channels).slice(2, -2);
-		new CronJob('*/20 * * * *', function() {
-			bot.say(channel, "Follow me on Twitter: https://twitter.com/" + options.identity.twitter)
-		}, function () {}, true );
-	}
-}
+		var client = new Twitter({
+			consumer_key: options.apiKeys.twitter_consumer_key,
+			consumer_secret: options.apiKeys.twitter_consumer_secret,
+			access_token_key: options.apiKeys.twitter_access_token_key,
+			access_token_secret: options.apiKeys.twitter_access_token_secret
+		});
+		client.get('users/show', {'screen_name': options.identity.twitter}, function(error, usr, response) {
+			client.stream('statuses/filter', {'follow': usr.id_str}, function(stream) {
+				stream.on('data', function(event) {
+					if(event.user.id != usr.id_str) return
+					if(event.text.startsWith("@")) return
+					bot.say(channel, "New tweet! PogChamp | " + event.text + " | " + "https://www.twitter.com/"+event.user["screen_name"]+"/status/"+event.id_str)
+				});
+				stream.on('error', function(error) {
+					throw error;
+				});
+			});
+		})
+	},
