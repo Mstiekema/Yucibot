@@ -11,53 +11,81 @@ module.exports = {
 	updateProfile: function () {
 		var channel = JSON.stringify(options.channels).slice(2, -2);
 		var info1 = {
-  		url: 'https://api.twitch.tv/kraken/streams?channel=' + channel.substring(1),
+  		url: 'https://api.twitch.tv/kraken/streams/' + options.identity.channelId,
  			headers: {
+				'Accept': 'application/vnd.twitchtv.v5+json',
   		  'Client-ID': clientID
   		}
   	}
 		new CronJob('*/5 * * * *', function() {
 			function callback(error, response, body) {
-				var streamStatus = JSON.parse(body).streams[0]
+				var streamStatus = JSON.parse(body).stream
 				request("https://tmi.twitch.tv/group/user/" + channel.substring(1) + "/chatters", function (error, response, body, channel) {
 					var chatters = JSON.parse(body)
 					var normViewers = chatters.chatters.viewers
 					var moderators = chatters.chatters.moderators
 					var viewers = normViewers.concat(moderators);
-					if(streamStatus != undefined) {
+					var pointAmount;
+					var allViewers = new Array;
+					var allIds = new Array;
+					if(streamStatus != null) {
 						for (var i = 0; i < viewers.length; i++) {
 							var userName = viewers[i]
+							var j = Math.floor(i / 100)
+							if(!allViewers[j]) allViewers[j] = new Array;
+							allViewers[j].push(userName)
+						}
+						func.connection.query('select * from modulesettings where moduleType = "updatePoints"', function(err, result) {
+							pointAmount = result[0].value
+						})
+						for (var i = 0; i < allViewers.length; i++) {
 							var info2 = {
-								url: 'https://api.twitch.tv/kraken/users?login=' + userName,
+								url: 'https://api.twitch.tv/kraken/users?login=' + allViewers[i].join(","),
 								headers: {
 									'Accept': 'application/vnd.twitchtv.v5+json',
 									'Client-ID': clientID
 								}
 							}
-							request(info2, function (error, response, body) {
-								var id = JSON.parse(body).users[0]._id
-								func.connection.query('select * from modulesettings where moduleType = "updatePoints"', function(err, result) {
-									var pointAmount = result[0].value
-									func.addPoints(id, pointAmount, userName)
+							addPointsWithId(i)
+							function addPointsWithId(i) {
+								request(info2, function (error, response, body) {
+									body = JSON.parse(body)
+									for(var x = 0; x < body.users.length; x++) {
+										var id = body.users[x]._id
+										var user = allViewers[i][x]
+										func.addPoints(id, pointAmount, user)
+										func.addXP(id, 1, user)
+										func.addTime(id, 5, user, "online")
+									}
 								})
-								func.addXP(id, 1, userName)
-								func.addTime(id, 5, userName, "online")
-							})
+							}
 						}
 					} else {
 						for (var i = 0; i < viewers.length; i++) {
 							var userName = viewers[i]
+							var j = Math.floor(i / 100)
+							if(!allViewers[j]) allViewers[j] = new Array;
+							allViewers[j].push(userName)
+						}
+						for (var i = 0; i < allViewers.length; i++) {
 							var info2 = {
-								url: 'https://api.twitch.tv/kraken/users?login=' + userName,
+								url: 'https://api.twitch.tv/kraken/users?login=' + allViewers[i].join(","),
 								headers: {
 									'Accept': 'application/vnd.twitchtv.v5+json',
 									'Client-ID': clientID
 								}
 							}
-							request(info2, function (error, response, body) {
-								var id = JSON.parse(body).users[0]._id
-								func.addTime(id, 5, userName, "offline")
-							})
+							addPointsWithId(i)
+							function addPointsWithId(i) {
+								request(info2, function (error, response, body) {
+									body = JSON.parse(body)
+									for(var x = 0; x < body.users.length; x++) {
+										var id = body.users[x]._id
+										var user = allViewers[i][x]
+										func.addTime(id, 5, user, "offline")
+									}
+								})
+							}
 						}
 					}
 					console.log("[DEBUG] Updated stats")
@@ -124,6 +152,13 @@ module.exports = {
 				bot.whisper(user.username, "You have " + result[0].points + " points!")
 			})}
 			func.cooldown("points", "global", user.username, 5, points)
+		}
+		if (message[0] == "!userpoints") {
+			function userpoints() {
+			func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
+				bot.say(channel, user.username + ", You have " + result[0].points + " points!")
+			})}
+			func.cooldown("userpoints", "global", user.username, 5, userpoints)
 		}
 		if (message[0] == "!lines") {
 			function lines() {

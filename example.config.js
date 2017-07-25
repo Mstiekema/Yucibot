@@ -12,6 +12,8 @@ module.exports = {
 		// Bot can't be the broadcaster or admin, don't use caps
 		password: 'oauth:1234abcd',
 		// You can get your oauth key from https://twitchapps.com/tmi/
+		channelId: 00000000
+		// Streamers Channel ID, you can get this from http://api.yucibot.nl/user/id/STREAMER
 		owUser: 'Battletag-1234',
 		// Use a - instead of a # in your battle tag
 		twitter: 'username',

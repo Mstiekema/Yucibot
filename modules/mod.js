@@ -55,7 +55,7 @@ module.exports = {
 		var message = msg.join(" ")
 		func.connection.query('select * from modulesettings where moduleType = "linkMod"', function(err, result) {
 			var cd = result[1].value
-			var link = String(message).match(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/igm)
+			var link = String(message).match((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$]))
 			if(link != null) {
 				if (user.mod == false) { if (user.username != channel.substring(1)) { if(user.username.indexOf(allowedUsers) == -1 || allowedUsers[0] == undefined) {
 					if (result[0].value == 1) {
