@@ -40,6 +40,9 @@ exp.commands = function(channel, user, message, self) {
 			if (result[17].state == 1) { profile.updateLines(channel, user, message, self); }
 			if (result[19].state == 1) { profile.fetchProfile(channel, user, msg, self); }
 		}
+		if (result[5].state == 1) {
+			if (result[22].state == 1) { basic.lastTweet(channel, user, msg, self); }
+		}
 		if (result[6].state == 1) {
 			if (result[23].state == 1) { mod.mod(channel, user, msg, self); }
 			if (result[24].state == 1) { mod.link(channel, user, msg, self); }

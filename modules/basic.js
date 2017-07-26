@@ -1,4 +1,5 @@
 var tmi = require('tmi.js');
+var Twitter = require('twitter');
 var options = require('../config.js')
 var connect = require('../app.js')
 var bot = connect.bot
@@ -38,6 +39,21 @@ module.exports = {
 			var link = base + question
 			bot.say(channel, user.username + " Google is je beste vriend! " + link)}
 			func.cooldown("lmgtfy", "global", user.username, 10, lmgtfy)
+		}
+	},
+	lastTweet: function (channel, user, message, self) {
+		if (message[0] == "!lasttweet") {
+			function lasttweet() {
+			var client = new Twitter({
+				consumer_key: options.apiKeys.twitter_consumer_key,
+				consumer_secret: options.apiKeys.twitter_consumer_secret,
+				access_token_key: options.apiKeys.twitter_access_token_key,
+				access_token_secret: options.apiKeys.twitter_access_token_secret
+			});
+			client.get('statuses/user_timeline', {'screen_name': options.identity.twitter}, function(error, tweets, response) {
+				bot.say(channel, "Latest tweet from @" + options.identity.twitter + ": " + tweets[0].text)
+			})}
+			func.cooldown("lasttweet", "global", user.username, 10, lasttweet)
 		}
 	},
 	useTwitchAPI: function (channel, user, message, self) {
