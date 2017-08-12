@@ -23,7 +23,8 @@
   <tr>
     <th>Name</th>
     <th>Type</th>
-    <th>URL</th>
+    <th>Test</th>
+    <th>Send</th>
     <th>Delete</th>
   </tr>
 <% clr.forEach(function(clr) { %>
@@ -31,6 +32,7 @@
     <td><%= clr.name %></td>
     <td><%= clr.type %></td>
     <td><button class="btn btn-success clrSamples <%= clr.type %>" id="<%= clr.url %>">Test sample</button></td>
+    <td><% if(clr.type == "meme"){ %><button class="btn btn-danger forceMeme" id="<%= clr.name %>">Send to stream</button><% } %></td>
     <td><button class="btn btn-warning rem <%= clr.id %>" id="<%= clr.name %>">Remove</button></td>
   </tr>
 <% }); %>

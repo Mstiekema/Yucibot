@@ -140,6 +140,11 @@ io.on('connection', function (socket) {
       io.emit('meme', {"meme": result[ranN].url});
     })
   })
+  socket.on('forceMeme', function (data) {
+    func.connection.query('select * from clr where name = ?', data.name, function(err,result){
+      io.emit('meme', {"meme": result[0].url});
+    })
+  })
   socket.on('removeCLR', function (data) {
     console.log(data)
     func.connection.query('delete from clr where id = ?', data.id, function(err, result) {})

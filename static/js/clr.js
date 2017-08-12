@@ -52,6 +52,9 @@ if (button) {
       if (type == "btn btn-danger memes") {
         return socket.emit("meme")
       }
+      if (type.startsWith("btn btn-danger forceMeme")) {
+        return socket.emit("forceMeme", {"name": this.id})
+      }
       if (type.indexOf("btn btn-warning rem") != -1) {
         var id = type.slice(19)
         var con = confirm("Are you sure you want to remove " + this.id + "?");
