@@ -228,6 +228,19 @@ io.on('connection', function (socket) {
     func.connection.query('update commands set commName = "' + data.commName + '", response = "' + data.response + '", level = "' + data.level + '",\
     cdType = "' + data.cdType + '", cd = "' + data.cd + '", points = "' + data.points + '" where commName = "' + data.commName + '"', function(err, result) {})
   })
+  socket.on('addTimer', function (data) {
+    func.connection.query('select * from timers where name = ?', data.name, function (err, result) {
+      if(result[0]) {
+        func.connection.query('delete from timers where name = ?', data.name, function(err, result) {})
+        func.connection.query('insert into timers set ?', data, function (err, result) {})
+      } else {
+        func.connection.query('insert into timers set ?', data, function (err, result) {})
+      }
+    })
+  })
+  socket.on('remTimer', function (data) {
+    func.connection.query('delete from timers where name = ?', data, function(err, result) {})
+  })
   socket.on('disableModule', function(data) {
     func.connection.query('update module set state = 0 where moduleName = ?', data, function(err, result) {
       socket.emit('reload')
@@ -862,6 +875,14 @@ app.get('/admin/commands', function(req, res) {
   func.connection.query('select * from commands where response IS NOT NULL ORDER BY level', function(err, result) {
     res.render('admin/commands.html', {
       commands: result
+    })
+  });
+});
+
+app.get('/admin/timers', function(req, res) {
+  func.connection.query('select * from timers', function(err, result) {
+    res.render('admin/timers.html', {
+      timers: result
     })
   });
 });

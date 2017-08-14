@@ -64,8 +64,9 @@ exp.commands = function(channel, user, message, self) {
 exp.events = function(channel, user, message, self) {
 	func.connection.query('select * from module', function(err, result) {
 		events.timeout();
+		events.customTimers();
 		if (result[4].state == 1) {
-			if (result[18].state == 1) { profile.updateProfile(channel, user, message, self); }
+			if (result[18].state == 1) { profile.updateProfile(); }
 		}
 		if (result[5].state == 1) {
 			if (result[20].state == 1) { events.sub(); }

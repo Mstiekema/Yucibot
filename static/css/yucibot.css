@@ -46,6 +46,16 @@
   float: right;
 }
 
+#createTimer, .timerRes {
+  float: right;
+  margin-right: 5px;
+}
+
+#timerC {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
 .songQueue {
   float: left;
 }

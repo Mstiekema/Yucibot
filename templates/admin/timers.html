@@ -1,0 +1,44 @@
+<% include ../header.ejs %>
+<div class="main">
+<h2>Manage timers <button class="btn btn-danger timerRes" id="restart">Restart bot</button><button class="btn btn-success" id="createTimer">Create timer</button></h2>
+<table class="table moduleTable">
+  <tr>
+    <th>Name</th>
+    <th>Message</th>
+    <th>Online interval</th>
+    <th>Offline interval</th>
+    <th>Actions</th>
+  </tr>
+<% timers.forEach(function(t) { %>
+  <tr>
+    <td><%= t.name %></td>
+    <td><%= t.msg %></td>
+    <td><%= t.online %></td>
+    <td><%= t.offline %></td>
+    <td class="<%= t.name %> <%= t.msg.split(' ').join(',') %> <%= t.online %> <%= t.offline %>"><button class="btn btn-danger remTimer" id=<%= t.name %>>X</button> <button class="btn btn-warning editTimer" id=<%= t.name %>>Edit</button></td>
+  </tr>
+<% }); %>
+</table>
+
+<div id="showBox">
+  <div id="showStuff">
+    <div class="modal-header">
+      <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 id="modalTitle">Add/edit timer</h4>
+    </div>
+    <div id="timerC">
+      <form class="pure-form">
+        Name: <input type="text" id="timerName" size=10> <br>
+        Response: <input type="text" id="msg" size=50> <br>
+        Online interval (in minutes): <input type="number" min=1 max=500 id="online" value=10> <br>
+        Offline interval (in minutes): <input type="number" min=1 max=500 id="offline" value=60> <br>
+      </form>
+      <button class="btn btn-success" id="addTimer">Submit</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<script type="text/javascript" src="/../js/yucisite.js"></script>
+<script type="text/javascript" src="/../js/timers.js"></script>
+</body>

@@ -183,6 +183,15 @@ connection.query(
 	function (err, result) {if (err) {return}}
 )
 
+connection.query(
+	'CREATE TABLE timers (' +
+	'name VARCHAR(50) PRIMARY KEY,' +
+	'online INT DEFAULT 0,' +
+	'offline INT DEFAULT 0,' +
+	'msg VARCHAR(500))',
+	function (err, result) {if (err) {return}}
+)
+
 console.log("[DEBUG] Added all tables")
 
 connection.query('select * from user', function (err, result) {

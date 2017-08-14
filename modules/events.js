@@ -6,6 +6,7 @@ var bot = connect.bot
 var CronJob = require('cron').CronJob;
 var request = require("request");
 var func = require("./functions.js")
+var channel = JSON.stringify(options.channels).slice(2, -2);
 
 module.exports = {
 	sub: function () {
@@ -48,7 +49,6 @@ module.exports = {
 		});
 	},
 	fourtwenty: function () {
-		var channel = JSON.stringify(options.channels).slice(2, -2);
 		var job = new CronJob('00 20 16 * * *', function() {
 			console.log("[DEBUG] 4:20 Timer initiated"),
 			bot.say(channel, "CiGrip 420 BLAZE IT CiGrip"),
@@ -57,7 +57,6 @@ module.exports = {
 		}, function () {}, true );
 	},
 	twitter: function () {
-		var channel = JSON.stringify(options.channels).slice(2, -2);
 		var client = new Twitter({
 			consumer_key: options.apiKeys.twitter_consumer_key,
 			consumer_secret: options.apiKeys.twitter_consumer_secret,
@@ -76,4 +75,62 @@ module.exports = {
 				});
 			});
 		})
-	},}
+	},
+	customTimers: function (channel) {
+		func.connection.query('select * from timers', function(err, result) {
+			var channel = JSON.stringify(options.channels).slice(2, -2);
+			var timers = new Array();
+			var state = null;
+			function doTheThings(c) {
+				var info1 = {
+					url: 'https://api.twitch.tv/kraken/streams/' + options.identity.channelId,
+					headers: {
+						'Accept': 'application/vnd.twitchtv.v5+json',
+						'Client-ID': options.identity.clientId
+					}
+				}
+				request(info1, function(error, response, body) {
+					var streamStatus = JSON.parse(body).stream
+					
+					function addToOnline(i) {
+						if(result[i].online == 0) return
+						if(timers[i]) clearInterval(timers[i])
+						var timmsg = result[i].msg
+						timers[i] = setInterval(function () {
+							bot.say(c, timmsg);
+						}, result[i].online * 1000 * 60);
+					}
+					function addToOffline(i) {
+						if(result[i].offline == 0) return
+						if(timers[i]) clearInterval(timers[i])
+						var timmsg = result[i].msg
+						timers[i] = setInterval(function () {
+							bot.say(c, timmsg);
+						}, result[i].offline * 1000 * 60);
+					}
+					if(streamStatus != null) {
+						if(state == null || state == 0) {
+							state = 1
+							for(var i = 0; i < result.length; i++) {
+								addToOnline(i)
+							}
+						}
+					} else if(streamStatus == null) {
+						if(state == null || state == 1) {
+							state = 0
+							for(var i = 0; i < result.length; i++) {
+								addToOffline(i)
+							}
+						}
+					} else {
+						return
+					}
+				})
+			}
+			doTheThings(channel)
+			setInterval(function () {
+				doTheThings(channel)
+			}, 60000);
+		});
+	},
+}
