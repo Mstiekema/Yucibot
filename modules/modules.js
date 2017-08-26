@@ -14,6 +14,7 @@ var exp = module.exports = {}
 
 exp.commands = function(channel, user, message, self) {
 	var msg = message.toLowerCase().split(" ")
+	points.pickpocket(channel, user, msg, message, self);
 
 	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {

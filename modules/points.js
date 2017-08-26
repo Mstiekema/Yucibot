@@ -12,6 +12,158 @@ var time = 30 * 1000;
 var points;
 
 module.exports = {
+	pickpocket: function (channel, user, message, msg, self) {
+		if (message[0] == "!pickpocket" && msg != "!pickpocket") {
+			var target = message[1]
+			var type = message[2]
+			var x = Math.floor(Math.random() * 100)
+			var cd;
+			if(!target) return
+			if(!type) type = 1
+			
+			if(type == 1) {
+				function pickpocket() {
+					func.connection.query('select * from user where name = ?', target, function (err, result) {
+						if(!result[0]) return bot.say(channel, user.username + ", " + target + " is not a user in chat.")
+						cd = 120
+						var stealP = Math.floor(Math.random() * 100)
+						if(user.subscriber) {
+							if(x > 20) {
+								if(result[0].points >= stealP) {
+									func.connection.query('update user set points = points - ' + stealP + ' where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + stealP + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + stealP + " points from " + target + " TriHard")
+								} else {
+									func.connection.query('update user set points = 0 where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + result[0].points + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + result[0].points + " points from " + target + " TriHard")
+								}
+							} else if(x < 3) {
+								func.connection.query('select * from user where name = ?', user.username, function (err, result) {
+									func.connection.query('update user set points = points - ' + (result[0].points * 0.05) + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+								})
+								bot.say(channel, user.username + " got caught trying to steal points from " + target + " and loses 5% of their points")
+							} else {
+								bot.say(channel, user.username + " failed to steal points from " + target + " FeelsBadMan")
+							}
+						} else {
+							if(x > 40) {
+								if(result[0].points >= stealP) {
+									func.connection.query('update user set points = points - ' + stealP + ' where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + stealP + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + stealP + " points from " + target + " TriHard")
+								} else {
+									func.connection.query('update user set points = 0 where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + result[0].points + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + result[0].points + " points from " + target + " TriHard")
+								}
+							} else if(x < 5) {
+								func.connection.query('select * from user where name = ?', user.username, function (err, result) {
+									func.connection.query('update user set points = points - ' + (result[0].points * 0.1) + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+								})
+								bot.say(channel, user.username + " got caught trying to steal points from " + target + " and loses 10% of their points")
+							} else {
+								bot.say(channel, user.username + " failed to steal points from " + target + " FeelsBadMan")
+							}
+						}
+					})
+				}
+				func.cooldown("pickpocket", "user", user.username, cd, pickpocket)
+			}
+			if(type == 2) {
+				function pickpocket() {
+					func.connection.query('select * from user where name = ?', target, function (err, result) {
+						if(!result[0]) return bot.say(channel, user.username + ", " + target + " is not a user in chat.")
+						cd = 600
+						var stealP = Math.floor(Math.random()*(1000 - 100 + 1) + 100);
+						if(user.subscriber) {
+							if(x > 50) {
+								if(result[0].points >= stealP) {
+									func.connection.query('update user set points = points - ' + stealP + ' where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + stealP + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + stealP + " points from " + target + " TriHard")
+								} else {
+									func.connection.query('update user set points = 0 where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + result[0].points + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + result[0].points + " points from " + target + " TriHard")
+								}
+							} else if(x < 10) {
+								func.connection.query('select * from user where name = ?', user.username, function (err, result) {
+									func.connection.query('update user set points = points - ' + (result[0].points * 0.1) + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+								})
+								bot.say(channel, user.username + " got caught trying to steal points from " + target + " and loses 10% of their points")
+							} else {
+								bot.say(channel, user.username + " failed to steal points from " + target + " FeelsBadMan")
+							}
+						} else {
+							if(x > 60) {
+								if(result[0].points >= stealP) {
+									func.connection.query('update user set points = points - ' + stealP + ' where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + stealP + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + stealP + " points from " + target + " TriHard")
+								} else {
+									func.connection.query('update user set points = 0 where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + result[0].points + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + result[0].points + " points from " + target + " TriHard")
+								}
+							} else if(x < 20) {
+								func.connection.query('select * from user where name = ?', user.username, function (err, result) {
+									func.connection.query('update user set points = points - ' + (result[0].points * 0.25) + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+								})
+								bot.say(channel, user.username + " got caught trying to steal points from " + target + " and loses 25% of their points")
+							} else {
+								bot.say(channel, user.username + " failed to steal points from " + target + " FeelsBadMan")
+							}
+						}
+					})
+				}
+				func.cooldown("pickpocket", "user", user.username, cd, pickpocket)
+			}
+			if(type == 3) {
+				function pickpocket() {
+					func.connection.query('select * from user where name = ?', target, function (err, result) {
+						if(!result[0]) return bot.say(channel, user.username + ", " + target + " is not a user in chat.")
+						cd = 3600
+						var stealP = result[0].points
+						if(user.subscriber) {
+							if(x > 80) {
+									func.connection.query('update user set points = 0 where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + stealP + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + stealP + " points from " + target + " TriHard")
+							} else if(x < 30) {
+								func.connection.query('select * from user where name = ?', user.username, function (err, result) {
+									func.connection.query('update user set points = points - ' + (result[0].points * 0.35) + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+								})
+								bot.say(channel, user.username + " got caught trying to steal points from " + target + " and loses 35% of their points")
+							} else {
+								bot.say(channel, user.username + " failed to steal points from " + target + " FeelsBadMan")
+							}
+						} else {
+							if(x > 90) {
+								if(result[0].points >= stealP) {
+									func.connection.query('update user set points = points - ' + stealP + ' where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + stealP + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + stealP + " points from " + target + " TriHard")
+								} else {
+									func.connection.query('update user set points = 0 where name = ?', target, function (err, result) {if (err) {return}})
+									func.connection.query('update user set points = points + ' + result[0].points + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+									bot.say(channel, user.username + " succesfully stole " + result[0].points + " points from " + target + " TriHard")
+								}
+							} else if(x < 50) {
+								func.connection.query('select * from user where name = ?', user.username, function (err, result) {
+									func.connection.query('update user set points = points - ' + (result[0].points * 0.5) + ' where name = ?', user.username, function (err, result) {if (err) {return}})
+								})
+								bot.say(channel, user.username + " got caught trying to steal points from " + target + " and loses 50% of their points")
+							} else {
+								bot.say(channel, user.username + " failed to steal points from " + target + " FeelsBadMan")
+							}
+						}
+					})
+				}
+				func.cooldown("pickpocket", "user", user.username, cd, pickpocket)
+			}
+		}
+	},
 	roulette: function (channel, user, message, self) {
 		if (message[0] == "!roulette") {
 			function roulette() {
