@@ -26,8 +26,9 @@ module.exports = {
 			var type = message[2]
 			var x = Math.floor(Math.random() * 100)
 			var cd;
-			func.connection.query('select * from user where name = ?', target, function (err, result) { 
-			if(result[0].pickP == 0) return bot.say(channel, user.username + ", you can't steal points from " + target)
+			func.connection.query('select * from user where name = ?', user.username, function (err, r1) {
+			func.connection.query('select * from user where name = ?', target, function (err, r2) { 
+			if(r1[0].pickP == 0 || r2[0].pickP == 0) return bot.say(channel, user.username + ", you can't steal points from " + target)
 			if(!target) return
 			if(!type) type = 1
 			
@@ -168,7 +169,7 @@ module.exports = {
 					})
 				}
 				func.cooldown("pickpocket", "user", user.username, 1800, pickpocket)
-			}})
+			}})})
 		}
 	},
 	roulette: function (channel, user, message, self) {
