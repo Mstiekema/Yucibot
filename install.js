@@ -22,6 +22,7 @@ connection.query(
 	'timeOnline INT DEFAULT 0,' +
 	'timeOffline INT DEFAULT 0,' +
 	'profile_pic VARCHAR(200),' +
+	'pickP BOOL DEFAULT TRUE,' +
 	'isMod BOOL DEFAULT FALSE,' +
 	'UNIQUE (name))',
 	function (err, result) {if (err) {return}}

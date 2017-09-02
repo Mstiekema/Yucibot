@@ -13,11 +13,21 @@ var points;
 
 module.exports = {
 	pickpocket: function (channel, user, message, msg, self) {
-		if (message[0] == "!pickpocket" && msg != "!pickpocket") {
+		if (message[0] == "!stoppp") {
+			func.connection.query('update user set pickP = 0 where name = ?', user.username, function (err, result) {if (err) {return}})
+			bot.say(channel, "You can no longer steal points from " + user.username)
+		}
+		if (message[0] == "!resumepp") {
+			func.connection.query('update user set pickP = 1 where name = ?', user.username, function (err, result) {if (err) {return}})
+			bot.say(channel, "You can now start stealing points from " + user.username + " again TriHard")
+		}
+		if ((message[0] == "!pickpocket" || message[0] == "!pp" )&& msg != "!pickpocket") {
 			var target = message[1]
 			var type = message[2]
 			var x = Math.floor(Math.random() * 100)
 			var cd;
+			func.connection.query('select * from user where name = ?', target, function (err, result) { 
+			if(result[0].pickP == 0) return bot.say(channel, user.username + ", you can't steal points from " + target)
 			if(!target) return
 			if(!type) type = 1
 			
@@ -25,7 +35,6 @@ module.exports = {
 				function pickpocket() {
 					func.connection.query('select * from user where name = ?', target, function (err, result) {
 						if(!result[0]) return bot.say(channel, user.username + ", " + target + " is not a user in chat.")
-						cd = 120
 						var stealP = Math.floor(Math.random() * 100)
 						if(user.subscriber) {
 							if(x > 20) {
@@ -68,13 +77,12 @@ module.exports = {
 						}
 					})
 				}
-				func.cooldown("pickpocket", "user", user.username, cd, pickpocket)
+				func.cooldown("pickpocket", "user", user.username, 15, pickpocket)
 			}
 			if(type == 2) {
 				function pickpocket() {
 					func.connection.query('select * from user where name = ?', target, function (err, result) {
 						if(!result[0]) return bot.say(channel, user.username + ", " + target + " is not a user in chat.")
-						cd = 600
 						var stealP = Math.floor(Math.random()*(1000 - 100 + 1) + 100);
 						if(user.subscriber) {
 							if(x > 50) {
@@ -117,13 +125,12 @@ module.exports = {
 						}
 					})
 				}
-				func.cooldown("pickpocket", "user", user.username, cd, pickpocket)
+				func.cooldown("pickpocket", "user", user.username, 600, pickpocket)
 			}
 			if(type == 3) {
 				function pickpocket() {
 					func.connection.query('select * from user where name = ?', target, function (err, result) {
 						if(!result[0]) return bot.say(channel, user.username + ", " + target + " is not a user in chat.")
-						cd = 3600
 						var stealP = result[0].points
 						if(user.subscriber) {
 							if(x > 80) {
@@ -160,8 +167,8 @@ module.exports = {
 						}
 					})
 				}
-				func.cooldown("pickpocket", "user", user.username, cd, pickpocket)
-			}
+				func.cooldown("pickpocket", "user", user.username, 1800, pickpocket)
+			}})
 		}
 	},
 	roulette: function (channel, user, message, self) {
