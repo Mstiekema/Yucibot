@@ -146,7 +146,6 @@ io.on('connection', function (socket) {
     })
   })
   socket.on('removeCLR', function (data) {
-    console.log(data)
     func.connection.query('delete from clr where id = ?', data.id, function(err, result) {})
   })
   socket.on('addSample', function (data) {

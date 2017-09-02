@@ -311,7 +311,8 @@ var moduleSettings = [
 	["Meme button", "clrMeme", "Meme button for CLR", 0, "clr"],
 	["Clr sub notifier", "clrSub", "Sub alert on CLR", 0, "clr"],
 	["Quotes", "quote", "Let viewers add quotes in the chat", 1, "fun"],
-	["Raffles", "raffle", "Users can participate in raffles for points.", 1, "points"]
+	["Raffles", "raffle", "Users can participate in raffles for points.", 1, "points"],
+	["Pickpocket", "pickpocket", "Users can steal point from other users in chat.", 1, "points"]
 ];
 
 connection.query('select * from module order by moduleName', function (err, result) {
@@ -348,7 +349,7 @@ var standardCommands = [
 	["!points", null, "Bot whispers your amount of points", "global", 5, 100, null, 0],
 	["!usage", null, "Shows you how many times an emote has been used", "global", 20, 100, "!usage EMOTE", 0],
 	["!lines", null, "Returns the amount of lines the user has typed", "global", 20, 100, null, 0],
-	["!cx", null, "xD", "global", 10, 1111111, null, 0],
+	["!pickpocket", null, "Steal points (in various ways with different consequences) from other users in chat.", "user", 120, 100, "!pickpocket Mstiekema 1/2/3 (1= 1-100 points, 2= 1-1000 points, 3= All points)", 0],
 	["!totallines", null, "Returns the total recorded lines in chat", "global", 30, 100, null, 0],
 	["!addquote", null, "Adds a new quote to the database", "global", 10, 100, null, 0],
 	["!quote", null, "Returns a quote with a certain ID", "global", 10, 100, "!quote #ID", 0],

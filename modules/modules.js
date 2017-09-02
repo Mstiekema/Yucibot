@@ -14,7 +14,6 @@ var exp = module.exports = {}
 
 exp.commands = function(channel, user, message, self) {
 	var msg = message.toLowerCase().split(" ")
-	points.pickpocket(channel, user, msg, message, self);
 
 	func.connection.query('select * from module', function(err, result) {
 		if (result[1].state == 1) {
@@ -35,6 +34,7 @@ exp.commands = function(channel, user, message, self) {
 			if (result[14].state == 1) { points.roulette(channel, user, msg, self); }
 			if (result[15].state == 1) { points.slot(channel, user, msg, self); }
 			if (result[16].state == 1) { points.dungeon(channel, user, msg, self); }
+			if (result[31].state == 1) { points.pickpocket(channel, user, msg, message, self); }
 			if (result[30].state == 1) { points.raffle(channel, user, msg, self); }
 		}
 		if (result[4].state == 1) {
