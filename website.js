@@ -156,15 +156,15 @@ io.on('connection', function (socket) {
     socket.emit('nextSong');
   })
   socket.on('removeSong', function (data) {
-    func.connection.query('update songrequest set playState = 2 where DATE_FORMAT(time,"%Y-%m-%d") = "' + new Date().toISOString().substr(0, 10) + '" AND songid = ?', data, function(err, result) {
-      socket.emit('nextSong');
-    })
+    func.connection.query('delete from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = "' + new Date().toISOString().substr(0, 10) + '" AND songid = ?', data, function(err, result) {})
   })
   socket.on('prevSong', function (data) {
-    func.connection.query('select * from songrequest where playState = 1 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id DESC LIMIT 1', date, function(err,result){
+    func.connection.query('select * from songrequest where playState = 1 AND DATE_FORMAT(time,"%Y-%m-%d") = ? ORDER BY id DESC LIMIT 1', new Date().toISOString().substr(0, 10), function(err,result){
       if (result[0] != undefined) {
       func.connection.query('update songrequest set playState = 0 where songid = ?', result[0].songid, function(err, result) {})
-      socket.emit('nextSong');
+      func.connection.query('select * from songrequest where playState = 0 AND DATE_FORMAT(time,"%Y-%m-%d") = ?', new Date().toISOString().substr(0, 10), function(err,result){
+        socket.emit('prevSongInfo', result);
+      })
     }})
   })
   socket.on('createPoll', function (data) {
@@ -568,7 +568,7 @@ app.get('/stats/emotes', function(req, res) {
 })
 
 app.get('/history/:id', function(req, res) {
-  func.connection.query('select * from songrequest where DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
+  func.connection.query('select * from songrequest WHERE DATE_FORMAT(time,"%Y-%m-%d") = ?', req.params.id, function(err, result) {
     var songInfo = result
     if (result == undefined || result[0] == undefined) {
       res.render("history.html", {

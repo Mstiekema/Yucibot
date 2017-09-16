@@ -9,11 +9,17 @@
 </div>
 <div id="player"></div>
 <div class="songQueue">
-<h2>Queue</h2>
-<div id="songItem" ng-repeat="x in allSongs">
-	<div><img ng-src={{x.thumb}}></div>
-	<div id ="songItemInfo"> [{{ $index + 1 }}] {{ x.title }} <br> Requested by: <b>{{ x.name }}</b> <br>
-	<button type="button" class="btn btn-default" ng-click="skip(x.songid)" id="skip">Delete</button></div>
+<div class="panel panel-default">
+  <div class="panel-heading"><h3>Queue</h3></div>
+	<div class="panel-body"><ul class="list-group">
+		<div ng-repeat="x in allSongs" ng-if="$index > 0">
+			<li class="list-group-item">
+				<img id="songItemThumb" ng-src={{x.thumb}}>
+				<div id="songItemInfo"> [{{ $index }}] {{ x.title }} <br> Requested by: <b>{{ x.name }}</b> <br>
+				<button type="button" class="btn btn-default" ng-click="skip(x.songid)" id="skip">Delete</button></div>
+			</li>
+		</div>
+	</div></ul>
 </div>
 </div>
 <% } else { %>

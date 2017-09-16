@@ -57,31 +57,22 @@
 }
 
 .songQueue {
+  margin-top: 10px;
   float: left;
-}
-
-#songItem {
-  width: 100%;
-  background-color: #c4c4c4;
-}
-
-#songItem:last-child {
-  margin-bottom: 20px;
-}
-
-#songItem {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  width: 100%;
-  height: 91px;
-  border: 1px solid black;
 }
 
 #songItemInfo {
   position: relative;
+  width: 260px;
+  display: block;
+  overflow: hidden;
   top: -80px;
+  margin-bottom: -80px;
   left: 130px;
+}
+
+#songItemThumb {
+  margin-top: -10px;
 }
 
 .profile {
@@ -433,6 +424,9 @@ html {
   .songQueue {
     width: 440px;
   }
+  #songItemInfo {
+    width: 260px;
+  }
 }
 
 @media screen and (max-width: 1420px) {
@@ -447,6 +441,16 @@ html {
   }
   .songQueue {
     width: 440px;
+  }
+  #songItemInfo {
+    width: 260px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  #player {
+    margin-top: 10px;
+    float: left;
   }
 }
 
@@ -472,6 +476,9 @@ html {
     top: 7px;
   }
   .songQueue {
+    width: 100%;
+  }
+  #songItemInfo {
     width: 100%;
   }
 }
