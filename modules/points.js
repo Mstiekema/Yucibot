@@ -399,21 +399,21 @@ module.exports = {
 		}
 	},
 	raffle: function (channel, user, message, self) {
-		if ((user.mod || user.username == channel.substring(1)) && (message[0] == "!raffle" && rafState == false)) {
+		if ((user.mod || user.username == channel.substring(1)) && ((message[0] == "!mraffle" || message[0] == "!multiraffle") && rafState == false)) {
 			points = parseInt(message[1])
 			if(message[2]) {time = parseInt(message[2] * 1000)}
 			rafState = true
 			participants.length = 0
 			
-			bot.say(channel, "A raffle has started! Type !join to join the raffle for " + points + " points!")
+			bot.say(channel, "A multiraffle has started! Type !join to join the raffle for " + points + " points!")
 			setTimeout(function () {
-				bot.say(channel, "Type !join to join the raffle for " + points + " points! You have " + (time * 0.75) / 1000 + " seconds left!")
+				bot.say(channel, "Type !join to join the multiraffle for " + points + " points! You have " + Math.ceil((time * 0.75) / 1000) + " seconds left!")
 			}, time * 0.25);
 			setTimeout(function () {
-				bot.say(channel, "Type !join to join the raffle for " + points + " points! You have " + (time * 0.5) / 1000 + " seconds left!")
+				bot.say(channel, "Type !join to join the multiraffle for " + points + " points! You have " + Math.ceil((time * 0.5) / 1000) + " seconds left!")
 			}, time * 0.5);
 			setTimeout(function () {
-				bot.say(channel, "Type !join to join the raffle for " + points + " points! You have " + (time * 0.25) / 1000 + " seconds left!")
+				bot.say(channel, "Type !join to join the multiraffle for " + points + " points! You have " + Math.ceil((time * 0.25) / 1000) + " seconds left!")
 			}, time * 0.75);
 			setTimeout(function () {
 				if (participants.length == 0) return bot.say(channel, "No one joined the raffle FeelsBadMan")
@@ -428,6 +428,31 @@ module.exports = {
 					winArr.push(winner)
 				}
 				bot.say(channel, "The raffle is over! " + winners + " users won " + wPoints + "! The winners are: " + winArr)
+				rafState = false
+			}, time);
+		}
+		if ((user.mod || user.username == channel.substring(1)) && (message[0] == "!raffle" && rafState == false)) {
+			points = parseInt(message[1])
+			if(message[2]) {time = parseInt(message[2] * 1000)}
+			rafState = true
+			// participants.length = 0
+			participants = ["mstiekema", "kappa", "keepo", "timvdwel", "pogchamp"]
+			
+			bot.say(channel, "A raffle has started! Type !join to join the raffle for " + points + " points!")
+			setTimeout(function () {
+				bot.say(channel, "Type !join to join the raffle for " + points + " points! You have " + Math.ceil((time * 0.75) / 1000) + " seconds left!")
+			}, time * 0.25);
+			setTimeout(function () {
+				bot.say(channel, "Type !join to join the raffle for " + points + " points! You have " + Math.ceil((time * 0.5) / 1000) + " seconds left!")
+			}, time * 0.5);
+			setTimeout(function () {
+				bot.say(channel, "Type !join to join the raffle for " + points + " points! You have " + Math.ceil((time * 0.25) / 1000) + " seconds left!")
+			}, time * 0.75);
+			setTimeout(function () {
+				if (participants.length == 0) return bot.say(channel, "No one joined the raffle FeelsBadMan")
+				var winner =  participants[Math.ceil(participants.length * Math.random())]
+				func.connection.query('update user set points = points + ' + points + ' where name = ?', winner, function (err, result) {if (err) {console.log(err)}})
+				bot.say(channel, "The raffle is over! " + winner + " won " + points + "!")
 				rafState = false
 			}, time);
 		}

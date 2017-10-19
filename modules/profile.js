@@ -135,34 +135,35 @@ module.exports = {
 				log: message
 			}
 			func.connection.query('insert into chatlogs set ?', logInfo, function (err, result) {if (err) {return}})
-		}
-		func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
-			if (result[0] == undefined) {
-				var userInfo = {
-					name: user.username,
-					userId: user['user-id'],
-					points: 0,
-					num_lines: 1,
-					level: 100,
+		} else {
+			func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
+				if (result[0] == undefined) {
+					var userInfo = {
+						name: user.username,
+						userId: user['user-id'],
+						points: 0,
+						num_lines: 1,
+						level: 100,
+					}
+					getID(user.username)
+					func.connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
+					func.connection.query('insert into userstats set userId = ?', user['user-id'], function (err, result) {if (err) {return}})
+				} else if (result[0].name != userName) {
+					func.connection.query('update user set name = "' + userName + '" where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
+				} else if (result[0].userId == null) {
+					getID(user.username)
+					func.connection.query('update user set num_lines = num_lines + 1 where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
+					func.connection.query('insert into userstats set userId = ?', user['user-id'], function (err, result) {if (err) {return}})
+				} else {
+					func.connection.query('update user set num_lines = num_lines + 1 where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
 				}
-				getID(user.username)
-				func.connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
-				func.connection.query('insert into userstats set userId = ?', user['user-id'], function (err, result) {if (err) {return}})
-			} else if (result[0].name != userName) {
-				func.connection.query('update user set name = "' + userName + '" where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
-			} else if (result[0].userId == null) {
-				getID(user.username)
-				func.connection.query('update user set num_lines = num_lines + 1 where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
-				func.connection.query('insert into userstats set userId = ?', user['user-id'], function (err, result) {if (err) {return}})
-			} else {
-				func.connection.query('update user set num_lines = num_lines + 1 where userId = ?', user['user-id'], function (err, result) {if (err) {return}})
+			})
+			var logInfo = {
+				userId: user['user-id'],
+				log: message
 			}
-		})
-		var logInfo = {
-			userId: user['user-id'],
-			log: message
+			func.connection.query('insert into chatlogs set ?', logInfo, function (err, result) {if (err) {return}})
 		}
-		func.connection.query('insert into chatlogs set ?', logInfo, function (err, result) {if (err) {return}})
 	},
 	fetchProfile: function(channel, user, message, self) {
 		if (message[0] == "!rq") {
