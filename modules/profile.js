@@ -109,7 +109,33 @@ module.exports = {
 			})
 		}
 		var userName = user.username
-		if (user['user-id'] == undefined) return
+		if (user['user-id'] == undefined) {
+			func.connection.query('select * from user where name = ?', userName, function(err, result) {
+				if (result[0] == undefined) {
+					var userInfo = {
+						name: userName,
+						userId: user['user-id'],
+						points: 0,
+						num_lines: 1,
+						level: 100,
+					}
+					getID(user.username)
+					func.connection.query('insert into user set ?', userInfo, function (err, result) {if (err) {return}})
+					func.connection.query('insert into userstats set userId = ?', user['user-id'], function (err, result) {if (err) {return}})
+				} else if (result[0].userId == null) {
+					getID(user.username)
+					func.connection.query('update user set num_lines = num_lines + 1 where name = ?', userName, function (err, result) {if (err) {return}})
+					func.connection.query('insert into userstats set userId = ?', user['user-id'], function (err, result) {if (err) {return}})
+				} else {
+					func.connection.query('update user set num_lines = num_lines + 1 where name = ?', userName, function (err, result) {if (err) {return}})
+				}
+			})
+			var logInfo = {
+				userId: user['user-id'],
+				log: message
+			}
+			func.connection.query('insert into chatlogs set ?', logInfo, function (err, result) {if (err) {return}})
+		}
 		func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
 			if (result[0] == undefined) {
 				var userInfo = {
@@ -148,21 +174,23 @@ module.exports = {
 		}
 		if (message[0] == "!points") {
 			function points() {
-			func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
+			func.connection.query('select * from user where name = ?', user.username, function(err, result) {
 				bot.whisper(user.username, "You have " + result[0].points + " points!")
 			})}
 			func.cooldown("points", "global", user.username, 5, points)
 		}
 		if (message[0] == "!userpoints") {
 			function userpoints() {
-			func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
-				bot.say(channel, user.username + ", You have " + result[0].points + " points!")
-			})}
+				if(message[1]) user.username = message[1]
+				func.connection.query('select * from user where name = ?', user.username, function(err, result) {
+					bot.say(channel, user.username + " has " + result[0].points + " points!")
+				})
+			}
 			func.cooldown("userpoints", "global", user.username, 5, userpoints)
 		}
 		if (message[0] == "!lines") {
 			function lines() {
-			func.connection.query('select * from user where userId = ?', user['user-id'], function(err, result) {
+			func.connection.query('select * from user where username = ?', user.username, function(err, result) {
 				bot.whisper(user.username, "You have written " + result[0].num_lines + " lines in this chat!")
 			})}
 			func.cooldown("lines", "global", user.username, 20, lines)
