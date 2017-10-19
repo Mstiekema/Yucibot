@@ -77,6 +77,9 @@ clr.on("sound", function(data) {
 clr.on("gif", function(data) {
   io.emit('gif', { "gif": data.gif, "url": data.url })
 })
+clr.on("meme", function(data) {
+  io.emit('meme', { "meme": data.meme})
+})
 clr.on("chatEmote", function(data) {
   io.emit('chatEmote', { "emote": data.url })
 })

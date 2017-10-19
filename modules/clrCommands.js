@@ -60,6 +60,19 @@ module.exports = {
           }
         })
       }
+      if (message[1] == "meme") {
+        func.connection.query('select * from clr where type = "meme"', function(err,result){
+          var length = result.length
+          var ranN = Math.floor(Math.random() * length)
+          if(user.mod == true || user.username == channel.substring(1)) {
+            function clrM() {io.emit('meme', {"meme": result[ranN].url}); bot.whisper(user.username, "Succesfully played a random meme");}
+            func.pointCd("CLR_Meme", user, user.username, 1, clrM, 0) 
+          } else {
+            function clrM() {io.emit('meme', {"meme": result[ranN].url}); bot.whisper(user.username, "Succesfully played a random meme");}
+            func.pointCd("CLR_Meme", global, user.username, cd, clrM, cost * 2)  
+          }
+        })
+      }
     })
   },
   emotes: function (channel, user, message, self) {
