@@ -32,7 +32,10 @@
     <td><%= clr.name %></td>
     <td><%= clr.type %></td>
     <td><button class="btn btn-success clrSamples <%= clr.type %>" id="<%= clr.url %>">Test sample</button></td>
-    <td><% if(clr.type == "meme"){ %><button class="btn btn-danger forceMeme" id="<%= clr.name %>">Send to stream</button><% } %></td>
+    <td>
+      <% if(clr.type == "meme"){ %><button class="btn btn-danger forceMeme" id="<%= clr.name %>">Send to stream</button><% } %>
+      <% if(clr.type == "sound"){ %><button class="btn btn-danger forceSound" id="<%= clr.name %>">Send to stream</button><% } %>
+    </td>
     <td><button class="btn btn-warning rem <%= clr.id %>" id="<%= clr.name %>">Remove</button></td>
   </tr>
 <% }); %>
